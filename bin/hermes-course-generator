@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+import os
+import sys
+import shutil
+import argparse
+
+TEMPLATE_DIR = os.path.expanduser("~/.config/hermes-course-generator/templates")
+
+def main():
+    parser = argparse.ArgumentParser(description="Hermes Course Generator Workspace Initializer")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    
+    init_parser = subparsers.add_parser("init", help="Initialize a new course workspace")
+    init_parser.add_argument(
+        "--path", 
+        default=os.getcwd(), 
+        help="Path where the workspace should be initialized (defaults to current directory)"
+    )
+    
+    args = parser.parse_args()
+    
+    if args.command == "init":
+        init_workspace(args.path)
+
+def init_workspace(target_path):
+    target_path = os.path.abspath(target_path)
+    print(f"Initializing course workspace at: {target_path}")
+    
+    if not os.path.exists(TEMPLATE_DIR):
+        print(f"Error: Global templates not found at {TEMPLATE_DIR}", file=sys.stderr)
+        sys.exit(1)
+        
+    os.makedirs(target_path, exist_ok=True)
+    
+    print("Copying instruction files and templates...")
+    for filename in os.listdir(TEMPLATE_DIR):
+        src_file = os.path.join(TEMPLATE_DIR, filename)
+        dest_file = os.path.join(target_path, filename)
+        if os.path.isfile(src_file):
+            shutil.copy2(src_file, dest_file)
+            
+    print("Creating output directory structure...")
+    subdirs = [
+        "output/sections/begin", "output/sections/advance", "output/sections/master",
+        "output/lessons/begin", "output/lessons/advance", "output/lessons/master",
+        "output/reviews/sections/begin", "output/reviews/sections/advance", "output/reviews/sections/master",
+        "output/reviews/lessons/begin", "output/reviews/lessons/advance", "output/reviews/lessons/master",
+    ]
+    for subdir in subdirs:
+        os.makedirs(os.path.join(target_path, subdir), exist_ok=True)
+        
+    state_path = os.path.join(target_path, "state.md")
+    if not os.path.exists(state_path):
+        with open(state_path, "w", encoding="utf-8") as f:
+            f.write("status: init\ncompleted_sections: []\n")
+            
+    changelog_path = os.path.join(target_path, "output/changelog.md")
+    if not os.path.exists(changelog_path):
+        with open(changelog_path, "w", encoding="utf-8") as f:
+            f.write("# Changelog\n\nAll notable changes to this course will be documented in this file.\n")
+            
+    print("\n✅ Workspace initialized successfully!")
+
+if __name__ == "__main__":
+    main()
