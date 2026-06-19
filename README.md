@@ -18,7 +18,15 @@ curl -fsSL https://raw.githubusercontent.com/tranthethang/hermes-course-generato
 
 _Note: Make sure `~/.local/bin` is in your environment `PATH` (e.g., in `~/.zshrc` or `~/.bashrc`)._
 
-### 2. Verify Setup
+### 2. Uninstallation
+
+To completely remove the CLI tool, global configurations, and registered skills from your system:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tranthethang/hermes-course-generator/main/uninstall.sh | bash
+```
+
+### 3. Verify Setup
 
 Ensure all components and global configuration directories are correctly configured:
 
@@ -26,7 +34,7 @@ Ensure all components and global configuration directories are correctly configu
 ./verify.sh
 ```
 
-### 3. Initialize Workspace
+### 4. Initialize Workspace
 
 To initialize a new course generator workspace at your current location or a specific path:
 
