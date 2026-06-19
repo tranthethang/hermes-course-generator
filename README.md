@@ -6,6 +6,19 @@ structure compatible with Docusaurus MDX and integrates directly with AI workflo
 
 ---
 
+## Cross-Platform AI Agent Support
+
+This toolset is **platform-agnostic** and can be used with any modern AI Coding Agent:
+
+- **Antigravity (Native)**: Provides native integration. The agent automatically detects and
+  utilizes the `SKILL.md` configurations.
+- **Claude Code, Cursor, & GitHub Copilot (Codex)**: Fully supported. Since the toolset relies on
+  standard Markdown files and a Python CLI, you can simply load the `SKILL.md` or template files
+  into the agent's context (e.g., by mentioning `@skills/hermes-course-writer/SKILL.md`) and
+  instruct the AI to adopt the described role.
+
+---
+
 ## Quick Start
 
 ### 1. Installation
