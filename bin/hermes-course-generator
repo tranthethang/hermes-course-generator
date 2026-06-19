@@ -283,31 +283,31 @@ def merge_lesson(target_path, level, lesson_id):
     body_lines = [
         f"# {lesson_title}\n",
         "## Lesson Introduction\n",
-        "<!-- HERMES:FILL lesson_introduction -->\n",
+        "{/* HERMES:FILL lesson_introduction */}\n",
         ":::info Learning Objectives\n",
         "After this lesson, you will be able to:\n",
-        "- [ ] <!-- HERMES:FILL learning_objectives -->\n",
+        "- [ ] {/* HERMES:FILL learning_objectives */}\n",
         ":::\n",
         "**Prerequisites:**\n",
-        "- <!-- HERMES:FILL prerequisites -->\n",
-        "\n**Estimated Time:** <!-- HERMES:FILL time_estimate -->\n",
+        "- {/* HERMES:FILL prerequisites */}\n",
+        "\n**Estimated Time:** {/* HERMES:FILL time_estimate */}\n",
         "---\n"
     ]
     
     for s in sections_data:
-        body_lines.append(f"<!-- TRANSITION_BEFORE_{s['id']} -->\n")
+        body_lines.append(f"{{/* TRANSITION_BEFORE_{s['id']} */}}\n")
         demoted_body = demote_headings(s['body'])
         body_lines.append(demoted_body)
-        body_lines.append(f"\n<!-- TRANSITION_AFTER_{s['id']} -->\n")
+        body_lines.append(f"\n{{/* TRANSITION_AFTER_{s['id']} */}}\n")
         body_lines.append("---\n")
         
     body_lines.extend([
         "## Lesson Recap\n",
-        "<!-- HERMES:FILL lesson_recap -->\n",
+        "{/* HERMES:FILL lesson_recap */}\n",
         "## Comprehensive Exercises\n",
-        "<!-- HERMES:FILL comprehensive_exercises -->\n",
+        "{/* HERMES:FILL comprehensive_exercises */}\n",
         "## Quiz\n",
-        "<!-- HERMES:FILL quiz_5_questions -->\n"
+        "{/* HERMES:FILL quiz_5_questions */}\n"
     ])
     
     lesson_content = "\n".join(yaml_lines) + "\n".join(body_lines)

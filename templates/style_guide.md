@@ -315,3 +315,9 @@ Do not use GitHub markdown syntax (e.g. `> [!NOTE]`). Instead, use Docusaurus Ad
 
 :::danger Danger/critical error warning goes here. :::
 ```
+
+### 8.3 MDX Comment Rules
+
+- Do NOT use HTML comments `<!-- comment -->`.
+- MDX only supports JSX-style comments: `{/* comment */}`.
+- Example: `{/* TRANSITION_BEFORE_S01 */}` instead of `<!-- TRANSITION_BEFORE_S01 -->`.
