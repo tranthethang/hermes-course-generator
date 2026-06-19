@@ -3,25 +3,123 @@ import os
 import sys
 import shutil
 import argparse
+import re
+from datetime import datetime
 
 TEMPLATE_DIR = os.path.expanduser("~/.config/hermes-course-generator/templates")
 
 def main():
-    parser = argparse.ArgumentParser(description="Hermes Course Generator Workspace Initializer")
+    parser = argparse.ArgumentParser(description="Hermes Course Generator CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
     
+    # init
     init_parser = subparsers.add_parser("init", help="Initialize a new course workspace")
-    init_parser.add_argument(
-        "--path", 
-        default=os.getcwd(), 
-        help="Path where the workspace should be initialized (defaults to current directory)"
-    )
+    init_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
+    
+    # merge
+    merge_parser = subparsers.add_parser("merge", help="Merge sections into a lesson")
+    merge_parser.add_argument("--level", required=True, choices=["begin", "advance", "master"], help="Level of the lesson")
+    merge_parser.add_argument("--lesson", required=True, help="Lesson ID (e.g. L01)")
+    merge_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
+    
+    # state
+    state_parser = subparsers.add_parser("state", help="Manage state.md")
+    state_subparsers = state_parser.add_subparsers(dest="state_command", required=True)
+    
+    state_update = state_subparsers.add_parser("update", help="Update state.md")
+    state_update.add_argument("--path", default=os.getcwd(), help="Workspace path")
+    state_update.add_argument("--key", required=True, help="State key to update")
+    state_update.add_argument("--value", required=True, help="State value")
     
     args = parser.parse_args()
     
     if args.command == "init":
         init_workspace(args.path)
+    elif args.command == "merge":
+        merge_lesson(args.path, args.level, args.lesson)
+    elif args.command == "state":
+        if args.state_command == "update":
+            update_state(args.path, args.key, args.value)
 
+# -- utility functions --
+def remove_vietnamese_diacritics(text):
+    diacritics_map = {
+        'a': 'áàảãạăắằẳẵặâấầẩẫậ', 'd': 'đ', 'e': 'éèẻẽẹêếềểễệ', 'i': 'íìỉĩị',
+        'o': 'óòỏõọôốồổỗộơớờởỡợ', 'u': 'úùủũụưứừửữự', 'y': 'ýỳỷỹỵ',
+        'A': 'ÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬ', 'D': 'Đ', 'E': 'ÉÈẺẼẸÊẾỀỂễỆ', 'I': 'ÍÌỈĨỊ',
+        'O': 'ÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢ', 'U': 'ÚÙỦŨỤƯỨỪỬỮỰ', 'Y': 'ÝỲỶỸỴ'
+    }
+    for non_diacritic, diacritics in diacritics_map.items():
+        for char in diacritics:
+            text = text.replace(char, non_diacritic)
+    return text
+
+def slugify(text):
+    text = remove_vietnamese_diacritics(text)
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9\s\-]', '', text)
+    text = re.sub(r'[\s_]+', '-', text)
+    text = re.sub(r'-+', '-', text)
+    text = text.strip('-')
+    return text
+
+def parse_frontmatter(content):
+    if not content.startswith("---"):
+        return {}, content
+    parts = content.split("---", 2)
+    if len(parts) < 3:
+        return {}, content
+    yaml_text = parts[1]
+    body_text = parts[2]
+    
+    metadata = {}
+    lines = yaml_text.strip().split("\n")
+    current_key = None
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("-") and current_key:
+            val = line[1:].strip().strip('"\'')
+            if not isinstance(metadata[current_key], list):
+                metadata[current_key] = []
+            metadata[current_key].append(val)
+        elif ":" in line:
+            key, val = line.split(":", 1)
+            key = key.strip()
+            val = val.strip().strip('"\'')
+            if val == "":
+                metadata[key] = []
+                current_key = key
+            else:
+                metadata[key] = val
+                current_key = None
+    return metadata, body_text
+
+def demote_headings(markdown_text):
+    in_code_block = False
+    new_lines = []
+    lines = markdown_text.split("\n")
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            new_lines.append(line)
+            continue
+        if not in_code_block:
+            match = re.match(r'^(#+)\s+(.*)$', line)
+            if match:
+                hashes = match.group(1)
+                content = match.group(2)
+                new_lines.append(f"#{hashes} {content}")
+            else:
+                new_lines.append(line)
+        else:
+            new_lines.append(line)
+    return "\n".join(new_lines)
+
+# -- commands --
 def init_workspace(target_path):
     target_path = os.path.abspath(target_path)
     print(f"Initializing course workspace at: {target_path}")
@@ -52,14 +150,187 @@ def init_workspace(target_path):
     state_path = os.path.join(target_path, "state.md")
     if not os.path.exists(state_path):
         with open(state_path, "w", encoding="utf-8") as f:
-            f.write("status: init\ncompleted_sections: []\n")
+            state_content = """# Workspace State
+workspace_version: "1.0"
+technology: ""
+technology_version: ""
+course_name: ""
+created_at: "{}"
+last_updated_at: "{}"
+active_level: ""
+active_lesson_id: ""
+active_section_id: ""
+""".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            f.write(state_content)
             
     changelog_path = os.path.join(target_path, "output/changelog.md")
     if not os.path.exists(changelog_path):
         with open(changelog_path, "w", encoding="utf-8") as f:
             f.write("# Changelog\n\nAll notable changes to this course will be documented in this file.\n")
             
-    print("\n✅ Workspace initialized successfully!")
+    print("\nWorkspace initialized successfully!")
+
+def update_state(target_path, key, value):
+    target_path = os.path.abspath(target_path)
+    state_path = os.path.join(target_path, "state.md")
+    if not os.path.exists(state_path):
+        print(f"Error: state.md not found at {state_path}")
+        return
+        
+    with open(state_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        
+    new_lines = []
+    key_found = False
+    for line in lines:
+        if line.startswith(f"{key}:"):
+            new_lines.append(f'{key}: "{value}"\n')
+            key_found = True
+        else:
+            new_lines.append(line)
+            
+    if not key_found:
+        new_lines.append(f'{key}: "{value}"\n')
+        
+    # update timestamp
+    for i, line in enumerate(new_lines):
+        if line.startswith("last_updated_at:"):
+            new_lines[i] = f'last_updated_at: "{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}"\n'
+            
+    with open(state_path, "w", encoding="utf-8") as f:
+        f.writelines(new_lines)
+    print(f"Updated {key} to {value} in state.md")
+
+def merge_lesson(target_path, level, lesson_id):
+    target_path = os.path.abspath(target_path)
+    sections_dir = os.path.join(target_path, f"output/sections/{level}")
+    
+    if not os.path.exists(sections_dir):
+        print(f"Error: Directory {sections_dir} does not exist.")
+        sys.exit(1)
+        
+    # Find all section files for the lesson (MDX files)
+    section_files = [f for f in os.listdir(sections_dir) if f.startswith(f"{lesson_id}_S") and f.endswith(".mdx")]
+    if not section_files:
+        print(f"Error: No .mdx section files found for lesson {lesson_id} in {sections_dir}")
+        sys.exit(1)
+        
+    # Sort files by section ID
+    section_files.sort()
+    
+    sections_data = []
+    lesson_title = ""
+    language_version = ""
+    
+    print(f"Found {len(section_files)} sections for {lesson_id}. Analyzing...")
+    
+    for f in section_files:
+        file_path = os.path.join(sections_dir, f)
+        with open(file_path, "r", encoding="utf-8") as file:
+            content = file.read()
+            
+        meta, body = parse_frontmatter(content)
+        sec_id = meta.get("section_id", "")
+        sec_title = meta.get("section_title", "")
+        status = meta.get("status", "draft")
+        score = float(meta.get("review_score", "0"))
+        
+        if not lesson_title:
+            lesson_title = meta.get("lesson_title", "Unknown Lesson")
+        if not language_version:
+            language_version = meta.get("language_version", "")
+            
+        print(f"  - {f}: status={status}, score={score}")
+        if status != "approved" or score < 8.0:
+            print(f"    WARNING: Section {sec_id} is not approved or score < 8.0!")
+            
+        sections_data.append({
+            "id": sec_id,
+            "title": sec_title,
+            "file": f,
+            "body": body
+        })
+        
+    lesson_slug = slugify(lesson_title)
+    lesson_id_lower = lesson_id.lower()
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    
+    # Build YAML frontmatter for lesson
+    yaml_lines = [
+        "---",
+        f"id: {lesson_id_lower}_{lesson_slug}",
+        f'title: "{lesson_title}"',
+        f'sidebar_label: "{lesson_title}"',
+        "sidebar_position: 1",
+        f"level: {level}",
+        f'lesson_id: "{lesson_id}"',
+        f'lesson_title: "{lesson_title}"',
+        f"section_count: {len(sections_data)}",
+        "sections:"
+    ]
+    for s in sections_data:
+        yaml_lines.append(f"  - id: {s['id']}")
+        yaml_lines.append(f"    title: \"{s['title']}\"")
+        yaml_lines.append(f"    file: \"{s['file']}\"")
+    yaml_lines.extend([
+        f'language_version: "{language_version}"',
+        "status: draft",
+        f'created_at: "{current_date}"',
+        "---\n"
+    ])
+    
+    # Build body
+    body_lines = [
+        f"# {lesson_title}\n",
+        "## Lesson Introduction\n",
+        "<!-- HERMES:FILL lesson_introduction -->\n",
+        ":::info Learning Objectives\n",
+        "After this lesson, you will be able to:\n",
+        "- [ ] <!-- HERMES:FILL learning_objectives -->\n",
+        ":::\n",
+        "**Prerequisites:**\n",
+        "- <!-- HERMES:FILL prerequisites -->\n",
+        "\n**Estimated Time:** <!-- HERMES:FILL time_estimate -->\n",
+        "---\n"
+    ]
+    
+    for s in sections_data:
+        body_lines.append(f"<!-- TRANSITION_BEFORE_{s['id']} -->\n")
+        demoted_body = demote_headings(s['body'])
+        body_lines.append(demoted_body)
+        body_lines.append(f"\n<!-- TRANSITION_AFTER_{s['id']} -->\n")
+        body_lines.append("---\n")
+        
+    body_lines.extend([
+        "## Lesson Recap\n",
+        "<!-- HERMES:FILL lesson_recap -->\n",
+        "## Comprehensive Exercises\n",
+        "<!-- HERMES:FILL comprehensive_exercises -->\n",
+        "## Quiz\n",
+        "<!-- HERMES:FILL quiz_5_questions -->\n"
+    ])
+    
+    lesson_content = "\n".join(yaml_lines) + "\n".join(body_lines)
+    
+    lesson_file_name = f"{lesson_id}_{lesson_slug}.mdx"
+    lesson_file_path = os.path.join(target_path, f"output/lessons/{level}/{lesson_file_name}")
+    
+    with open(lesson_file_path, "w", encoding="utf-8") as f:
+        f.write(lesson_content)
+        
+    print(f"\nLesson merged successfully to {lesson_file_path}")
+    
+    # Update changelog
+    changelog_path = os.path.join(target_path, "output/changelog.md")
+    if os.path.exists(changelog_path):
+        with open(changelog_path, "a", encoding="utf-8") as f:
+            f.write(f"\n## [{datetime.now().strftime('%Y-%m-%d %H:%M:%S +07:00')}]\n\n")
+            f.write("### Merged\n\n")
+            f.write(f"- `output/lessons/{level}/{lesson_file_name}` — {len(sections_data)} sections merged (automated via CLI).\n")
+        print("Changelog updated")
+        
+    # Auto update state.md if possible
+    update_state(target_path, "last_updated_at", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 if __name__ == "__main__":
     main()

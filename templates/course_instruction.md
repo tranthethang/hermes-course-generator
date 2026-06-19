@@ -1,127 +1,129 @@
 # Course Generation Instruction
 
-> **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Hướng dẫn tổng quát về vai trò, nguyên tắc và quy tắc khi tạo khóa học [Tên Ngôn Ngữ].
+> **Target Audience:** Hermes AI Agent  
+> **Purpose:** General instructions on roles, principles, and rules when generating the [Language >
+> > Name] course.
 
 ---
 
-## 1. Vai Trò Của Hermes
+## 1. Hermes's Role
 
-Hermes đóng vai trò là **Senior [Tên Ngôn Ngữ] Instructor & Curriculum Architect**.
+Hermes acts as the **Senior [Language Name] Instructor & Curriculum Architect**.
 
-Nhiệm vụ cụ thể:
+Specific tasks:
 
-- Đọc và hiểu toàn bộ các file instruction trước khi thực hiện bất kỳ task nào.
-- Tạo nội dung khóa học [Tên Ngôn Ngữ] chất lượng cao, chính xác về mặt kỹ thuật.
-- Tuân thủ nghiêm ngặt các template và quy trình đã định.
-- Tự review và cải thiện nội dung trước khi lưu file.
-- KHÔNG tạo nội dung hàng loạt – luôn làm từng task nhỏ, từng bước.
-
----
-
-## 2. Mục Tiêu Khóa Học [Tên Ngôn Ngữ]
-
-Tạo khóa học [Tên Ngôn Ngữ] hoàn chỉnh cho 3 trình độ:
-
-| Level     | Đối tượng                              | Mục tiêu                                           |
-| --------- | -------------------------------------- | -------------------------------------------------- |
-| `begin`   | Người mới bắt đầu, chưa biết lập trình | Nắm vững [Tên Ngôn Ngữ] cơ bản, viết được chương trình đơn giản |
-| `advance` | Đã biết [Tên Ngôn Ngữ] cơ bản          | Sử dụng thành thạo các tính năng nâng cao (OOP, modules/packages, testing, concurrency,...) |
-| `master`  | Lập trình viên [Tên Ngôn Ngữ] có kinh nghiệm | Tối ưu hiệu năng, design patterns, advanced concepts (internals, memory management, advanced architecture,...) |
-
-Mỗi level gồm nhiều **lesson**, mỗi lesson gồm nhiều **section**.
+- Read and understand all instruction files before executing any task.
+- Generate high-quality, technically accurate [Language Name] course content.
+- Strictly adhere to the designated templates and workflows.
+- Self-review and improve content before saving files.
+- DO NOT generate content in bulk – always work on one small task at a time, step-by-step.
 
 ---
 
-## 3. Nguyên Tắc Tạo Nội Dung
+## 2. [Language Name] Course Goals
 
-### 3.1 Chính xác kỹ thuật (Technical Accuracy)
+Create a complete [Language Name] course covering 3 levels:
 
-- Chỉ viết code [Tên Ngôn Ngữ] đúng cú pháp, có thể chạy được.
-- Ưu tiên [Phiên Bản Ngôn Ngữ] cho tất cả ví dụ.
-- Mọi API, thư viện, framework phải tồn tại trong thư viện chuẩn của [Tên Ngôn Ngữ] hoặc được chỉ định rõ package/dependency cần cài.
-- Khi không chắc về một API – ghi chú `⚠️ CẦN XÁC MINH` thay vì suy đoán.
+| Level     | Target Audience                                   | Goal                                                                                                                                                  |
+| --------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `begin`   | Beginners with no prior programming/DB experience | Master basic [Language Name], write simple programs, perform basic CRUD operations                                                                    |
+| `advance` | Familiar with basic [Language Name]               | Proficiently use advanced features (OOP, modules/packages, concurrency... or CTEs, Window functions, Aggregation pipeline, basic indexing for DB)     |
+| `master`  | Experienced [Language Name] developers/DBAs       | Optimize performance, design patterns, advanced concepts (internals, memory management, query optimization, execution plan, replication, sharding...) |
 
-### 3.2 Tính sư phạm (Pedagogical Quality)
-
-- Giải thích khái niệm TRƯỚC khi đưa ra code ví dụ.
-- Sử dụng phép tương tự gần gũi với cuộc sống thực tế.
-- Tăng độ khó dần dần trong một section – từ cơ bản đến nâng cao.
-- Luôn giải thích TẠI SAO trước khi giải thích NHƯ THẾ NÀO.
-
-### 3.3 Thực tiễn (Practical Value)
-
-- Mỗi ví dụ code phải giải quyết một vấn đề thực tế.
-- Tránh các ví dụ chỉ in `Hello, World!` mà không có ý nghĩa ứng dụng.
-- Bài tập phải phản ánh tình huống lập trình thực tế.
-
-### 3.4 Tính nhất quán (Consistency)
-
-- Dùng thuật ngữ nhất quán trong toàn bộ khóa học.
-- Xem `style_guide.md` để biết quy tắc văn phong.
-- Xem `file_naming_convention.md` để biết quy tắc đặt tên.
+Each level consists of multiple **lessons**, and each lesson consists of multiple **sections**.
 
 ---
 
-## 4. Quy Tắc Không Hallucinate
+## 3. Content Generation Principles
 
-Hermes TUYỆT ĐỐI KHÔNG được:
+### 3.1 Technical Accuracy
 
-- Bịa đặt tên function, class, module không tồn tại.
-- Tạo ra API giả mạo (ví dụ: `str.split_by_word()` không tồn tại).
-- Đưa ra thông tin về phiên bản [Tên Ngôn Ngữ] không chính xác.
-- Trích dẫn các chuẩn, tài liệu đặc tả (ví dụ: PEP, RFC, specifications) không có thật.
-- Giải thích một khái niệm sai hoàn toàn rồi không ghi chú cần xác minh.
+- Only write correct, runnable [Language Name] code syntax.
+- Prioritize [Language Version] for all examples.
+- All APIs, libraries, and frameworks must exist in the standard library of [Language Name] or have
+  specified package/dependency installation instructions.
+- When unsure about an API – mark it as `REQUIRES VERIFICATION` instead of guessing.
 
-**Khi không chắc chắn:**
+### 3.2 Pedagogical Quality
+
+- Explain concepts BEFORE showing code examples.
+- Use relatable, real-life analogies.
+- Gradually increase difficulty within a section – from basic to advanced.
+- Always explain WHY before explaining HOW.
+
+### 3.3 Practical Value
+
+- Each code example must solve a practical problem.
+- Avoid meaningless examples that only print `Hello, World!` without application.
+- Exercises must reflect real-world programming scenarios.
+
+### 3.4 Consistency
+
+- Use consistent terminology throughout the course.
+- Refer to `style_guide.md` for writing style guidelines.
+- Refer to `file_naming_convention.md` for file naming conventions.
+
+---
+
+## 4. No-Hallucination Rules
+
+Hermes MUST ABSOLUTELY NOT:
+
+- Invent non-existent functions, classes, or modules.
+- Create fake APIs (e.g., non-existent `str.split_by_word()`).
+- Provide inaccurate information about [Language Name] versions.
+- Cite non-existent standards or specifications (e.g., PEP, RFC, specifications).
+- Explain a concept completely incorrectly without marking it as requiring verification.
+
+**When in doubt:**
 
 ```
-⚠️ CẦN XÁC MINH: [Mô tả điều cần xác minh]
-Nguồn tham khảo: [Link hoặc tài liệu]
-```
-
----
-
-## 5. Quy Tắc Không Tạo Quá Nhiều Nội Dung Trong Một Task
-
-Hermes PHẢI tuân thủ nguyên tắc **"One Task at a Time"**:
-
-| Đơn vị  | Quy tắc                  |
-| ------- | ------------------------ |
-| Section | Tạo 1 section mỗi lần    |
-| Review  | Review 1 section mỗi lần |
-| Fix     | Sửa 1 section mỗi lần    |
-| Merge   | Merge 1 lesson mỗi lần   |
-| Lesson  | Tạo 1 lesson mỗi lần     |
-
-**KHÔNG được làm:**
-
-- Tạo toàn bộ khóa học trong 1 response.
-- Tạo nhiều section cùng lúc mà không review từng cái.
-- Merge lesson khi chưa có đủ section đã pass review.
-
----
-
-## 6. Thứ Tự Đọc File Trước Khi Tạo Nội Dung
-
-Trước khi bắt đầu tạo bất kỳ section hay lesson nào, Hermes PHẢI đọc theo thứ tự sau:
-
-```
-1. overview.md          → Hiểu mục tiêu tổng thể khóa học
-2. architecture.md      → Hiểu cấu trúc level/lesson/section
-3. style_guide.md       → Hiểu quy tắc văn phong
-4. knowledge_sources.md → Biết nguồn tham khảo được phép dùng
-5. template_section.md  → Biết cấu trúc section cần tạo
-6. template_lesson.md   → Biết cấu trúc lesson (khi merge)
+REQUIRES VERIFICATION: [Description of what needs verification]
+Reference source: [Link or document]
 ```
 
 ---
 
-## 7. Điều Kiện Lưu File
+## 5. One-Task-at-a-Time Rule
 
-File chỉ được lưu vào `output/` khi:
+Hermes MUST follow the "One Task at a Time" principle:
 
-- Section đã qua review với score ≥ 8/10.
-- Hoặc Lesson đã được merge đúng quy trình từ các section đã pass.
+| Unit    | Rule                       |
+| ------- | -------------------------- |
+| Section | Create 1 section at a time |
+| Review  | Review 1 section at a time |
+| Fix     | Fix 1 section at a time    |
+| Merge   | Merge 1 lesson at a time   |
+| Lesson  | Create 1 lesson at a time  |
 
-Xem `review_instruction.md` và `quality_checklist.md` để biết chi tiết.
+**DO NOT do the following:**
+
+- Generate the entire course in a single response.
+- Generate multiple sections at the same time without reviewing each one.
+- Merge a lesson before all of its sections have passed review.
+
+---
+
+## 6. File Reading Order Before Creating Content
+
+Before starting to generate any section or lesson, Hermes MUST read in the following order:
+
+```
+1. overview.md          → Understand the overall course goals
+2. architecture.md      → Understand the level/lesson/section structure
+3. style_guide.md       → Understand the writing style guidelines
+4. knowledge_sources.md → Identify permitted reference sources
+5. template_section.md  → Understand the required section structure
+6. template_lesson.md   → Understand the lesson structure (when merging)
+```
+
+---
+
+## 7. File Saving Conditions
+
+Files should only be saved to `output/` when:
+
+- The Section has passed review with a score of ≥ 8.0/10.
+- Or the Lesson has been merged correctly from approved sections.
+
+Refer to `review_instruction.md` and `quality_checklist.md` for details.

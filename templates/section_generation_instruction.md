@@ -1,127 +1,135 @@
 # Section Generation Instruction
 
-> **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Hướng dẫn chi tiết quy trình tạo **một** section duy nhất cho khóa học [Tên Ngôn Ngữ].
+> **Target Audience:** Hermes AI Agent  
+> **Purpose:** Detailed instructions on the process of generating **a single** section for the
+> [Language Name] course.
 
 ---
 
-## 1. Nguyên Tắc Cốt Lõi
+## 1. Core Principles
 
-- **Tạo đơn lẻ:** Hermes chỉ tạo **MỘT** section trong mỗi task. Không bao giờ tạo nhiều section cùng lúc.
-- **Tương thích Docusaurus:** Toàn bộ nội dung Markdown sinh ra phải tương thích với Docusaurus MDX.
-- **MDX Safety (Cực kỳ quan trọng):** Tuyệt đối KHÔNG viết các ký tự so sánh hoặc tag giả trần trụi trong văn bản (ví dụ: `<T>`, `<string>`, `<int>`). Parser MDX của Docusaurus sẽ hiểu nhầm đây là tag JSX/HTML và báo lỗi compile. Phải viết các chuỗi này bên trong cặp backticks (ví dụ: `` `<T>` ``) hoặc escape các ký tự `<` và `>`.
-- **Hộp ghi chú (Admonitions):** Sử dụng cú pháp Docusaurus Admonitions (`:::note`, `:::tip`, `:::info`, `:::warning`, `:::danger`) thay vì cú pháp Github-style (`> [!NOTE]`).
+- **Generate individually:** Hermes only creates **ONE** section per task. Never generate multiple
+  sections at once.
+- **Docusaurus compatible:** All Markdown content generated must be compatible with Docusaurus MDX.
+- **MDX Safety (Extremely Important):** Absolutely DO NOT write raw comparison operators or generic
+  type brackets directly in plain text (e.g., `<T>`, `<string>`, `<int>`). The Docusaurus MDX parser
+  will misinterpret these as unclosed HTML/JSX tags and fail compilation. You must write these
+  inside backticks (e.g., `` `<T>` ``) or escape the `<` and `>` characters.
+- **Admonitions:** Use Docusaurus Admonitions syntax (`:::note`, `:::tip`, `:::info`, `:::warning`,
+  `:::danger`) instead of GitHub-style (`> [!NOTE]`).
 
 ---
 
-## 2. Input Cần Đọc Trước Khi Bắt Đầu
+## 2. Inputs to Read Before Starting
 
-Hermes PHẢI đọc đầy đủ các file sau **theo thứ tự**:
+Hermes MUST read the following files **in order**:
 
 ```
-1. overview.md              → Hiểu mục tiêu tổng thể và audience
-2. architecture.md          → Hiểu lesson hiện tại thuộc đâu trong toàn khóa
-3. template_section.md      → Xem cấu trúc section bắt buộc phải theo
-4. style_guide.md           → Áp dụng quy tắc văn phong
-5. knowledge_sources.md     → Biết nguồn nào được phép tham khảo
-6. quality_checklist.md     → Biết tiêu chí trước khi lưu
+1. overview.md              → Understand the overall course goals and audience
+2. architecture.md          → Understand where the current lesson fits in the course
+3. template_section.md      → Check the mandatory section structure
+4. style_guide.md           → Apply writing style rules
+5. knowledge_sources.md     → Identify permitted reference sources
+6. quality_checklist.md     → Understand criteria before saving
 ```
 
 ---
 
-## 3. Metadata Bắt Buộc Trước Khi Tạo Section
+## 3. Mandatory Metadata Before Creating Section
 
-Trước khi viết bất kỳ nội dung nào, Hermes phải xác định rõ:
+Before writing any content, Hermes must define:
 
 ```yaml
-id: l01_s01_slug # Định dạng: l<lesson_id_lower>_s<section_id_lower>_<slug>
-title: "Tên section"
-sidebar_label: "Tên section"
-sidebar_position: 1 # Số thứ tự hiển thị trong lesson
+id: l01_s01_slug # Format: l<lesson_id_lower>_s<section_id_lower>_<slug>
+title: "Section title"
+sidebar_label: "Section title"
+sidebar_position: 1 # Display position in lesson
 level: begin | advance | master
-lesson_id: "L01" # Ví dụ: L01, L02, L03
-lesson_title: "Tên lesson" # Ví dụ: "Biến và Kiểu Dữ Liệu"
-section_id: "S01" # Ví dụ: S01, S02, S03
-section_title: \"Tên section\" # Ví dụ: \"Giới thiệu về biến trong [Tên Ngôn Ngữ]\"
-language_version: "1.0.0" # Phiên bản ngôn ngữ được dạy
+lesson_id: "L01" # E.g., L01, L02, L03
+lesson_title: "Lesson title" # E.g., "Variables and Basic Data Types"
+section_id: "S01" # E.g., S01, S02, S03
+section_title: "Section title" # E.g., "Introduction to variables in [Language Name]"
+language_version: "1.0.0" # Language version being taught
 review_score: 0.0
 status: draft
 ```
 
-Nếu thiếu bất kỳ trường nào trên – **DỪNG LẠI** và yêu cầu người dùng cung cấp trước khi tiếp tục.
+If any of these fields are missing – **STOP** and ask the user to provide them before proceeding.
 
 ---
 
-## 4. Quy Trình Tạo Section (7 Bước)
+## 4. Section Generation Process (7 Steps)
 
-### Bước 1: Hiểu Context Lesson
+### Step 1: Understand Lesson Context
 
-Trả lời rõ các câu hỏi sau:
+Provide clear answers to these questions:
 
-- Lesson này dạy gì?
-- Section này nằm ở vị trí nào trong lesson?
-- Section trước đó (nếu có) đã dạy gì?
-- Section tiếp theo (nếu có) sẽ dạy gì?
-- Người học cần biết gì trước khi đọc section này?
+- What does this lesson teach?
+- Where is this section located in the lesson?
+- What did the previous section (if any) teach?
+- What will the next section (if any) teach?
+- What does the learner need to know before reading this section?
 
-### Bước 2: Xác Định Learner Level
+### Step 2: Determine Learner Level
 
-Áp dụng tiêu chí phù hợp với level:
+Apply criteria appropriate for the level:
 
-| Level     | Yêu cầu                                                                                        |
-| --------- | ---------------------------------------------------------------------------------------------- |
-| `begin`   | Không giả định kiến thức trước. Giải thích mọi khái niệm từ đầu. Dùng ví dụ đơn giản, gần gũi. |
-| `advance` | Giả định đã biết [Tên Ngôn Ngữ] cơ bản. Tập trung vào cách dùng hiệu quả, pattern, và edge case.       |
-| `master`  | Giả định có kinh nghiệm thực tế. Đi sâu vào internals, performance, và advanced patterns.      |
+| Level     | Requirements                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------------ |
+| `begin`   | Do not assume prior knowledge. Explain all concepts from scratch. Use simple, relatable examples.      |
+| `advance` | Assume knowledge of basic [Language Name]. Focus on best practices, patterns, and edge cases.          |
+| `master`  | Assume hands-on professional experience. Deep dive into internals, performance, and advanced patterns. |
 
-### Bước 3: Nghiên Cứu Chủ Đề
+### Step 3: Research the Topic
 
-Tra cứu thông tin từ các nguồn được phép (xem `knowledge_sources.md`):
+Look up information from permitted sources (see `knowledge_sources.md`):
 
-- Tài liệu chính thức của [Tên Ngôn Ngữ] (Ví dụ: Python Docs, Rust Docs, MSDN cho C#...)
-- Các chỉ dẫn kỹ thuật, chuẩn đặt tên hoặc đặc tả (Ví dụ: PEPs, RFCs, Language specifications)
-- Nhật ký thay đổi/Changelog của [Tên Ngôn Ngữ] để cập nhật tính năng mới nhất
+- Official documentation of [Language Name] (e.g., Python Docs, Rust Docs, MSDN for C#...)
+- Technical guidelines, naming standards, or language specifications (e.g., PEPs, RFCs, Language
+  specifications)
+- Changelogs of [Language Name] to ensure modern and updated features
 
-Ghi chú nguồn tham khảo trong phần `## Nguồn Tham Khảo` của section.
+Cite your references in the `## References` section of the document.
 
-### Bước 4: Tạo Nội Dung Section
+### Step 4: Create Section Content
 
-Section phải theo đúng cấu trúc từ `template_section.md`.
+The section must follow the exact structure from `template_section.md`.
 
-Nội dung bắt buộc:
+Mandatory content requirements:
 
-#### 4.1 Phần Giải Thích (Explanation)
+#### 4.1 Explanation
 
-- Giải thích khái niệm bằng ngôn ngữ tự nhiên, dễ hiểu.
-- Dùng phép tương tự với cuộc sống thực tế.
-- Giải thích TẠI SAO khái niệm này quan trọng.
-- Độ dài: 150–400 từ (tùy độ phức tạp của chủ đề).
+- Explain concepts using clear, natural language.
+- Use relatable real-world analogies.
+- Explain WHY this concept is important.
+- Length: 150–400 words (depending on topic complexity).
 
-#### 4.2 Code Ví Dụ (Examples)
+#### 4.2 Code Examples
 
-- Số lượng: Tối thiểu 2 ví dụ code, tối đa 5.
-- Mỗi ví dụ phải có comment giải thích.
-- Code phải chạy được với [Phiên Bản Ngôn Ngữ].
-- Ví dụ đầu tiên: đơn giản nhất.
-- Ví dụ cuối: thực tế và phức tạp hơn.
+- Quantity: Minimum of 2, maximum of 5 examples.
+- Each example must have explanatory comments.
+- Code must be syntactically correct and free of compilation/syntax errors. For SQL/MongoDB, ensure
+  syntax accuracy against standard documentation; establishing a running database is not required.
+- First example: the simplest.
+- Last example: realistic and more complex.
 
 ```[language]
-# [Tên Ngôn Ngữ] [Phiên Bản Ngôn Ngữ]
-# Sử dụng cú pháp hiện đại và chuẩn hóa của ngôn ngữ
-# [Đoạn code minh họa hàm/biến...]
+# [Language Name] [Language Version]
+# Uses modern and standardized syntax of the language
+# [Code demonstrating functions/variables...]
 ```
 
-#### 4.3 Lỗi Thường Gặp (Common Mistakes)
+#### 4.3 Common Mistakes
 
-- Liệt kê 2–4 lỗi phổ biến.
-- Mỗi lỗi cần có: mô tả lỗi + code sai + code đúng + giải thích.
+- List 2–4 common mistakes.
+- Each mistake needs: description + bad code + good code + explanation.
 
 ```python
-# ❌ SAI
+# INCORRECT
 my_list = [1, 2, 3]
 print(my_list[3])  # IndexError: list index out of range
 
-# ✅ ĐÚNG
+# CORRECT
 my_list = [1, 2, 3]
 if len(my_list) > 3:
     print(my_list[3])
@@ -129,47 +137,47 @@ if len(my_list) > 3:
 
 #### 4.4 Best Practices
 
-- Liệt kê 2–3 best practice liên quan đến chủ đề.
-- Tham chiếu PEP nếu có.
+- List 2–3 best practices related to the topic.
+- Reference coding style rules (e.g. PEP 8) where applicable.
 
 #### 4.5 Mini Exercise
 
-- Đúng 1 bài tập nhỏ.
-- Phải có: mô tả yêu cầu + input mẫu + output mong đợi.
-- KHÔNG cung cấp lời giải ngay trong section (để Hermes tạo riêng).
+- Exactly 1 small exercise.
+- Must include: requirements + sample input + expected output.
+- DO NOT provide the solution directly in the section (Hermes will create it separately).
 
-#### 4.6 Tóm Tắt (Summary)
+#### 4.6 Summary
 
-- 3–5 bullet points tóm lại nội dung chính.
+- 3–5 bullet points summarizing the main takeaways.
 
 ---
 
-### Bước 5: Tự Review Section
+### Step 5: Self-Review Section
 
-Sau khi viết xong nội dung, Hermes thực hiện self-review theo tiêu chí sau:
+After writing the content, Hermes performs a self-review according to the following template:
 
 ```json
 {
   "self_review": {
     "technical_accuracy": {
       "score": 0,
-      "note": "Code có chạy được không? API có tồn tại không?"
+      "note": "Is the code syntax correct? Do the APIs exist?"
     },
     "teaching_quality": {
       "score": 0,
-      "note": "Giải thích có rõ ràng không? Phù hợp với level không?"
+      "note": "Are explanations clear? Is it level-appropriate?"
     },
     "example_quality": {
       "score": 0,
-      "note": "Ví dụ có thực tế không? Có đủ không?"
+      "note": "Are examples realistic? Is there a sufficient number of them?"
     },
     "exercise_quality": {
       "score": 0,
-      "note": "Bài tập có phù hợp độ khó không?"
+      "note": "Is the exercise difficulty appropriate?"
     },
     "format_compliance": {
       "score": 0,
-      "note": "Có theo đúng template_section.md không?"
+      "note": "Does it follow template_section.md exactly?"
     },
     "total_score": 0,
     "pass": false,
@@ -179,49 +187,55 @@ Sau khi viết xong nội dung, Hermes thực hiện self-review theo tiêu chí
 }
 ```
 
-Tính `total_score` = trung bình cộng của 5 tiêu chí.
+Calculate the `total_score` = weighted average of the 5 criteria.
 
-### Bước 6: Xử Lý Kết Quả Review
-
-```
-Nếu total_score >= 8.0:
-  → Tiến hành Bước 7 (Lưu file)
-
-Nếu total_score >= 6.0 và < 8.0:
-  → Thực hiện các required_fixes
-  → Tăng chất lượng phần yếu nhất
-  → Review lại (quay về Bước 5)
-  → Tối đa 2 lần sửa; nếu vẫn < 8.0, báo cáo vấn đề
-
-Nếu total_score < 6.0:
-  → Xóa toàn bộ nội dung đã viết
-  → Viết lại từ đầu với cách tiếp cận khác (Bước 4)
-  → Tối đa 1 lần viết lại
-```
-
-### Bước 7: Lưu Section
-
-Lưu vào đường dẫn đúng theo `file_naming_convention.md`:
+### Step 6: Handle Review Results
 
 ```
-output/sections/{level}/{lesson_id}_{section_id}_{slug}.md
+If total_score >= 8.0:
+  → Proceed to Step 7 (Save file)
+
+If total_score >= 6.0 and < 8.0:
+  → Apply required_fixes
+  → Improve the weakest dimensions
+  → Re-review (back to Step 5)
+  → Max 2 fixes; if still < 8.0, report the issue
+
+If total_score < 6.0:
+  → Discard all written content
+  → Rewrite from scratch using a different approach (Step 4)
+  → Max 1 rewrite
 ```
 
-Ví dụ:
+### Step 7: Save Section
+
+Save to the correct path according to `file_naming_convention.md`:
 
 ```
-output/sections/begin/L01_S01_bien-va-gia-tri.md
-output/sections/advance/L03_S02_decorator-pattern.md
-output/sections/master/L05_S01_metaclass-internals.md
+output/sections/{level}/{lesson_id}_{section_id}_{slug}.mdx
+```
+
+Examples:
+
+```
+output/sections/begin/L01_S01_variable-and-assignment.mdx
+output/sections/advance/L03_S02_decorator-pattern.mdx
+output/sections/master/L05_S01_metaclass-internals.mdx
+```
+
+After successfully saving, the Agent CALLS THE CLI COMMAND TO UPDATE STATE:
+
+```bash
+hermes-course-generator state update --key "active_section_id" --value "{lesson_id}_{section_id}"
 ```
 
 ---
 
-## 5. Cấu Trúc Section Bắt Buộc
+## 5. Mandatory Section Structure
 
-Xem `template_section.md` để lấy cấu trúc chi tiết.
+See `template_section.md` for the detailed structure.
 
-Các heading bắt buộc theo thứ tự:
+Mandatory headings in order:
 
 ```markdown
 ---
@@ -239,45 +253,45 @@ review_score: 0.0
 status: draft | reviewed | approved
 ---
 
-# {Tên Section}
+# {Section Name}
 
-## Giới Thiệu
+## Introduction
 
-## Khái Niệm Chính
+## Main Concepts
 
-## Ví Dụ Code
+## Code Examples
 
-## Lỗi Thường Gặp
+## Common Mistakes
 
 ## Best Practices
 
 ## Mini Exercise
 
-## Tóm Tắt
+## Summary
 
-## Nguồn Tham Khảo
+## References
 ```
 
 ---
 
-## 6. Quy Tắc Dùng `template_section.md`
+## 6. Rules for Using `template_section.md`
 
-- Đọc toàn bộ `template_section.md` trước khi viết.
-- Giữ nguyên thứ tự các heading.
-- Giữ nguyên các field trong YAML frontmatter.
-- Điền đúng giá trị vào `review_score` sau khi self-review.
-- Điền `status: approved` chỉ khi score ≥ 8.0.
+- Read the entire `template_section.md` before writing.
+- Keep heading order.
+- Keep YAML frontmatter fields.
+- Populate `review_score` correctly after self-review.
+- Set `status: approved` only when score ≥ 8.0.
 
 ---
 
-## 7. Output Mong Đợi
+## 7. Expected Output
 
-Khi hoàn thành, Hermes báo cáo:
+When completed, Hermes reports:
 
 ```
-✅ Section đã tạo: output/sections/begin/L01_S01_bien-va-gia-tri.md
-📊 Self-review score: 8.5/10
-🔍 Weaknesses: [...]
-🔧 Applied fixes: [...]
-📌 Status: approved
+Section created: output/sections/begin/L01_S01_variable-and-assignment.mdx
+Self-review score: 8.5/10
+Weaknesses: [...]
+Applied fixes: [...]
+Status: approved
 ```

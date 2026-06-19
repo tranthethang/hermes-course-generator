@@ -1,66 +1,61 @@
 ---
 id: l01_s01_slug
-title: "Tên Section"
-sidebar_label: "Tên Section"
+title: "Section Title"
+sidebar_label: "Section Title"
 sidebar_position: 1
 level: begin
 lesson_id: "L01"
-lesson_title: "Tên Lesson"
+lesson_title: "Lesson Title"
 section_id: "S01"
-section_title: "Tên Section"
+section_title: "Section Title"
 language_version: "1.0.0"
 review_score: 0.0
 status: draft
 ---
 
-# Tên Section
+# Section Title
 
-## Giới Thiệu
+## Introduction
 
-{Giới thiệu ngắn gọn về bài học, bối cảnh thực tế hoặc tương tự thực tế.}
+{Brief introduction to the section topic, real-world context, or real-life analogy.}
 
-## Khái Niệm Chính
+## Main Concepts
 
-{Giải thích chi tiết các khái niệm cốt lõi. Hãy dùng bảng so sánh hoặc ví dụ thực tế.}
+{Detailed explanation of core concepts. Use comparison tables or practical examples.}
 
-:::info Khái Niệm Quan Trọng
-{Nội dung lưu ý đặc biệt hoặc giải thích sâu về khái niệm.}
-:::
+:::info Important Concept {Special note or deep explanation of the concept.} :::
 
-## Ví Dụ Code
+## Code Examples
 
-{Các ví dụ code từ đơn giản đến phức tạp. Lưu ý: Code block phải khai báo ngôn ngữ rõ ràng.}
+{Code examples from simple to complex. Note: Code blocks must declare their language clearly.}
 
 ```[language]
-// Code minh họa mẫu
+// Code illustration sample
 ```
 
-## Lỗi Thường Gặp
+## Common Mistakes
 
-{Liệt kê 2-4 lỗi phổ biến nhất và cách khắc phục.}
+{List of 2-4 most common mistakes and how to fix them.}
 
-:::danger Lỗi Phổ Biến
-{Mô tả lỗi dễ mắc phải và cách debug.}
-:::
+:::danger Common Mistake {Description of common error and how to debug.} :::
 
 ## Best Practices
 
-{Các quy chuẩn viết code đẹp, tối ưu, dễ bảo trì.}
+{Coding standards for clean, optimal, and maintainable code.}
 
-:::tip Mẹo Hay
-{Mẹo tối ưu hiệu năng hoặc các thủ thuật lập trình hữu ích.}
-:::
+:::tip Pro Tip {Performance optimization tips or useful programming tricks.} :::
 
 ## Mini Exercise
 
-{Đúng 1 bài tập thực hành nhỏ kèm theo mô tả yêu cầu, dữ liệu đầu vào và kết quả mong muốn.}
+{Exactly 1 small practice exercise with description of requirements, sample input, and expected
+output.}
 
-## Tóm Tắt
+## Summary
 
 - {Bullet point 1}
 - {Bullet point 2}
 - {Bullet point 3}
 
-## Nguồn Tham Khảo
+## References
 
-- {Liên kết tài liệu chính thức}
+- {Links to official documentation}

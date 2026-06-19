@@ -1,56 +1,62 @@
 ---
 name: hermes-course-generator
 description: >-
-  Khởi tạo cấu trúc dự án và tạo giáo trình (syllabus), tài liệu hướng dẫn khóa học lập trình bất kỳ (Rust, C#, Java, Go, v.v.) tương thích Docusaurus.
+  Initialize project structure and generate syllabus and documentation for any programming course
+  (Rust, C#, Java, Go, etc.) compatible with Docusaurus.
 ---
 
 # Hermes Course Generator Skill
 
 ## Overview
 
-Skill này hướng dẫn Agent tương tác với người dùng để thiết lập một môi trường tạo khóa học tự động cho bất kỳ ngôn ngữ lập trình nào, tương thích hoàn toàn với Docusaurus MDX.
+This skill guides the Agent to interact with the user to set up an automated course creation
+environment for any programming language, fully compatible with Docusaurus MDX.
 
 ## Dependencies
 
-- Công cụ CLI `hermes-course-generator` được cài đặt tại `/Users/thangtt/.local/bin/hermes-course-generator`.
+- CLI tool `hermes-course-generator` installed at `~/.local/bin/hermes-course-generator`.
 
 ## Quick Start
 
-Khi người dùng yêu cầu: _"Tôi muốn tạo khóa học [Rust/C#/Go...]"_ hoặc _"Hãy setup khóa học lập trình mới"_, Agent sẽ kích hoạt quy trình thiết lập tương tác.
+When the user requests: _"I want to create a course for [Rust/C#/Go...]"_ or _"Please set up a new
+programming course"_, the Agent triggers the interactive setup workflow.
 
 ## Workflow
 
-### Bước 1: Thu Thập Yêu Cầu (Interactive Interview)
+### Step 1: Collect Requirements (Interactive Interview)
 
-Agent hỏi các thông số:
+The Agent prompts for the following parameters:
 
-1. Ngôn ngữ lập trình mong muốn
-2. Cấp độ giảng dạy (begin, advance, master)
-3. Đối tượng học viên
-4. Quy mô khóa học (Số lượng Lessons & Sections)
+1. Target programming language
+2. Target level (begin, advance, master)
+3. Target audience
+4. Course scope (number of Lessons & Sections)
 
-### Bước 2: Khởi Tạo Môi Trường Bằng CLI
+### Step 2: Initialize Environment via CLI
 
-Agent chạy lệnh CLI để tạo khung thư mục:
-`hermes-course-generator init --path <đường_dẫn_dự_án>`
+The Agent runs the CLI command to generate the folder structure:
+`hermes-course-generator init --path <project_path>`
 
-### Bước 3: Tự Động Sinh Nội Dung Cấu Thiết Lập (Dynamic Generation)
+### Step 3: Automatically Generate Configuration Documents (Dynamic Generation)
 
-Agent tự động tạo ra 3 tài liệu cốt lõi cá nhân hóa cho ngôn ngữ đã chọn:
+The Agent automatically generates 3 core personalized documents for the chosen language:
 
-- `overview.md`: Mục tiêu đầu ra chi tiết của ngôn ngữ.
-- `architecture.md` (Giáo trình Syllabus): Lập danh sách chi tiết các Lessons và Sections phù hợp đặc trưng ngôn ngữ.
-- `style_guide.md`: Quy chuẩn viết code của ngôn ngữ và tích hợp quy tắc an toàn MDX (tránh viết các generic dạng `<T>`, `<string>` trần trụi ngoài text, phải bọc trong inline code).
+- `overview.md`: Detailed language learning objectives and outcomes.
+- `architecture.md` (Syllabus): A detailed list of Lessons and Sections tailored to the language
+  features.
+- `style_guide.md`: Language-specific coding standards combined with MDX safety rules (e.g.,
+  wrapping raw generics like `<T>` or `<string>` in inline code blocks instead of raw text).
 
-### Bước 4: Thiết Lập Trạng Thế
+### Step 4: Set Up State
 
-Cập nhật file `state.md` ghi nhận danh sách toàn bộ các section và lesson, đặt trạng thái ban đầu:
+Update the `state.md` file to list all sections and lessons with their initial state:
 
 ```yaml
 status: init
 completed_sections: []
 ```
 
-### Bước 5: Báo Cáo Hoàn Thành
+### Step 5: Report Completion
 
-Trình bày cấu trúc khóa học đã tạo (`architecture.md`) cho người dùng và hướng dẫn họ cách bắt đầu quy trình Hermes Workflow tiếp theo.
+Present the generated course structure (`architecture.md`) to the user and guide them on how to
+begin the next phase of the Hermes Workflow.

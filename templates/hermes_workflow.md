@@ -1,40 +1,44 @@
 # Hermes Workflow
 
-> **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Workflow đầy đủ từ generate section đến merge lesson, bao gồm retry logic và changelog rules.
+> **Target Audience:** Hermes AI Agent  
+> **Purpose:** Full workflow from section generation to lesson merging, including retry logic and
+> changelog rules.
 
 ---
 
-## 1. Tổng Quan Workflow
+## 1. Workflow Overview
 
-```
-[START]
-    │
-    ▼
-[READ INSTRUCTIONS]  ← Bắt buộc: đọc tất cả file instruction
-    │
-    ▼
-[GET TASK PARAMS]    ← Xác định: level, lesson_id, section_id
-    │
-    ├──► [GENERATE SECTION] ──► [SELF REVIEW] ──► pass? ──► [SAVE SECTION]
-    │         (repeat for each section)                           │
-    │                                                             │
-    ▼                                                             ▼
-[CHECK ALL SECTIONS READY] ──► all approved? ──► [MERGE LESSON]
-    │
-    ▼
-[REVIEW LESSON] ──► pass? ──► [SAVE LESSON]
-    │
-    ▼
-[UPDATE CHANGELOG]
-    │
-    ▼
-[END]
+```mermaid
+flowchart TD
+    Start([START]) --> ReadInstr[READ INSTRUCTIONS<br/>Mandatory: read all instruction files]
+    ReadInstr --> GetParams[GET TASK PARAMS<br/>Identify: level, lesson_id, section_id]
+
+    subgraph SectionGenLoop [Section Generation Loop (repeat for each section)]
+        GetParams --> GenSection[GENERATE SECTION]
+        GenSection --> SelfReview[SELF REVIEW]
+        SelfReview --> PassSection{pass?}
+        PassSection -- Yes --> SaveSection[SAVE SECTION]
+        PassSection -- No --> GenSection
+    end
+
+    SaveSection --> CheckReady[CHECK ALL SECTIONS READY]
+
+    CheckReady --> AllApproved{all approved?}
+    AllApproved -- Yes --> MergeLesson[MERGE LESSON]
+    AllApproved -- No --> GetParams
+
+    MergeLesson --> ReviewLesson[REVIEW LESSON]
+    ReviewLesson --> PassLesson{pass?}
+    PassLesson -- Yes --> SaveLesson[SAVE LESSON]
+    PassLesson -- No --> MergeLesson
+
+    SaveLesson --> UpdateChangelog[UPDATE CHANGELOG]
+    UpdateChangelog --> End([END])
 ```
 
 ---
 
-## 2. Phase 1: Khởi Động (Initialization)
+## 2. Phase 1: Initialization
 
 ```
 TASK: init_session
@@ -42,7 +46,7 @@ TASK: init_session
 INPUT:
   - level: begin | advance | master
   - lesson_id: L01..LNN
-  - section_ids: [S01, S02, S03, ...]  # Danh sách section cần tạo
+  - section_ids: [S01, S02, S03, ...]  # List of sections to create
 
 STEPS:
   1. READ overview.md
@@ -52,9 +56,9 @@ STEPS:
   5. READ template_section.md
   6. READ quality_checklist.md
   7. VERIFY output directory structure:
-       - output/sections/{level}/ → tồn tại?
-       - output/reviews/sections/{level}/ → tồn tại?
-       - Nếu không → CREATE directories
+       - Does output/sections/{level}/ exist?
+       - Does output/reviews/sections/{level}/ exist?
+       - If not → CREATE directories
   8. REPORT: "Session initialized. Ready to generate {n} sections for Lesson {lesson_id} ({level})"
 ```
 
@@ -66,62 +70,63 @@ STEPS:
 TASK: generate_section(level, lesson_id, section_id, section_title)
 
 PRE-CONDITION:
-  - Đã đọc: template_section.md
-  - Đã xác định: level, lesson_id, section_id
+  - Read: template_section.md
+  - Identified: level, lesson_id, section_id
 
 STEPS:
   1. UNDERSTAND_CONTEXT:
-     - Đọc lại architecture.md để biết section này nằm ở đâu
-     - Liệt kê prerequisites (section trước đã dạy gì)
+     - Read architecture.md again to know where this section is positioned
+     - List prerequisites (what the previous section taught)
 
   2. RESEARCH:
-     - Tra cứu tài liệu chính thức của [Tên Ngôn Ngữ] cho topic
-     - Ghi chú các API chính, đặc tả/chuẩn liên quan
+     - Look up official documentation of [Language Name] for the topic
+     - Note key APIs, related specifications/standards
 
   3. WRITE_CONTENT:
-     - Áp dụng template_section.md
-     - Áp dụng style_guide.md
-     - Target: 500–1500 từ tùy level
+     - Apply template_section.md
+     - Apply style_guide.md
+     - Target: 500–1500 words depending on level
 
   4. SELF_REVIEW:
-     - Tính score theo review_instruction.md
-     - Xuất JSON review result
+     - Calculate score according to review_instruction.md
+     - Export JSON review result
 
   5. DECISION:
      IF score >= 8.0:
        → GO TO save_section
      ELIF score >= 6.0:
        → APPLY required_fixes
-       → RE_REVIEW (max 2 lần)
-       IF sau 2 lần vẫn < 8.0:
-         → REPORT "Cần hỗ trợ: score {score} sau 2 lần sửa"
-         → STOP (chờ instruction từ người dùng)
+       → RE_REVIEW (max 2 times)
+       IF after 2 times still < 8.0:
+         → REPORT "Needs support: score {score} after 2 fixes"
+         → STOP (wait for user instruction)
      ELSE (score < 6.0):
        → DISCARD current content
-       → REWRITE from scratch (1 lần duy nhất)
+       → REWRITE from scratch (only once)
        → RE_REVIEW
-       IF vẫn < 8.0:
-         → REPORT "Không thể đạt score >= 8.0. Cần xem xét lại topic."
+       IF still < 8.0:
+         → REPORT "Cannot achieve score >= 8.0. Topic needs re-evaluation."
          → STOP
 
   6. SAVE_SECTION:
-     - Điền review_score và status: approved vào frontmatter
-     - Lưu: output/sections/{level}/{lesson_id}_{section_id}_{slug}.md
-     - Lưu review: output/reviews/sections/{level}/{lesson_id}_{section_id}_review.json
+     - Populate review_score and status: approved in frontmatter
+     - Save: output/sections/{level}/{lesson_id}_{section_id}_{slug}.mdx
+     - Save review: output/reviews/sections/{level}/{lesson_id}_{section_id}_review.json
+     - Run: hermes-course-generator state update --key "active_section_id" --value "{lesson_id}_{section_id}"
 
   7. REPORT:
-     ✅ Section saved: [file path]
-     📊 Score: {score}/10
-     📌 Status: approved
+     Section saved: [file path]
+     Score: {score}/10
+     Status: approved
 
 OUTPUT:
-  - output/sections/{level}/{lesson_id}_{section_id}_{slug}.md
+  - output/sections/{level}/{lesson_id}_{section_id}_{slug}.mdx
   - output/reviews/sections/{level}/{lesson_id}_{section_id}_review.json
 ```
 
 ---
 
-## 4. Retry Logic Chi Tiết
+## 4. Detailed Retry Logic
 
 ```
 FUNCTION retry_section(section_content, review_result, attempt_number):
@@ -145,36 +150,36 @@ FUNCTION retry_section(section_content, review_result, attempt_number):
     RETURN retry_section(section_content, new_review, attempt_number + 1)
 ```
 
-Giới hạn retry:
+Retry limits:
 
-- `generate_section`: 2 lần sửa, 1 lần viết lại
-- `merge_lesson`: 1 lần sửa nếu quality check fail
-- Không có infinite loop
+- `generate_section`: 2 fixes, 1 rewrite
+- `merge_lesson`: 1 fix if quality check fails
+- No infinite loop
 
 ---
 
-## 5. Phase 3: Kiểm Tra Đủ Sections
+## 5. Phase 3: Check Sections Readiness
 
 ```
 TASK: check_sections_ready(level, lesson_id)
 
 STEPS:
-  1. Liệt kê tất cả file trong output/sections/{level}/ có prefix {lesson_id}_
-  2. Kiểm tra YAML frontmatter của từng file:
-     - status == "approved" ?
-     - review_score >= 8.0 ?
-  3. Đối chiếu với danh sách section_ids từ architecture.md
+  1. List all files in output/sections/{level}/ with prefix {lesson_id}_
+  2. Check YAML frontmatter of each file:
+     - status == "approved"?
+     - review_score >= 8.0?
+  3. Compare with the section_ids list from architecture.md
 
 REPORT:
-  ✅ Ready sections: [S01, S02, S03]
-  ❌ Missing sections: [S04]
-  ⚠️  Not approved: [S05 (score: 7.5)]
+  Ready sections: [S01, S02, S03]
+  Missing sections: [S04]
+  Not approved: [S05 (score: 7.5)]
 
-IF tất cả sections đều ready:
+IF all sections are ready:
   → PROCEED to merge_lesson
 ELSE:
   → REPORT missing/not-approved sections
-  → STOP (chờ generate missing sections)
+  → STOP (wait to generate missing sections)
 ```
 
 ---
@@ -185,43 +190,33 @@ ELSE:
 TASK: merge_lesson(level, lesson_id)
 
 PRE-CONDITION:
-  - check_sections_ready() đã pass
-  - template_lesson.md đã đọc
+  - check_sections_ready() passed
 
 STEPS:
-  1. READ_SECTIONS:
-     - Load tất cả section files theo thứ tự section_id
-     - Parse YAML frontmatter của từng section
+  1. CLI_MERGE:
+     - Run command: `hermes-course-generator merge --level {level} --lesson {lesson_id}`
+     - This command automatically merges sections, removes redundant metadata, and creates a new `.mdx` file containing `<!-- HERMES:FILL ... -->` placeholders.
 
-  2. MERGE_CONTENT:
-     - Kết hợp nội dung theo thứ tự S01, S02, S03...
-     - Phát hiện và xử lý trùng lặp
-     - Thêm transition text giữa sections
+  2. FILL_CONTENT:
+     - Open the newly created `.mdx` file.
+     - Replace the `<!-- HERMES:FILL ... -->` lines with content generated by the Agent (Intro, Recap, Exercises, Quiz).
+     - DO NOT modify code blocks or text copied from the sections.
 
-  3. ADD_LESSON_CONTENT:
-     - Viết Lesson Introduction (objectives, prerequisites, time estimate)
-     - Viết Lesson Recap (summary của toàn lesson)
-     - Tạo 2–3 Bài Tập Tổng Hợp
-     - Tạo Quiz 5 câu
-
-  4. QUALITY_CHECK:
-     - Chạy Checklist 2 trong quality_checklist.md
+  3. QUALITY_CHECK:
+     - Run Checklist 2 in quality_checklist.md
      IF any REQUIRED item fails:
        → FIX the issue
-       → RE-CHECK (1 lần duy nhất)
 
-  5. SAVE_LESSON:
-     - Lưu: output/lessons/{level}/{lesson_id}_{slug}.md
-     - Update changelog.md
+  4. SAVE_LESSON:
+     - Save the filled `.mdx` file.
+     - Update state: `hermes-course-generator state update --key "active_lesson_id" --value "{lesson_id}"`
 
-  6. REPORT:
-     ✅ Lesson merged: [file path]
-     📦 Sections included: [S01, S02, S03, S04]
-     ➕ Added: Introduction, Recap, {n} Exercises, {n} Quiz questions
-     📌 Status: draft (chờ review)
+  5. REPORT:
+     Lesson merged and filled: [file path]
+     Status: draft (waiting for review)
 
 OUTPUT:
-  - output/lessons/{level}/{lesson_id}_{slug}.md
+  - output/lessons/{level}/{lesson_id}_{slug}.mdx
 ```
 
 ---
@@ -233,51 +228,51 @@ TASK: review_lesson(level, lesson_id)
 
 STEPS:
   1. Load lesson file
-  2. Review theo review_instruction.md (phần Lesson Review)
-  3. Tính score tổng hợp
-  4. Xuất review result
-  5. Lưu: output/reviews/lessons/{level}/{lesson_id}_review.json
+  2. Review according to review_instruction.md (Lesson Review section)
+  3. Calculate overall score
+  4. Export review result
+  5. Save: output/reviews/lessons/{level}/{lesson_id}_review.json
 
   IF score >= 8.0:
-    → Cập nhật lesson status: reviewed
+    → Update lesson status: reviewed
     → REPORT: "Lesson ready for publish"
   ELSE:
-    → REPORT weaknesses và required_fixes
-    → STOP (chờ fix từng issue)
+    → REPORT weaknesses and required_fixes
+    → STOP (wait for fixing each issue)
 ```
 
 ---
 
 ## 8. Changelog Rules
 
-Mỗi khi tạo, sửa, hoặc merge file, Hermes phải cập nhật `output/changelog.md`:
+Each time a file is created, modified, or merged, Hermes must update `output/changelog.md`:
 
 ```markdown
 ## [YYYY-MM-DD HH:MM +07:00]
 
 ### Created
 
-- `output/sections/begin/L01_S01_bien-va-gia-tri.md` — score: 8.5
+- `output/sections/begin/L01_S01_bien-va-gia-tri.mdx` — score: 8.5
 
 ### Modified
 
-- `output/sections/begin/L01_S02_kieu-du-lieu.md` — score: 7.0 → 8.2 (applied 2 fixes)
+- `output/sections/begin/L01_S02_kieu-du-lieu.mdx` — score: 7.0 → 8.2 (applied 2 fixes)
 
 ### Merged
 
-- `output/lessons/begin/L01_bien-va-kieu-du-lieu.md` — 4 sections merged
+- `output/lessons/begin/L01_bien-va-kieu-du-lieu.mdx` — 4 sections merged
 
 ### Reviews
 
 - `output/reviews/sections/begin/L01_S01_review.json` — APPROVED
 ```
 
-**Quy tắc changelog:**
+**Changelog rules:**
 
-- Mỗi entry phải có timestamp đầy đủ.
-- Không xóa entry cũ.
-- Ghi chú score trước và sau khi sửa.
-- Ghi chú số lần retry nếu có.
+- Each entry must have a full timestamp.
+- Do not delete old entries.
+- Note scores before and after modifications.
+- Note the number of retries if any.
 
 ---
 
@@ -285,36 +280,36 @@ Mỗi khi tạo, sửa, hoặc merge file, Hermes phải cập nhật `output/ch
 
 ```
 ERROR: File not found
-  → Kiểm tra lại đường dẫn theo file_naming_convention.md
-  → Kiểm tra xem output directories đã tạo chưa
-  → REPORT lỗi cụ thể và đường dẫn cần kiểm tra
+  → Check path according to file_naming_convention.md
+  → Check if output directories have been created
+  → REPORT specific error and the path to check
 
-ERROR: Score không đạt sau 2 lần retry
-  → SAVE draft với status: "needs-revision"
-  → Ghi rõ danh sách required_fixes vào file
-  → REPORT cho người dùng để quyết định
+ERROR: Score not achieved after 2 retries
+  → SAVE draft with status: "needs-revision"
+  → Clearly list required_fixes in the file
+  → REPORT to user for decision
 
-ERROR: Missing section khi merge
+ERROR: Missing section during merge
   → STOP merge
   → LIST missing sections
-  → REQUEST: "Cần generate các section: [danh sách]"
+  → REQUEST: "Need to generate sections: [list]"
 
-ERROR: Template không tồn tại
+ERROR: Template does not exist
   → STOP
-  → REPORT: "Không tìm thấy template_section.md hoặc template_lesson.md"
-  → REQUEST: "Vui lòng tạo file template trước"
+  → REPORT: "Cannot find template_section.md or template_lesson.md"
+  → REQUEST: "Please create template files first"
 ```
 
 ---
 
-## 10. Trạng Thái File (Status Lifecycle)
+## 10. File Status Lifecycle
 
 ```
 draft → reviewed → approved → published
   │          │           │
-  │          │           └── Chỉ set khi score >= 8.0
-  │          └── Sau khi qua review_instruction.md
-  └── Ngay sau khi tạo xong nội dung
+  │          │           └── Only set when score >= 8.0
+  │          └── After passing review_instruction.md
+  └── Right after generating content
 ```
 
-Thêm: `needs-revision` — dùng khi score < 8.0 sau max retry.
+Additional: `needs-revision` — used when score < 8.0 after max retry.

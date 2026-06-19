@@ -1,254 +1,262 @@
 # Style Guide
 
-> **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Quy tắc văn phong tiếng Việt, cách trình bày code, và hướng dẫn viết nội dung khóa học.
+> **Target Audience:** Hermes AI Agent  
+> **Purpose:** Guidelines for Vietnamese writing style, code formatting, and course content
+> generation.
 
 ---
 
-## 1. Văn Phong Tiếng Việt
+## 1. English Writing Style
 
-### 1.1 Nguyên Tắc Chung
+### 1.1 General Principles
 
-| Nguyên tắc                      | Mô tả                                                       |
-| ------------------------------- | ----------------------------------------------------------- |
-| **Thân thiện, không cứng nhắc** | Viết như đang hướng dẫn trực tiếp, không như sách giáo khoa |
-| **Chuyên nghiệp**               | Tránh từ lóng, biệt ngữ không cần thiết                     |
-| **Rõ ràng hơn là văn hoa**      | Câu ngắn, ý rõ, tránh câu dài lòng vòng                     |
-| **Chủ động**                    | Dùng "bạn sẽ học", không dùng "người học được hướng dẫn"    |
+| Principle                     | Description                                                                  |
+| ----------------------------- | ---------------------------------------------------------------------------- |
+| **Friendly, not rigid**       | Write as if explaining directly, not like a dry textbook.                    |
+| **Professional**              | Avoid slang or unnecessary jargon.                                           |
+| **Clear rather than flowery** | Short sentences, clear ideas, avoid rambling sentences.                      |
+| **Active voice**              | Use active constructs (e.g. "you will learn"), not passive ones.             |
+| **No Emojis**                 | Do not use emojis in headings, lists, inline text, code blocks, or comments. |
 
-### 1.2 Xưng Hô
+### 1.2 Pronouns
 
-- Gọi người đọc là **"bạn"** (không phải "các bạn", "quý vị", "học viên").
-- Hermes tự xưng là **"chúng ta"** khi giải thích cùng nhau, không dùng "tôi".
-- Ví dụ: "Chúng ta sẽ cùng tìm hiểu..." thay vì "Tôi sẽ giải thích..."
+- Address the reader directly as **"you"** (not "the learner", "students").
+- Hermes addresses itself as **"we"** when explaining concepts together; do not use "I".
+- Example: "We will explore..." instead of "I will explain...".
 
-### 1.3 Cấu Trúc Câu
+### 1.3 Sentence Structure
 
-**Ưu tiên:**
+**Prefer:**
 
-- Câu ngắn, tối đa 20–25 từ mỗi câu.
-- Mỗi đoạn văn: 3–5 câu.
-- Bắt đầu bằng khái niệm, kết thúc bằng ví dụ hoặc hành động.
+- Short sentences, maximum of 20–25 words per sentence.
+- Each paragraph: 3–5 sentences.
+- Start with the concept, end with an example or action.
 
-**Tránh:**
+**Avoid:**
 
-- Câu bị động: ❌ "Biến được dùng để lưu trữ..." → ✅ "Biến lưu trữ..."
-- Câu dài có nhiều mệnh đề: ❌ "[Tên Ngôn Ngữ] là ngôn ngữ lập trình mạnh mẽ, linh hoạt, dễ học, được dùng rộng rãi..."
-- Từ thừa: ❌ "Thực ra thì..." "Về cơ bản thì..." "Nói một cách đơn giản..."
+- Passive voice: [INCORRECT] "Variables are used to store..." -> [CORRECT] "Variables store..."
+- Long sentences with multiple clauses: [INCORRECT] "[Language Name] is a powerful, flexible,
+  easy-to-learn programming language that is widely used for..."
+- Filler words: [INCORRECT] "Actually..." "Basically..." "Simply put..."
+- Emojis and decorative symbols: [INCORRECT] Using emojis in headings, lists, inline text, or code
+  comments. Always write in plain text.
 
-### 1.4 Ví Dụ Văn Phong
+### 1.4 Writing Examples
 
-**❌ Không viết như thế này:**
+**Do not write like this (INCORRECT):**
 
-> "[Kiểu dữ liệu] là một kiểu dữ liệu trong [Tên Ngôn Ngữ] cho phép lưu trữ các phần tử..."
+> "A [Data Type] is a data type in [Language Name] that allows storing elements..."
 
-**✅ Viết như thế này:**
+**Write like this (CORRECT):**
 
-> "List giống như một chiếc hộp chứa nhiều thứ khác nhau. Bạn có thể bỏ vào số, chuỗi, thậm chí là một list khác. Và bạn có thể thay đổi nội dung của hộp bất cứ lúc nào."
-
----
-
-## 2. Cách Dùng Thuật Ngữ Tiếng Anh
-
-### 2.1 Quy Tắc Giữ Nguyên Tiếng Anh
-
-Giữ nguyên tiếng Anh cho các thuật ngữ sau (KHÔNG dịch):
-
-- Tên ngôn ngữ lập trình: `Python`, `JavaScript`, `SQL`, `Rust`, `Go`, `C#`
-- Tên kiểu dữ liệu đặc thù (Ví dụ: `list`, `dict`, `vector`, `struct`, `class`, `int`, `float`)
-- Tên từ khóa (Ví dụ: `for`, `while`, `if`, `fn`, `let`, `pub`, `def`, `return`, `import`)
-- Tên hàm/method (Ví dụ: `print()`, `len()`, `append()`, `unwrap()`)
-- Tên khái niệm kỹ thuật phổ biến: `function`, `variable`, `loop`, `recursion`, `decorator`, `generator`, `iterator`, `ownership`
-- Tên các chuẩn/module/package đặc thù (Ví dụ: `PEP 8`, `Cargo.toml`, `std::collections`, `pathlib`)
-- Tên lỗi/exceptions (Ví dụ: `ValueError`, `NullReferenceException`, `Panic`)
-
-### 2.2 Thuật Ngữ Cần Giải Thích
-
-Lần đầu xuất hiện trong section, dùng cả tiếng Anh lẫn tiếng Việt:
-
-- "`closure` (hàm đóng)" — sau đó dùng `closure` thống nhất
-- "`interface` (giao diện)" — sau đó dùng `interface` thống nhất
-- "`decorator` (bộ trang trí)" — sau đó dùng `decorator` thống nhất
-
-### 2.3 Thuật Ngữ Nên Dịch
-
-| Tiếng Anh    | Dùng trong nội dung     |
-| ------------ | ----------------------- |
-| variable     | biến                    |
-| function     | hàm                     |
-| loop         | vòng lặp                |
-| condition    | điều kiện               |
-| exception    | ngoại lệ                |
-| inheritance  | kế thừa                 |
-| module       | module (giữ nguyên)     |
-| class        | class (giữ nguyên)      |
-| method       | method hoặc phương thức |
-| argument     | đối số                  |
-| parameter    | tham số                 |
-| return value | giá trị trả về          |
-| data type    | kiểu dữ liệu            |
-| string       | chuỗi ký tự hoặc `str`  |
-| integer      | số nguyên hoặc `int`    |
+> "A list is like a box containing multiple items. You can put numbers, strings, or even other lists
+> inside. And you can change the contents of the box at any time."
 
 ---
 
-## 3. Cấu Trúc Trình Bày Khái Niệm
+## 2. Technical Terminology
 
-**Thứ tự bắt buộc:**
+- All programming language names, syntax keywords, and functions must be written exactly as they are
+  defined in the language (e.g., `Python`, `struct`, `class`, `print()`, `unwrap()`).
+- Always write technical terms in code blocks (e.g., `closure`, `decorator`, `interface`) to keep
+  them distinct from normal text.
+- Explain complex concepts upon their first appearance in a section (e.g., "a `closure` (an inner
+  function that remembers outer variables)").
+
+---
+
+## 3. Concept Presentation Structure
+
+**Mandatory order:**
 
 ```
-1. Giải thích "là gì" bằng ngôn ngữ tự nhiên
-2. Dùng phép tương tự thực tế (nếu phù hợp)
-3. Giải thích tại sao cần dùng
-4. Đưa ra code ví dụ đơn giản nhất
-5. Mở rộng với ví dụ thực tế hơn
-6. Nêu trường hợp đặc biệt hoặc lỗi thường gặp
-7. Nêu best practice
+1. Explain "what it is" in natural language
+2. Use a real-world analogy (if applicable)
+3. Explain why it is needed
+4. Provide the simplest code example
+5. Expand with a more realistic example
+6. Mention special cases or common mistakes
+7. State best practices
 ```
 
 ---
 
-## 4. Quy Tắc Viết Code Sample
+## 4. Code Sample Rules
 
-### 4.1 Tiêu Chuẩn Bắt Buộc (Ví dụ minh họa cho Python)
+### 4.1 Mandatory Standards (Examples for Python/SQL/MongoDB)
+
+**For programming languages (e.g., Python):**
 
 ```python
 # Python 3.12+
-# ✅ Luôn khai báo phiên bản ngôn ngữ ở đầu file hoặc đầu code block đầu tiên (nếu cần thiết)
+# Always declare the language version at the beginning of the file or first code block (if necessary)
 
-# ✅ Sử dụng cú pháp chuẩn và hiện đại nhất của ngôn ngữ (ví dụ type hints)
-def tinh_dien_tich(chieu_dai: float, chieu_rong: float) -> float:
-    """Tính diện tích hình chữ nhật."""
-    return chieu_dai * chieu_rong
+# Use the standard and most modern syntax of the language (e.g., type hints)
+def calculate_area(length: float, width: float) -> float:
+    """Calculate the area of a rectangle."""
+    return length * width
 
-# ✅ Tên biến bằng tiếng Việt không dấu hoặc tiếng Anh, nhất quán trong ví dụ
-ten_hoc_sinh = "Nguyễn Văn A"  # Tên người dùng tiếng Việt
-student_name = "Nguyen Van A"  # Hoặc tiếng Anh, chọn 1 cái và nhất quán
+# Variable names must be descriptive and in English
+student_name = "Alice"
 
-# ✅ Comment giải thích bằng tiếng Việt
-danh_sach = [1, 2, 3, 4, 5]  # List chứa 5 số nguyên
+# Explanation comments in English
+numbers = [1, 2, 3, 4, 5]  # A list containing 5 integers
 ```
 
-### 4.2 Quy Tắc Comment
+**For databases (e.g., SQL):**
 
-- Comment phải giải thích **tại sao**, không phải **cái gì** (code đã nói cái gì rồi).
-- Mỗi ví dụ code cần ít nhất 2–3 comment.
-- Dùng `#` cho inline comment, docstring `"""` cho function/class.
+```sql
+-- PostgreSQL 15+
+-- Single-line comment starts with --
+-- Get top 5 employees with highest salary
+SELECT
+    first_name,
+    last_name,
+    salary
+FROM employees
+WHERE department = 'Engineering'
+ORDER BY salary DESC
+LIMIT 5;
+```
+
+**For databases (e.g., MongoDB):**
+
+```javascript
+// MongoDB 6.0+
+// Comments explaining the query purpose
+// Find users in Vietnam, sorted by registration date descending
+db.users
+  .find({ country: "Vietnam" }, { username: 1, email: 1, registered_at: 1, _id: 0 })
+  .sort({ registered_at: -1 })
+  .limit(10);
+```
+
+### 4.2 Commenting Rules
+
+- Comments must explain **why**, not **what** (the code already tells what).
+- Each code example needs at least 2–3 comments.
+- Use `#` for inline comments, docstrings `"""` for functions/classes.
 
 ```python
-# ❌ Comment vô nghĩa
-x = x + 1  # Tăng x lên 1
+# INCORRECT: Meaningless comment
+x = x + 1  # Increment x by 1
 
-# ✅ Comment có giá trị
-x = x + 1  # Bù thêm 1 vì index bắt đầu từ 0
+# CORRECT: Valuable comment
+x = x + 1  # Offset by 1 because index starts at 0
 ```
 
-### 4.3 Format Code Block
+### 4.3 Code Block Formatting
 
-Luôn khai báo ngôn ngữ tương ứng (ví dụ: `rust`, `python`, `go`):
+Always declare the language corresponding to code blocks (e.g. `rust`, `python`, `go`):
 
 ````markdown
-```{language}
-// Code ở đây
+```python
+# Code goes here
 ```
 ````
 
-Khi so sánh code sai và đúng (Ví dụ minh họa cho Python):
+When comparing correct/incorrect code (Example in Python):
 
 ```python
-# ❌ SAI
+# INCORRECT
 result = [x for x in range(10) if x % 2 = 0]  # SyntaxError
 
-# ✅ ĐÚNG
+# CORRECT
 result = [x for x in range(10) if x % 2 == 0]
 ```
 
-### 4.4 Quy Tắc Đặt Tên & Định Dạng (Style Guide/Naming Conventions)
+### 4.4 Style Guide / Naming Conventions
 
-- Tuân thủ quy tắc đặt tên chuẩn của ngôn ngữ lập trình được dạy (ví dụ: `camelCase` cho Java/JavaScript; `snake_case` cho Python/Rust; `PascalCase` cho C#).
-- Tên biến/hàm: Tuân thủ chuẩn của ngôn ngữ (ví dụ: `snake_case` hoặc `camelCase`).
-- Tên class/struct/type: Thường là `PascalCase`.
-- Tên hằng số: Thường là `UPPER_SNAKE_CASE` hoặc theo chuẩn ngôn ngữ.
-- Định dạng (Formatting): Sử dụng công cụ formatter chuẩn của ngôn ngữ (ví dụ: `black` cho Python, `rustfmt` cho Rust, `prettier` cho JavaScript) để định dạng dòng và độ dài dòng.
+- Adhere to naming conventions of the language being taught (e.g., `camelCase` for Java/JavaScript;
+  `snake_case` for Python/Rust; `PascalCase` for C#).
+- Variables/functions/tables/columns: Adhere to standards (e.g., `snake_case` for Python and SQL
+  tables).
+- Classes/structs/types: Usually `PascalCase`.
+- Constants: Usually `UPPER_SNAKE_CASE`.
+- SQL Keywords: MUST be written in UPPERCASE (`SELECT`, `FROM`, `WHERE`).
+- Formatting: Use standard code formatters. For SQL, ensure line breaks for each major clause.
 
-### 4.5 Code Phải Runnable
+### 4.5 Code Must Be Runnable
 
-Mọi code block phải có thể chạy được ngay lập tức. Nếu cần import/khai báo thư viện ngoài, phải ghi rõ (Ví dụ minh họa cho Python):
+Every code block (for programming) must be immediately runnable. If external libraries are needed,
+declare them clearly (Example in Python):
 
 ```python
-# Cần cài: pip install requests
+# Install: pip install requests
 import requests
 
 response = requests.get("https://api.example.com/data")
 print(response.status_code)
 ```
 
----
-
-## 5. Quy Tắc Viết Ví Dụ
-
-### 5.1 Ví Dụ Phải Thực Tế
-
-| ❌ Tránh                         | ✅ Nên dùng                                                    |
-| -------------------------------- | -------------------------------------------------------------- |
-| `foo`, `bar`, `baz` làm tên biến | `student_scores`, `product_prices`                             |
-| `x = 10` không ngữ cảnh          | `age = 25  # Tuổi của người dùng`                              |
-| Khai báo hàm không rõ ràng       | Khai báo hàm có tên rõ nghĩa, kiểu dữ liệu (nếu có)           |
-| In `Hello World`                 | Xử lý dữ liệu thực tế (tên, điểm, giá...)                      |
-
-### 5.2 Độ Phức Tạp Tăng Dần
-
-Trong một section, ví dụ phải từ đơn giản đến phức tạp:
-
-```
-Ví dụ 1: Trường hợp cơ bản nhất
-Ví dụ 2: Thêm một tình huống thực tế
-Ví dụ 3 (nếu có): Kết hợp với kiến thức khác hoặc edge case
-```
+**Note:** For SQL and MongoDB, only syntax correctness is required; running environments are not
+mandatory for reviews.
 
 ---
 
-## 6. Quy Tắc Viết Bài Tập
+## 5. Rules for Writing Examples
 
-### 6.1 Cấu Trúc Bắt Buộc
+### 5.1 Examples Must Be Realistic
+
+| Avoid (INCORRECT)                     | Should Use (CORRECT)                                  |
+| ------------------------------------- | ----------------------------------------------------- |
+| `foo`, `bar`, `baz` as variable names | `student_scores`, `product_prices`                    |
+| `x = 10` without context              | `age = 25  # User's age`                              |
+| Vague function declarations           | Function declarations with clear names and type hints |
+| Printing `Hello World`                | Processing real-world data (names, scores, prices...) |
+
+### 5.2 Gradually Increasing Complexity
+
+Within a section, examples must progress from simple to complex:
+
+```
+Example 1: The most basic case
+Example 2: Adding a realistic scenario
+Example 3 (if any): Combined with other concepts or edge cases
+```
+
+---
+
+## 6. Rules for Writing Exercises
+
+### 6.1 Mandatory Structure
 
 ```markdown
-### Bài Tập: [Tên bài tập rõ ràng]
+### Exercise: [Clear Exercise Title]
 
-**Yêu cầu:**
-Mô tả cụ thể, không mơ hồ. Nêu rõ:
+**Requirements:** Specific, non-ambiguous description. State clearly:
 
-- Input là gì
-- Output là gì
-- Điều kiện đặc biệt (nếu có)
+- What the Input is
+- What the Output is
+- Special conditions (if any)
 
-**Ví dụ:**
+**Example:**
 
 - Input: `[1, 2, 3, 4, 5]`
 - Output: `[1, 4, 9, 16, 25]`
 
-**Gợi ý (tùy chọn):**
+**Hint (Optional):**
 
-- Sử dụng tính năng/phương thức đặc thù (Ví dụ: list comprehension trong Python, `map` trong Rust, LINQ trong C#)
+- Use language-specific features (e.g. list comprehension in Python, `map` in Rust, LINQ in C#)
 
-**Mức độ:** Cơ bản / Nâng cao
+**Level:** Basic / Advanced
 ```
 
-### 6.2 Quy Tắc Bài Tập
+### 6.2 Exercise Rules
 
-- KHÔNG đưa lời giải ngay trong phần bài tập section.
-- Bài tập phải kiểm tra ĐÚNG kiến thức vừa học trong section đó.
-- Bài tập của lesson-level (trong phần Tổng Hợp) phải kết hợp nhiều section.
+- DO NOT provide solutions in the section's exercise.
+- Exercises must test the EXACT knowledge taught in the section.
+- Lesson-level exercises (in the Comprehensive section) must combine multiple sections.
 
 ---
 
-## 7. Quy Tắc Viết Quiz
+## 7. Rules for Writing Quizzes
 
 ````markdown
-### Câu [N]: [Câu hỏi rõ ràng, không mơ hồ (Ví dụ minh họa cho Python)]
+### Question [N]: [Clear, unambiguous question (Example in Python)]
 
 ```python
-# Code cho câu hỏi đọc code (nếu có)
+# Code for code-reading question (if any)
 x = [1, 2, 3]
 print(x[-1])
 ```
@@ -260,55 +268,50 @@ print(x[-1])
 - D) `IndexError`
 
 <details>
-<summary>📖 Xem đáp án</summary>
+<summary>View Answer</summary>
 
-**Đáp án: C) `3`**
+**Answer: C) `3`**
 
-Giải thích: Index `-1` trong Python trỏ đến phần tử cuối cùng của list. (Khi viết cho ngôn ngữ khác, hãy dùng ví dụ và giải thích tương ứng).
+Explanation: Index `-1` in Python refers to the last element of the list. (When writing for other
+languages, adapt the examples and explanations accordingly).
 
 </details>
 ```
 
 Quiz rules:
 
-- Câu hỏi phải có 4 đáp án rõ ràng.
-- Chỉ có DUY NHẤT 1 đáp án đúng.
-- Đáp án sai phải "hợp lý" – không được quá hiển nhiên là sai.
-- Luôn có giải thích ngắn trong phần đáp án.
+- Questions must have exactly 4 clear options.
+- ONLY 1 correct option per question.
+- Incorrect options must be "plausible" – not obviously wrong.
+- Always provide a short explanation in the answer details.
 
 ---
 
-## 8. Quy Tắc Tương Thích Docusaurus & MDX
+## 8. Docusaurus & MDX Compatibility Rules
 
-Khi viết tài liệu bài học, bắt buộc tuân thủ các quy tắc Docusaurus MDX để tránh lỗi trong quá trình compile và hiển thị:
+When writing lesson docs, you must comply with Docusaurus MDX rules to prevent compile and display
+errors:
 
-### 8.1 Tránh Lỗi MDX Safety (Ký tự `<` và `>`)
+### 8.1 Avoid MDX Safety Errors (Characters `<` and `>`)
 
-- Bộ phân tích MDX của Docusaurus sẽ hiểu nhầm các ký tự `<` và `>` đứng một mình (hoặc dạng tên kiểu dữ liệu như `<int>`, `<string>`, `<T>`) là các thẻ HTML/JSX chưa đóng. Điều này gây lỗi build hệ thống.
-- **Quy tắc:** Bắt buộc bọc các ký tự này hoặc các kiểu generic vào trong inline code (ví dụ: `` `<string>` `` hoặc `` `<T>` ``) hoặc dùng ký tự escape (`\<int\>`).
+- The Docusaurus MDX parser will misinterpret `<` and `>` characters standing alone (or inside
+  generic formats like `<int>`, `<string>`, `<T>`) as unclosed HTML/JSX tags. This breaks system
+  builds.
+- **Rule:** You must wrap these characters or generic types in inline code (e.g., `` `<string>` ``
+  or `` `<T>` ``) or use escape characters (`\<int\>`).
 
-### 8.2 Sử dụng Hộp Thông Tin (Admonitions)
+### 8.2 Use Admonitions
 
-Không sử dụng định dạng trích dẫn của Github (ví dụ: `> [!NOTE]`). Thay vào đó, hãy sử dụng Docusaurus Admonitions với cú pháp:
+Do not use GitHub markdown syntax (e.g. `> [!NOTE]`). Instead, use Docusaurus Admonitions:
 
 ```markdown
-:::note Tên Tiêu Đề (Tùy chọn)
-Nội dung ghi chú ở đây.
-:::
+:::note Title (Optional) Note content goes here. :::
 
-:::tip Mẹo hữu ích
-Nội dung mẹo ở đây.
-:::
+:::tip Useful tip goes here. :::
 
-:::info Thông tin
-Nội dung thông tin ở đây.
-:::
+:::info Information goes here. :::
 
-:::warning Cảnh báo
-Nội dung cảnh báo ở đây.
-:::
+:::warning Warning goes here. :::
 
-:::danger Nguy hiểm
-Nội dung lỗi nghiêm trọng/nguy hiểm ở đây.
-:::
+:::danger Danger/critical error warning goes here. :::
 ```

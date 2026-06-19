@@ -1,170 +1,170 @@
 # Quality Checklist
 
-> **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Danh sách kiểm tra bắt buộc trước khi lưu section hoặc merge lesson.
+> **Target Audience:** Hermes AI Agent  
+> **Purpose:** Mandatory checklist before saving a section or merging a lesson.
 
 ---
 
-## Hướng Dẫn Dùng
+## Usage Guide
 
-- Chạy checklist **trước khi lưu** bất kỳ file nào.
-- Đánh dấu `[x]` cho mỗi mục đã kiểm tra.
-- Nếu bất kỳ mục `[REQUIRED]` nào chưa đạt → **KHÔNG lưu file**.
-- Mục `[OPTIONAL]` không đạt thì ghi chú nhưng vẫn cho phép lưu.
+- Run the checklist **before saving** any file.
+- Mark `[x]` for each checked item.
+- If any `[REQUIRED]` item is not met → **DO NOT save the file**.
+- If an `[OPTIONAL]` item is not met, note it down but saving the file is still allowed.
 
 ---
 
-## Checklist 1: Trước Khi Lưu Section
+## Checklist 1: Before Saving a Section
 
-### A. Kỹ Thuật Ngôn Ngữ [REQUIRED]
+### A. Language Technology [REQUIRED]
 
 ````
-[ ] Code trong section đã được kiểm tra cú pháp (không có SyntaxError)
-[ ] Tất cả function/class/module được nhắc đến đều tồn tại trong phiên bản ngôn ngữ được chỉ định
-[ ] Type hints / static typing đúng (nếu có sử dụng)
-[ ] Không có hallucinated API (API bịa đặt không tồn tại)
-[ ] Import / using / include statements đúng và đầy đủ
-[ ] Exception / Error handling phù hợp với context (không try/catch quá rộng)
-[ ] Không có code deprecated mà không ghi chú rõ ràng
-[ ] Code tuân thủ quy chuẩn style guide của ngôn ngữ
-[ ] Mỗi code block đều có khai báo ngôn ngữ (ví dụ: ```rust, ```csharp, ```python)
+[ ] Code in the section has been checked for syntax (no SyntaxError). For SQL/MongoDB, check for syntax validity against standard specifications.
+[ ] All functions/classes/modules/keywords mentioned exist in the specified language/DB version.
+[ ] Type hints / static typing are correct (if used in the programming language).
+[ ] No hallucinated APIs/keywords (non-existent APIs or syntax).
+[ ] Import / using / include statements are correct and complete (for programming).
+[ ] Exception / Error handling is appropriate for the context (no overly broad try/catch).
+[ ] No deprecated code/queries without clear notes.
+[ ] Code complies with the language's style guide.
+[ ] Each code block declares its language (e.g., ```rust, ```csharp, ```python, ```sql, ```javascript).
 ````
 
-### B. Tính Sư Phạm [REQUIRED]
+### B. Pedagogy [REQUIRED]
 
 ```
-[ ] Có phần giải thích khái niệm TRƯỚC code ví dụ
-[ ] Giải thích phù hợp với level (begin/advance/master)
-[ ] Không giả định kiến thức vượt level (đặc biệt với begin)
-[ ] Có ít nhất 2 ví dụ code
-[ ] Ví dụ đầu tiên đơn giản nhất, ví dụ sau phức tạp hơn
-[ ] Có phần Lỗi Thường Gặp với ít nhất 2 lỗi
-[ ] Có phần Best Practices với ít nhất 2 điểm
-[ ] Có Mini Exercise rõ ràng (có input và output mẫu)
-[ ] Có Tóm Tắt cuối section (3–5 bullet points)
+[ ] Concepts are explained BEFORE code examples.
+[ ] Explanations are level-appropriate (begin/advance/master).
+[ ] No assumption of knowledge beyond the level (especially for begin).
+[ ] At least 2 code examples are provided.
+[ ] The first example is the simplest, followed by more complex ones.
+[ ] A Common Mistakes section is included with at least 2 mistakes.
+[ ] A Best Practices section is included with at least 2 points.
+[ ] A clear Mini Exercise is included (with sample input and expected output).
+[ ] A Summary is included at the end of the section (3–5 bullet points).
 ```
 
-### C. Format Markdown & Docusaurus [REQUIRED]
+### C. Markdown & Docusaurus Formatting [REQUIRED]
 
 ```
-[ ] YAML frontmatter đầy đủ Docusaurus format (id, title, sidebar_label, sidebar_position, level, lesson_id, section_id, language_version, review_score, status)
-[ ] Sử dụng Docusaurus Admonitions (:::note, :::tip, :::info, :::warning, :::danger) thay vì Github-style (> [!NOTE])
-[ ] MDX Safety: Không chứa các tag giả trần trụi (như <T>, <string>) trong text bình thường. Tất cả đều phải viết trong code block, inline code hoặc được escape.
-[ ] Thứ tự heading đúng theo template_section.md
-[ ] Heading không skip level (không đi từ ## thẳng xuống ####)
-[ ] Code block dùng triple backtick với ngôn ngữ chỉ định
-[ ] Không có broken link
-[ ] Bảng (table) được format đúng Markdown
-[ ] Không có heading trùng nhau trong một section
+[ ] YAML frontmatter is complete in Docusaurus format (id, title, sidebar_label, sidebar_position, level, lesson_id, section_id, language_version, review_score, status).
+[ ] Uses Docusaurus Admonitions (:::note, :::tip, :::info, :::warning, :::danger) instead of GitHub-style (> [!NOTE]).
+[ ] MDX Safety: No raw HTML-like tags (such as <T>, <string>) in plain text. All must be in code blocks, inline code, or escaped.
+[ ] Heading order follows template_section.md.
+[ ] Heading levels are not skipped (e.g., no going from ## straight to ####).
+[ ] Code blocks use triple backticks with the specified language.
+[ ] No broken links.
+[ ] Tables are formatted correctly in Markdown.
+[ ] No duplicate headings within a section.
 ```
 
-### D. Nội Dung [REQUIRED]
+### D. Content [REQUIRED]
 
 ```
-[ ] Tên file theo đúng quy tắc file_naming_convention.md
-[ ] Thuật ngữ nhất quán trong toàn section
-[ ] Không có nội dung copy-paste nguyên văn từ nguồn ngoài
-[ ] Viết bằng tiếng Việt (ngoại trừ thuật ngữ kỹ thuật tiếng Anh)
-[ ] Thông tin không chắc đã được gắn tag ⚠️ CẦN XÁC MINH
-[ ] Có phần Nguồn Tham Khảo (ít nhất 1 nguồn)
+[ ] Filename follows file_naming_convention.md exactly.
+[ ] Terminology is consistent throughout the section.
+[ ] No content copied verbatim from external sources.
+[ ] Written in Vietnamese (except for English technical terms).
+[ ] Uncertain information is marked with a REQUIRES VERIFICATION tag.
+[ ] References section is included (at least 1 source).
 ```
 
 ### E. Review Score [REQUIRED]
 
 ```
-[ ] Đã tự review theo review_instruction.md
-[ ] review_score đã được điền vào YAML frontmatter
-[ ] review_score >= 8.0
-[ ] status: approved (chỉ khi score >= 8.0)
-[ ] File review JSON đã được lưu vào output/reviews/sections/
+[ ] Self-reviewed according to review_instruction.md.
+[ ] review_score is populated in the YAML frontmatter.
+[ ] review_score >= 8.0.
+[ ] status: approved (only when score >= 8.0).
+[ ] Review JSON file has been saved to output/reviews/sections/.
 ```
 
-### F. Chất Lượng Tùy Chọn [OPTIONAL]
+### F. Optional Quality [OPTIONAL]
 
 ```
-[ ] Có phép tương tự hoặc hình ảnh trực quan cho khái niệm phức tạp
-[ ] Code ví dụ có giá trị thực tế (không chỉ Hello World)
-[ ] Bài tập có nhiều mức độ (cơ bản / nâng cao)
-[ ] Có gợi ý (hint) cho bài tập nhưng không phá lộ lời giải
+[ ] Analogies or visual illustrations are provided for complex concepts.
+[ ] Code examples have practical value (not just Hello World).
+[ ] Exercises have multiple difficulty levels (basic / advanced).
+[ ] Hints are provided for exercises without giving away the solution.
 ```
 
 ---
 
-## Checklist 2: Trước Khi Merge Lesson
+## Checklist 2: Before Merging a Lesson
 
-### A. Điều Kiện Tiên Quyết [REQUIRED]
-
-```
-[ ] Tất cả section files đã tồn tại trong output/sections/{level}/
-[ ] Tất cả section đều có status: approved
-[ ] Tất cả section đều có review_score >= 8.0
-[ ] Section IDs liên tiếp không bị thiếu (S01, S02, S03...)
-[ ] Đã đọc template_lesson.md
-```
-
-### B. Cấu Trúc Lesson [REQUIRED]
+### A. Prerequisites [REQUIRED]
 
 ```
-[ ] YAML frontmatter của lesson đầy đủ Docusaurus format (id, title, sidebar_label, sidebar_position, ...)
-[ ] Có phần Giới Thiệu Lesson (mục tiêu học tập, prerequisites, thời gian) sử dụng Docusaurus info admonition cho learning objectives
-[ ] Sections được sắp xếp đúng thứ tự (S01 → S02 → ...) và sidebar_position tương ứng
-[ ] Có phần Ôn Tập Lesson cuối lesson
-[ ] Có ít nhất 2 Bài Tập Tổng Hợp
-[ ] Có Quiz (5 câu, có đáp án hidden trong <details> tag)
+[ ] All section files exist in output/sections/{level}/.
+[ ] All sections have status: approved.
+[ ] All sections have review_score >= 8.0.
+[ ] Consecutive Section IDs are not missing (S01, S02, S03...).
+[ ] Read template_lesson.md.
 ```
 
-### C. Xử Lý Nội Dung [REQUIRED]
+### B. Lesson Structure [REQUIRED]
 
 ```
-[ ] Đã loại bỏ nội dung trùng lặp rõ ràng giữa các section
-[ ] Thuật ngữ nhất quán xuyên suốt lesson
-[ ] Transition text giữa các section (câu dẫn từ section này sang section tiếp theo)
-[ ] Không xóa ví dụ code hữu ích dù có vẻ trùng
-[ ] Không thay đổi ý nghĩa code khi chỉnh sửa
+[ ] YAML frontmatter of the lesson is complete in Docusaurus format (id, title, sidebar_label, sidebar_position, ...).
+[ ] Lesson Introduction section is included (learning objectives, prerequisites, estimated time) using Docusaurus info admonition for learning objectives.
+[ ] Sections are arranged in the correct order (S01 → S02 → ...) and sidebar_position corresponds.
+[ ] Lesson Recap section is included at the end of the lesson.
+[ ] At least 2 Comprehensive Exercises are included.
+[ ] Quiz is included (5 questions, with hidden answers in <details> tags).
 ```
 
-### D. Format Lesson [REQUIRED]
+### C. Content Processing [REQUIRED]
 
 ```
-[ ] Tên file lesson theo đúng quy tắc file_naming_convention.md
-[ ] Heading hierarchy đúng
-[ ] Tất cả section ID và title trong YAML frontmatter khớp với nội dung thực tế
-[ ] Không có broken link hoặc tham chiếu sai
+[ ] Clear duplicate content between sections has been removed.
+[ ] Terminology is consistent throughout the lesson.
+[ ] Transition text is added between sections (sentences leading from one section to the next).
+[ ] Useful code examples are not deleted even if they seem similar.
+[ ] Code meaning is not changed during editing.
 ```
 
-### E. Bài Tập Tổng Hợp [REQUIRED]
+### D. Lesson Formatting [REQUIRED]
 
 ```
-[ ] Ít nhất 2 bài tập kết hợp kiến thức từ nhiều section
-[ ] Mỗi bài tập có: tiêu đề, mô tả, input mẫu, output mong đợi
-[ ] Độ khó tăng dần giữa các bài tập
-[ ] Bài tập phù hợp với level của lesson
+[ ] Lesson filename follows file_naming_convention.md exactly.
+[ ] Heading hierarchy is correct.
+[ ] All section IDs and titles in YAML frontmatter match the actual content.
+[ ] No broken links or incorrect references.
+```
+
+### E. Comprehensive Exercises [REQUIRED]
+
+```
+[ ] At least 2 exercises combining knowledge from multiple sections.
+[ ] Each exercise has: title, description, sample input, expected output.
+[ ] Difficulty gradually increases between exercises.
+[ ] Exercises match the level of the lesson.
 ```
 
 ### F. Quiz [REQUIRED]
 
 ```
-[ ] Đúng 5 câu hỏi
-[ ] Mỗi câu có đúng 4 đáp án (A, B, C, D)
-[ ] Chỉ 1 đáp án đúng cho mỗi câu
-[ ] Đáp án nằm trong <details> tag (hidden)
-[ ] Có giải thích ngắn cho đáp án đúng
-[ ] Phân bố: 2 câu lý thuyết, 2 câu đọc code, 1 câu debug
+[ ] Exactly 5 questions.
+[ ] Each question has exactly 4 options (A, B, C, D).
+[ ] Only 1 correct option per question.
+[ ] Answer is inside <details> tag (hidden).
+[ ] Brief explanation is provided for the correct answer.
+[ ] Distribution: 2 theoretical questions, 2 code-reading questions, 1 debug question.
 ```
 
 ---
 
-## Checklist 3: Kỹ Thuật [Tên Ngôn Ngữ] Nâng Cao (Cho Level Advance và Master)
+## Checklist 3: Advanced [Language Name] Techniques (For Advance and Master Levels)
 
-Áp dụng bổ sung cho section/lesson thuộc `advance` hoặc `master`:
+Apply additionally to sections/lessons belonging to `advance` or `master`:
 
 ```
-[ ] Type hints đầy đủ và chính xác (đặc biệt Generic types, Protocol)
-[ ] Đã đề cập đến performance implications (nếu có)
-[ ] Đã nêu rõ thread safety / async safety (nếu liên quan)
-[ ] Đã so sánh với cách tiếp cận alternative khi có nhiều cách giải quyết
-[ ] Ví dụ code không quá đơn giản so với level
-[ ] Đề cập chuẩn/tài liệu đặc tả liên quan (như PEP, RFC, specifications) khi thảo luận về design decision
+[ ] Type hints are complete and accurate (especially Generic types, Protocol).
+[ ] Performance implications are mentioned (if any).
+[ ] Thread safety / async safety is clearly stated (if relevant).
+[ ] Alternative approaches are compared when there are multiple solutions.
+[ ] Code examples are not too simplistic for the level.
+[ ] Related standards/specifications (such as PEP, RFC, specifications) are mentioned when discussing design decisions.
 ```
 
 ---
@@ -174,40 +174,39 @@
 ### Level Begin
 
 ```
-[ ] Không dùng list comprehension mà chưa giải thích trước
-[ ] Không dùng lambda mà chưa giải thích function cơ bản
-[ ] Không dùng decorator mà chưa giải thích function là object
-[ ] Mỗi khái niệm mới đều có phép tương tự dễ hiểu
-[ ] Không giả định người đọc biết OOP
+[ ] Programming: Complex structures (list comprehension, lambda, decorator...) are not used without prior explanation.
+[ ] Database: Complex subqueries/joins are not used without prior explanation.
+[ ] Each new concept has an easy-to-understand analogy.
+[ ] No assumption of prior knowledge about OOP or RDBMS Architecture.
 ```
 
 ### Level Advance
 
 ```
-[ ] Đã giải thích WHY (tại sao dùng pattern này), không chỉ HOW
-[ ] Có đề cập edge case và cách xử lý
-[ ] Có ví dụ realistic (không chỉ ví dụ đơn giản hóa)
-[ ] Đề cập đến testing nếu phù hợp
+[ ] Explained WHY (why use this pattern), not just HOW.
+[ ] Edge cases and handling methods are mentioned.
+[ ] Realistic examples are included (not just simplified examples).
+[ ] Testing is mentioned if appropriate.
 ```
 
 ### Level Master
 
 ```
-[ ] Có thảo luận về performance (time/space complexity khi có liên quan)
-[ ] Có đề cập đến kiến trúc runtime/compiler internals của [Tên Ngôn Ngữ] nếu phù hợp
-[ ] Có so sánh với các pattern/approach khác
-[ ] Code ví dụ ở mức production-ready
-[ ] Đề cập đến maintainability và scalability
+[ ] Performance is discussed (time/space complexity when relevant).
+[ ] Runtime architecture/compiler internals of [Language Name] are mentioned if appropriate.
+[ ] Compared with other patterns/approaches.
+[ ] Code examples are at a production-ready level.
+[ ] Maintainability and scalability are discussed.
 ```
 
 ---
 
-## Tổng Kết Nhanh
+## Quick Summary
 
-Trước khi nhấn lưu, trả lời 3 câu hỏi này:
+Before saving, answer these 3 questions:
 
-> 1. **Code có chạy được không?** Nếu không → Sửa trước.
-> 2. **Review score có ≥ 8.0 không?** Nếu không → Sửa trước.
-> 3. **Tất cả REQUIRED checklist đã tick không?** Nếu không → Sửa trước.
+> 1. **Is the code syntax correct (and runnable for programming languages)?** If not → Fix it first.
+> 2. **Is the review score >= 8.0?** If not → Fix it first.
+> 3. **Are all REQUIRED checklist items ticked?** If not → Fix it first.
 
-Chỉ lưu khi cả 3 câu đều là **CÓ**.
+Only save when all 3 answers are **YES**.
