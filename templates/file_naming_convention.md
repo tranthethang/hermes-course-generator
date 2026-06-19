@@ -1,39 +1,38 @@
 # File Naming Convention
 
-> **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Quy tắc đặt tên file, tạo slug không dấu, và cấu trúc thư mục đầu ra trong project.
+> **Target Audience:** Hermes AI Agent  
+> **Purpose:** Rules for file naming, slug creation, and output directory structure in the project.
 
 ---
 
-## 1. Quy Tắc Tạo Slug (Slugification Rules)
+## 1. Slugification Rules
 
-Slug là chuỗi ký tự được dùng làm tên file để thân thiện với hệ thống tệp và URL.
+A slug is a string used as a filename that is friendly to the filesystem and URLs.
 
-### Quy tắc tạo Slug bắt buộc:
+### Mandatory slug creation rules:
 
-1. **Chuyển thành chữ thường (Lowercase):** Không viết hoa bất kỳ ký tự nào.
-2. **Loại bỏ dấu tiếng Việt:** Chuyển các chữ có dấu thành không dấu (ví dụ: `đ` -> `d`, `á` -> `a`,
-   `ơ` -> `o`).
-3. **Thay khoảng trắng bằng dấu gạch ngang (`-`):** Không dùng khoảng trắng hoặc dấu gạch dưới (`_`)
-   trong slug.
-4. **Loại bỏ ký tự đặc biệt:** Xóa bỏ tất cả các ký tự như `?`, `!`, `,`, `.`, `:`, `/`, `(`, `)`,
-   `"`, `'`...
-5. **Chỉ giữ lại chữ cái thường (a-z), chữ số (0-9) và dấu gạch ngang (-).**
+1. **Convert to lowercase:** Do not capitalize any characters.
+2. **Remove Vietnamese diacritics:** Convert accented characters to non-accented equivalents (e.g.,
+   `đ` -> `d`, `á` -> `a`, `ơ` -> `o`).
+3. **Replace spaces with hyphens (`-`):** Do not use spaces or underscores (`_`) in the slug.
+4. **Remove special characters:** Delete all characters such as `?`, `!`, `,`, `.`, `:`, `/`, `(`,
+   `)`, `"`, `'`...
+5. **Only keep lowercase letters (a-z), digits (0-9), and hyphens (-).**
 
-### Ví dụ chuyển đổi:
+### Conversion Examples:
 
-- `"Khái niệm về Biến & Gán Giá Trị!"`  
-  ➔ `khai-niem-ve-bien-va-gan-gia-tri`
-- `"Làm việc với f-string (Python 3.12+)"`  
-  ➔ `lam-viec-vui-f-string-python-312`
-- `"Decorator & OOP nâng cao"`  
-  ➔ `decorator-va-oop-nang-cao`
+- `"Concept of Variables & Value Assignment!"`  
+  -> `concept-of-variables-and-value-assignment`
+- `"Working with f-string (Python 3.12+)"`  
+  -> `working-with-f-string-python-312`
+- `"Advanced Decorator & OOP"`  
+  -> `advanced-decorator-and-oop`
 
 ---
 
-## 2. Quy Tắc Đặt Tên File (File Naming Rules)
+## 2. File Naming Rules
 
-### 2.1 Đối với Section (Bài Học Nhỏ)
+### 2.1 For Section (Small Lesson)
 
 Format:
 
@@ -41,16 +40,16 @@ Format:
 {lesson_id}_{section_id}_{slug}.mdx
 ```
 
-- `{lesson_id}`: Định dạng `L` + 2 chữ số (ví dụ: `L01`, `L12`).
-- `{section_id}`: Định dạng `S` + 2 chữ số (ví dụ: `S01`, `S05`).
-- `{slug}`: Slug được tạo từ tiêu đề của section đó.
+- `{lesson_id}`: Format `L` + 2 digits (e.g., `L01`, `L12`).
+- `{section_id}`: Format `S` + 2 digits (e.g., `S01`, `S05`).
+- `{slug}`: Slug created from the section title.
 
-Ví dụ cụ thể:
+Specific examples:
 
-- `L01_S01_khai-niem-ve-bien-va-gan-gia-tri.mdx`
-- `L02_S03_closures-va-bien-nonlocal.mdx`
+- `L01_S01_concept-of-variables-and-value-assignment.mdx`
+- `L02_S03_closures-and-nonlocal-variables.mdx`
 
-### 2.2 Đối với Lesson (Bài Học Lớn - Sau Khi Merge)
+### 2.2 For Lesson (Large Lesson - After Merging)
 
 Format:
 
@@ -58,17 +57,17 @@ Format:
 {lesson_id}_{slug}.mdx
 ```
 
-- `{lesson_id}`: Định dạng `L` + 2 chữ số.
-- `{slug}`: Slug được tạo từ tiêu đề lớn của lesson đó.
+- `{lesson_id}`: Format `L` + 2 digits.
+- `{slug}`: Slug created from the lesson title.
 
-Ví dụ cụ thể:
+Specific examples:
 
-- `L01_bien-va-kieu-du-lieu-co-ban.mdx`
-- `L02_ham-va-pham-vi-bien.mdx`
+- `L01_variables-and-basic-data-types.mdx`
+- `L02_functions-and-variable-scopes.mdx`
 
-### 2.3 Đối với File Review (Đánh Giá Chất Lượng)
+### 2.3 For Review Files (Quality Assessment)
 
-#### A. Review của Section
+#### A. Section Review
 
 Format:
 
@@ -76,12 +75,12 @@ Format:
 {lesson_id}_{section_id}_review.json
 ```
 
-Ví dụ cụ thể:
+Specific examples:
 
 - `L01_S01_review.json`
 - `L02_S03_review.json`
 
-#### B. Review của Lesson
+#### B. Lesson Review
 
 Format:
 
@@ -89,48 +88,48 @@ Format:
 {lesson_id}_review.json
 ```
 
-Ví dụ cụ thể:
+Specific examples:
 
 - `L01_review.json`
 
 ---
 
-## 3. Cấu Trúc Thư Mục `output/`
+## 3. Directory Structure under `output/`
 
-Toàn bộ file đầu ra phải được đặt chính xác trong các thư mục con sau. Hermes có trách nhiệm tự động
-tạo thư mục này nếu chúng chưa tồn tại.
+All output files must be placed precisely in the following subdirectories. Hermes is responsible for
+automatically creating these directories if they do not already exist.
 
 ```text
 output/
-├── changelog.md                       # Nhật ký thay đổi chung của project
-├── sections/                          # Nơi lưu trữ các file section đơn lẻ
-│   ├── begin/                         # Các section trình độ Newbie (Beginner)
-│   ├── advance/                       # Các section trình độ Trung cấp (Advanced)
-│   └── master/                        # Các section trình độ Chuyên gia (Master)
-├── lessons/                           # Nơi lưu các lesson đã được merge hoàn chỉnh
+├── changelog.md                       # Overall changelog of the project
+├── sections/                          # Stores individual section files
+│   ├── begin/                         # Beginner level sections
+│   ├── advance/                       # Intermediate level sections
+│   └── master/                        # Master level sections
+├── lessons/                           # Stores fully merged lesson files
 │   ├── begin/
 │   ├── advance/
 │   └── master/
-└── reviews/                           # Nơi lưu trữ các đánh giá chất lượng (JSON)
-    ├── sections/                      # Đánh giá cho từng section riêng lẻ
+└── reviews/                           # Stores quality reviews (JSON)
+    ├── sections/                      # Reviews for individual sections
     │   ├── begin/
     │   ├── advance/
     │   └── master/
-    └── lessons/                       # Đánh giá cho cả lesson sau khi merge
+    └── lessons/                       # Reviews for merged lessons
         ├── begin/
         ├── advance/
         └── master/
 ```
 
-### Bản đồ lưu file mẫu:
+### Sample File Saving Map:
 
-- Nếu tạo Section `L01_S01` thuộc level `begin`: ➔ Lưu vào:
-  `output/sections/begin/L01_S01_khai-niem-ve-bien-va-gan-gia-tri.mdx`
-- Nếu lưu review của Section `L01_S01` level `begin`: ➔ Lưu vào:
+- If creating Section `L01_S01` for level `begin`: -> Save to:
+  `output/sections/begin/L01_S01_concept-of-variables-and-value-assignment.mdx`
+- If saving review for Section `L01_S01` level `begin`: -> Save to:
   `output/reviews/sections/begin/L01_S01_review.json`
 
-- Nếu merge Lesson `L01` thuộc level `begin`: ➔ Lưu vào:
-  `output/lessons/begin/L01_bien-va-kieu-du-lieu-co-ban.mdx`
+- If merging Lesson `L01` for level `begin`: -> Save to:
+  `output/lessons/begin/L01_variables-and-basic-data-types.mdx`
 
-- Nếu lưu review của Lesson `L01` level `begin`: ➔ Lưu vào:
+- If saving review for Lesson `L01` level `begin`: -> Save to:
   `output/reviews/lessons/begin/L01_review.json`

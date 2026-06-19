@@ -168,7 +168,7 @@ active_section_id: ""
         with open(changelog_path, "w", encoding="utf-8") as f:
             f.write("# Changelog\n\nAll notable changes to this course will be documented in this file.\n")
             
-    print("\n✅ Workspace initialized successfully!")
+    print("\nWorkspace initialized successfully!")
 
 def update_state(target_path, key, value):
     target_path = os.path.abspath(target_path)
@@ -199,7 +199,7 @@ def update_state(target_path, key, value):
             
     with open(state_path, "w", encoding="utf-8") as f:
         f.writelines(new_lines)
-    print(f"✅ Updated {key} to {value} in state.md")
+    print(f"Updated {key} to {value} in state.md")
 
 def merge_lesson(target_path, level, lesson_id):
     target_path = os.path.abspath(target_path)
@@ -222,7 +222,7 @@ def merge_lesson(target_path, level, lesson_id):
     lesson_title = ""
     language_version = ""
     
-    print(f"🔍 Found {len(section_files)} sections for {lesson_id}. Analyzing...")
+    print(f"Found {len(section_files)} sections for {lesson_id}. Analyzing...")
     
     for f in section_files:
         file_path = os.path.join(sections_dir, f)
@@ -242,7 +242,7 @@ def merge_lesson(target_path, level, lesson_id):
             
         print(f"  - {f}: status={status}, score={score}")
         if status != "approved" or score < 8.0:
-            print(f"    ⚠️ WARNING: Section {sec_id} is not approved or score < 8.0!")
+            print(f"    WARNING: Section {sec_id} is not approved or score < 8.0!")
             
         sections_data.append({
             "id": sec_id,
@@ -282,15 +282,15 @@ def merge_lesson(target_path, level, lesson_id):
     # Build body
     body_lines = [
         f"# {lesson_title}\n",
-        "## Giới Thiệu Lesson\n",
+        "## Lesson Introduction\n",
         "<!-- HERMES:FILL lesson_introduction -->\n",
-        ":::info Mục Tiêu Học Tập\n",
-        "Sau bài học này, bạn sẽ có thể:\n",
+        ":::info Learning Objectives\n",
+        "After this lesson, you will be able to:\n",
         "- [ ] <!-- HERMES:FILL learning_objectives -->\n",
         ":::\n",
-        "**Yêu cầu trước:**\n",
+        "**Prerequisites:**\n",
         "- <!-- HERMES:FILL prerequisites -->\n",
-        "\n**Thời gian ước tính:** <!-- HERMES:FILL time_estimate -->\n",
+        "\n**Estimated Time:** <!-- HERMES:FILL time_estimate -->\n",
         "---\n"
     ]
     
@@ -302,9 +302,9 @@ def merge_lesson(target_path, level, lesson_id):
         body_lines.append("---\n")
         
     body_lines.extend([
-        "## Ôn Tập Lesson\n",
+        "## Lesson Recap\n",
         "<!-- HERMES:FILL lesson_recap -->\n",
-        "## Bài Tập Tổng Hợp\n",
+        "## Comprehensive Exercises\n",
         "<!-- HERMES:FILL comprehensive_exercises -->\n",
         "## Quiz\n",
         "<!-- HERMES:FILL quiz_5_questions -->\n"
@@ -318,7 +318,7 @@ def merge_lesson(target_path, level, lesson_id):
     with open(lesson_file_path, "w", encoding="utf-8") as f:
         f.write(lesson_content)
         
-    print(f"\n✅ Lesson merged successfully to {lesson_file_path}")
+    print(f"\nLesson merged successfully to {lesson_file_path}")
     
     # Update changelog
     changelog_path = os.path.join(target_path, "output/changelog.md")
@@ -327,7 +327,7 @@ def merge_lesson(target_path, level, lesson_id):
             f.write(f"\n## [{datetime.now().strftime('%Y-%m-%d %H:%M:%S +07:00')}]\n\n")
             f.write("### Merged\n\n")
             f.write(f"- `output/lessons/{level}/{lesson_file_name}` — {len(sections_data)} sections merged (automated via CLI).\n")
-        print("✅ Changelog updated")
+        print("Changelog updated")
         
     # Auto update state.md if possible
     update_state(target_path, "last_updated_at", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))

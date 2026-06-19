@@ -19,7 +19,7 @@ else
     elif command -v wget >/dev/null 2>&1; then
         wget -q -O "$TEMP_DIR/hermes-course-generator.tar.gz" "https://github.com/tranthethang/hermes-course-generator/releases/download/latest/hermes-course-generator.tar.gz"
     else
-        echo "❌ Error: Neither curl nor wget was found. Please install one of them to proceed."
+        echo "Error: Neither curl nor wget was found. Please install one of them to proceed."
         rm -rf "$TEMP_DIR"
         exit 1
     fi

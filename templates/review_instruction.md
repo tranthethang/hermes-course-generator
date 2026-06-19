@@ -1,173 +1,173 @@
 # Review Instruction
 
-> **Dành cho:** Hermes AI Agent (đóng vai trò Reviewer)  
-> **Mục đích:** Tiêu chí review nghiêm ngặt cho section và lesson.
+> **Target Audience:** Hermes AI Agent (acting as Reviewer)  
+> **Purpose:** Strict review criteria for sections and lessons.
 
 ---
 
-## 1. Nguyên Tắc Review
+## 1. Review Principles
 
-> Khi review, Hermes đóng vai là một **reviewer độc lập**, không phải người viết nội dung đó.
+> When reviewing, Hermes acts as an **independent reviewer**, not the author of the content.
 >
-> Nhiệm vụ: **Tìm ra điểm yếu** – không phải ca ngợi nội dung.
+> Mission: **Find weaknesses** – not praise the content.
 
-Quy tắc bắt buộc:
+Mandatory rules:
 
-- Phải liệt kê ít nhất 1 `weakness` ngay cả khi nội dung tốt.
-- Phải liệt kê `required_fixes` cụ thể, không chung chung.
-- Điểm số phải phản ánh thực tế, không làm tròn lên.
-
----
-
-## 2. Tiêu Chí Review Section (5 Chiều)
-
-### Chiều 1: Chính Xác Kỹ Thuật (Technical Accuracy) — Trọng số 30%
-
-| Điểm | Tiêu chí                                                                                         |
-| ---- | ------------------------------------------------------------------------------------------------ |
-| 9–10 | Tất cả code chạy được, API đúng, phiên bản [Tên Ngôn Ngữ] ghi rõ, không có hallucinated function |
-| 7–8  | Code chạy được, có 1–2 lỗi nhỏ về style hoặc không tối ưu                                        |
-| 5–6  | Code có lỗi runtime nhỏ hoặc dùng API lỗi thời (deprecated)                                      |
-| 3–4  | Code có lỗi logic, API không tồn tại, hoặc thiếu xử lý exception                                 |
-| 0–2  | Code sai hoàn toàn, hallucinated API, hoặc không thể chạy                                        |
-
-Câu hỏi kiểm tra:
-
-- Code có chạy được với [Phiên Bản Ngôn Ngữ] không?
-- Có dùng API/module không tồn tại không?
-- Type hints có đúng không?
-- Exception handling có phù hợp không?
-- Có ghi chú khi cần xác minh không?
-
-### Chiều 2: Chất Lượng Giảng Dạy (Teaching Quality) — Trọng số 25%
-
-| Điểm | Tiêu chí                                                                        |
-| ---- | ------------------------------------------------------------------------------- |
-| 9–10 | Giải thích rõ ràng, logic, phù hợp level, dùng phép tương tự tốt                |
-| 7–8  | Giải thích đủ rõ nhưng thiếu một vài phép tương tự hoặc chưa giải thích tại sao |
-| 5–6  | Giải thích tạm ổn nhưng khó theo dõi hoặc không phù hợp level                   |
-| 3–4  | Giải thích không rõ ràng, quá ngắn, hoặc giả định kiến thức sai                 |
-| 0–2  | Không giải thích, chỉ có code mà không có hướng dẫn                             |
-
-Câu hỏi kiểm tra:
-
-- Có giải thích trước khi đưa code không?
-- Có phép tương tự gần gũi với cuộc sống không?
-- Người học ở level `{level}` có hiểu được không?
-- Có giải thích TẠI SAO không chỉ NHƯ THẾ NÀO?
-
-### Chiều 3: Chất Lượng Ví Dụ (Example Quality) — Trọng số 20%
-
-| Điểm | Tiêu chí                                                 |
-| ---- | -------------------------------------------------------- |
-| 9–10 | ≥2 ví dụ, thực tế, có comment, tăng độ phức tạp dần      |
-| 7–8  | 2 ví dụ ổn nhưng 1 ví dụ quá đơn giản hoặc thiếu comment |
-| 5–6  | Chỉ 1 ví dụ hoặc ví dụ không thực tế (chỉ `Hello World`) |
-| 3–4  | Ví dụ không minh họa được khái niệm cần dạy              |
-| 0–2  | Không có ví dụ hoặc ví dụ sai                            |
-
-### Chiều 4: Chất Lượng Bài Tập (Exercise Quality) — Trọng số 15%
-
-| Điểm | Tiêu chí                                                                             |
-| ---- | ------------------------------------------------------------------------------------ |
-| 9–10 | Bài tập rõ ràng, có input/output mẫu, phù hợp level, kiểm tra đúng kiến thức vừa học |
-| 7–8  | Bài tập ổn nhưng thiếu input/output mẫu hoặc hơi khó/dễ                              |
-| 5–6  | Bài tập mơ hồ hoặc không liên quan trực tiếp đến nội dung                            |
-| 3–4  | Bài tập quá đơn giản (chỉ cần thay một giá trị) hoặc không thể giải quyết            |
-| 0–2  | Không có bài tập                                                                     |
-
-### Chiều 5: Tuân Thủ Format (Format Compliance) — Trọng số 10%
-
-| Điểm | Tiêu chí                                                     |
-| ---- | ------------------------------------------------------------ |
-| 9–10 | Đầy đủ YAML frontmatter, đúng thứ tự heading, Markdown chuẩn |
-| 7–8  | Đúng cấu trúc nhưng thiếu 1–2 trường trong frontmatter       |
-| 5–6  | Thiếu một số heading bắt buộc                                |
-| 3–4  | Sai cấu trúc đáng kể so với template                         |
-| 0–2  | Không theo template                                          |
+- Must list at least 1 weakness even if the content is good.
+- Must list specific, non-generic `required_fixes`.
+- The score must reflect reality, do not round up.
 
 ---
 
-## 3. Công Thức Tính Điểm
+## 2. Section Review Criteria (5 Dimensions)
+
+### Dimension 1: Technical Accuracy — Weight 30%
+
+| Score | Criteria                                                                                     |
+| ----- | -------------------------------------------------------------------------------------------- |
+| 9–10  | All code runs, APIs are correct, [Language Version] is specified, no hallucinated functions. |
+| 7–8   | Code runs, 1–2 minor issues with style or not optimal.                                       |
+| 5–6   | Code has minor runtime errors or uses deprecated APIs.                                       |
+| 3–4   | Code has logic errors, APIs do not exist, or missing exception handling.                     |
+| 0–2   | Code is completely incorrect, hallucinated APIs, or cannot run.                              |
+
+Questions to check:
+
+- Does the code run with [Language Version]?
+- Are non-existent APIs/modules used?
+- Are type hints correct?
+- Is exception handling appropriate?
+- Are there notes when verification is required?
+
+### Dimension 2: Teaching Quality — Weight 25%
+
+| Score | Criteria                                                                      |
+| ----- | ----------------------------------------------------------------------------- |
+| 9–10  | Clear, logical explanation, level-appropriate, good analogies used.           |
+| 7–8   | Explanations are clear enough but lack some analogies or fail to explain why. |
+| 5–6   | Explanation is okay but hard to follow or not level-appropriate.              |
+| 3–4   | Explanation is unclear, too short, or assumes incorrect prior knowledge.      |
+| 0–2   | No explanation, only code without guidance.                                   |
+
+Questions to check:
+
+- Is there an explanation before showing code?
+- Are there relatable, real-life analogies?
+- Can a learner at level `{level}` understand it?
+- Does it explain WHY, not just HOW?
+
+### Dimension 3: Example Quality — Weight 20%
+
+| Score | Criteria                                                               |
+| ----- | ---------------------------------------------------------------------- |
+| 9–10  | ≥2 examples, practical, commented, gradually increasing in complexity. |
+| 7–8   | 2 examples are good but 1 is too simple or lacks comments.             |
+| 5–6   | Only 1 example or examples are impractical (only Hello World).         |
+| 3–4   | Examples fail to illustrate the concept being taught.                  |
+| 0–2   | No examples or incorrect examples.                                     |
+
+### Dimension 4: Exercise Quality — Weight 15%
+
+| Score | Criteria                                                                                        |
+| ----- | ----------------------------------------------------------------------------------------------- |
+| 9–10  | Clear exercise, has sample input/output, level-appropriate, tests the correct knowledge taught. |
+| 7–8   | Exercise is okay but lacks sample input/output or is slightly hard/easy.                        |
+| 5–6   | Exercise is ambiguous or not directly related to content.                                       |
+| 3–4   | Exercise is too simple (only requires changing one value) or insolvable.                        |
+| 0–2   | No exercise.                                                                                    |
+
+### Dimension 5: Format Compliance — Weight 10%
+
+| Score | Criteria                                                                     |
+| ----- | ---------------------------------------------------------------------------- |
+| 9–10  | Complete YAML frontmatter, correct heading order, clean Markdown formatting. |
+| 7–8   | Correct structure but missing 1–2 fields in frontmatter.                     |
+| 5–6   | Missing some required headings.                                              |
+| 3–4   | Significant structural deviations from template.                             |
+| 0–2   | Does not follow template.                                                    |
+
+---
+
+## 3. Score Calculation Formula
 
 ```
 total_score = (
-  technical_accuracy +
-  teaching_quality +
-  example_quality +
-  exercise_quality +
-  format_compliance
-) / 5
+  technical_accuracy * 0.30 +
+  teaching_quality * 0.25 +
+  example_quality * 0.20 +
+  exercise_quality * 0.15 +
+  format_compliance * 0.10
+)
 ```
 
-Làm tròn đến 1 chữ số thập phân.
+Round to 1 decimal place.
 
 ---
 
-## 4. Điều Kiện Pass / Fail
+## 4. Pass / Fail Conditions
 
-| Kết quả      | Điều kiện                  | Hành động                            |
-| ------------ | -------------------------- | ------------------------------------ |
-| **APPROVED** | `total_score >= 8.0`       | Lưu file với `status: approved`      |
-| **REVISE**   | `6.0 <= total_score < 8.0` | Sửa các `required_fixes`, review lại |
-| **REWRITE**  | `total_score < 6.0`        | Viết lại toàn bộ section từ đầu      |
+| Result       | Condition                  | Action                                  |
+| ------------ | -------------------------- | --------------------------------------- |
+| **APPROVED** | `total_score >= 8.0`       | Save file with `status: approved`       |
+| **REVISE**   | `6.0 <= total_score < 8.0` | Apply `required_fixes`, re-review       |
+| **REWRITE**  | `total_score < 6.0`        | Rewrite the entire section from scratch |
 
 ---
 
-## 5. Output Review — Định Dạng JSON
+## 5. Output Review — JSON Format
 
-Hermes PHẢI xuất kết quả review theo đúng format JSON sau:
+Hermes MUST export review results in the following JSON format:
 
 ```json
 {
   "review_type": "section",
-  "target_file": "output/sections/begin/L01_S01_bien-va-gia-tri.mdx",
+  "target_file": "output/sections/begin/L01_S01_variable-and-assignment.mdx",
   "review_timestamp": "2026-06-18T10:00:00+07:00",
   "scores": {
     "technical_accuracy": {
       "score": 8.5,
-      "notes": "Code chạy được, type hints đúng. Thiếu xử lý ValueError trong ví dụ 2."
+      "notes": "Code runs, type hints are correct. Missing ValueError handling in example 2."
     },
     "teaching_quality": {
       "score": 9.0,
-      "notes": "Giải thích rõ ràng, phép tương tự tốt. Đúng level begin."
+      "notes": "Explanation is clear, good analogy. Correctly fits beginner level."
     },
     "example_quality": {
       "score": 8.0,
-      "notes": "3 ví dụ tốt. Ví dụ 2 thiếu comment giải thích dòng phức tạp."
+      "notes": "3 good examples. Example 2 lacks comments explaining complex lines."
     },
     "exercise_quality": {
       "score": 7.5,
-      "notes": "Bài tập rõ ràng nhưng thiếu output mẫu cụ thể."
+      "notes": "Exercise is clear but lacks sample output."
     },
     "format_compliance": {
       "score": 10.0,
-      "notes": "Đầy đủ YAML, đúng thứ tự heading, Markdown sạch."
+      "notes": "Complete YAML, correct heading order, clean Markdown."
     }
   },
   "total_score": 8.6,
   "result": "APPROVED",
   "strengths": [
-    "Giải thích khái niệm biến rất rõ ràng cho người mới",
-    "Phép tương tự 'hộp đựng đồ' dễ hiểu",
-    "Liệt kê 3 lỗi thường gặp thực tế"
+    "Explains the variable concept very clearly for beginners.",
+    "relatable 'storage box' analogy.",
+    "Lists 3 practical common mistakes."
   ],
   "weaknesses": [
-    "Ví dụ 2 thiếu comment giải thích phần list comprehension phức tạp",
-    "Bài tập thiếu output mẫu cụ thể"
+    "Example 2 lacks comments explaining the complex list comprehension.",
+    "The mini exercise is missing a sample output."
   ],
   "required_fixes": [
     {
       "priority": "medium",
-      "location": "## Ví Dụ Code > Ví dụ 2",
-      "issue": "Thiếu comment cho dòng list comprehension",
-      "fix": "Thêm comment '#  Tạo list số chẵn từ 0 đến 20' trước dòng đó"
+      "location": "## Code Examples > Example 2",
+      "issue": "Missing comments for the list comprehension line.",
+      "fix": "Add comment '# Create list of even numbers from 0 to 20' before that line."
     },
     {
       "priority": "low",
       "location": "## Mini Exercise",
-      "issue": "Thiếu output mẫu",
-      "fix": "Thêm 'Output mong đợi: [2, 4, 6, 8, 10]'"
+      "issue": "Missing sample output.",
+      "fix": "Add 'Expected Output: [2, 4, 6, 8, 10]'"
     }
   ]
 }
@@ -175,39 +175,39 @@ Hermes PHẢI xuất kết quả review theo đúng format JSON sau:
 
 ---
 
-## 6. Output Review — Định Dạng Markdown (Thay Thế)
+## 6. Output Review — Markdown Format (Alternative)
 
-Nếu cần trình bày cho người đọc (không phải machine), dùng format Markdown:
+If needed to present to human readers (not machines), use this Markdown format:
 
 ```markdown
-## Kết Quả Review
+## Review Results
 
-**File:** `output/sections/begin/L01_S01_bien-va-gia-tri.mdx`  
-**Thời gian:** 2026-06-18 10:00 +07:00  
-**Loại:** Section Review
+**File:** `output/sections/begin/L01_S01_variable-and-assignment.mdx`  
+**Time:** 2026-06-18 10:00 +07:00  
+**Type:** Section Review
 
-### Điểm Số
+### Scores
 
-| Tiêu chí            | Điểm         |
-| ------------------- | ------------ |
-| Technical Accuracy  | 8.5          |
-| Teaching Quality    | 9.0          |
-| Example Quality     | 8.0          |
-| Exercise Quality    | 7.5          |
-| Format Compliance   | 10.0         |
-| **TỔNG TRUNG BÌNH** | **8.6 / 10** |
+| Criteria           | Score        |
+| ------------------ | ------------ |
+| Technical Accuracy | 8.5          |
+| Teaching Quality   | 9.0          |
+| Example Quality    | 8.0          |
+| Exercise Quality   | 7.5          |
+| Format Compliance  | 10.0         |
+| **TOTAL WEIGHTED** | **8.6 / 10** |
 
-### Kết Quả: ✅ APPROVED
+### Result: APPROVED
 
-### Điểm Mạnh
-
-- ...
-
-### Điểm Yếu
+### Strengths
 
 - ...
 
-### Các Fix Bắt Buộc
+### Weaknesses
+
+- ...
+
+### Required Fixes
 
 1. [MEDIUM] ...
 2. [LOW] ...
@@ -215,18 +215,18 @@ Nếu cần trình bày cho người đọc (không phải machine), dùng forma
 
 ---
 
-## 7. Review Lesson (Sau Khi Merge)
+## 7. Review Lesson (After Merging)
 
-Khi review lesson đã merge, dùng thêm các tiêu chí:
+When reviewing a merged lesson, use these additional criteria:
 
-| Tiêu chí bổ sung | Mô tả                                                   |
-| ---------------- | ------------------------------------------------------- |
-| **Flow**         | Các section có liên kết mạch lạc không?                 |
-| **Completeness** | Lesson có đủ Introduction, Recap, Exercise, Quiz không? |
-| **Consistency**  | Thuật ngữ có nhất quán xuyên suốt lesson không?         |
-| **Duplication**  | Có nội dung trùng lặp không cần thiết không?            |
+| Additional Criteria | Description                                                       |
+| ------------------- | ----------------------------------------------------------------- |
+| **Flow**            | Do the sections connect logically and smoothly?                   |
+| **Completeness**    | Does the lesson include Introduction, Recap, Exercises, and Quiz? |
+| **Consistency**     | Is terminology consistent throughout the lesson?                  |
+| **Duplication**     | Is there any unnecessary duplicate content?                       |
 
-Lưu kết quả review lesson vào:
+Save the merged lesson review result to:
 
 ```
 output/reviews/lessons/{level}/{lesson_id}_review.json
@@ -234,16 +234,16 @@ output/reviews/lessons/{level}/{lesson_id}_review.json
 
 ---
 
-## 8. Quy Tắc Lưu File Review
+## 8. Review File Saving Rules
 
-Mọi kết quả review phải được lưu file để truy vết:
+All review results must be saved to files for tracking and history:
 
 ```
 output/reviews/sections/{level}/{lesson_id}_{section_id}_review.json
 output/reviews/lessons/{level}/{lesson_id}_review.json
 ```
 
-Ví dụ:
+Examples:
 
 ```
 output/reviews/sections/begin/L01_S01_review.json
