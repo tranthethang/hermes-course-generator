@@ -1,16 +1,22 @@
 # Section Generation Instruction
 
 > **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Hướng dẫn chi tiết quy trình tạo **một** section duy nhất cho khóa học [Tên Ngôn Ngữ].
+> **Mục đích:** Hướng dẫn chi tiết quy trình tạo **một** section duy nhất cho khóa học [Tên Ngôn
+> Ngữ].
 
 ---
 
 ## 1. Nguyên Tắc Cốt Lõi
 
-- **Tạo đơn lẻ:** Hermes chỉ tạo **MỘT** section trong mỗi task. Không bao giờ tạo nhiều section cùng lúc.
+- **Tạo đơn lẻ:** Hermes chỉ tạo **MỘT** section trong mỗi task. Không bao giờ tạo nhiều section
+  cùng lúc.
 - **Tương thích Docusaurus:** Toàn bộ nội dung Markdown sinh ra phải tương thích với Docusaurus MDX.
-- **MDX Safety (Cực kỳ quan trọng):** Tuyệt đối KHÔNG viết các ký tự so sánh hoặc tag giả trần trụi trong văn bản (ví dụ: `<T>`, `<string>`, `<int>`). Parser MDX của Docusaurus sẽ hiểu nhầm đây là tag JSX/HTML và báo lỗi compile. Phải viết các chuỗi này bên trong cặp backticks (ví dụ: `` `<T>` ``) hoặc escape các ký tự `<` và `>`.
-- **Hộp ghi chú (Admonitions):** Sử dụng cú pháp Docusaurus Admonitions (`:::note`, `:::tip`, `:::info`, `:::warning`, `:::danger`) thay vì cú pháp Github-style (`> [!NOTE]`).
+- **MDX Safety (Cực kỳ quan trọng):** Tuyệt đối KHÔNG viết các ký tự so sánh hoặc tag giả trần trụi
+  trong văn bản (ví dụ: `<T>`, `<string>`, `<int>`). Parser MDX của Docusaurus sẽ hiểu nhầm đây là
+  tag JSX/HTML và báo lỗi compile. Phải viết các chuỗi này bên trong cặp backticks (ví dụ:
+  `` `<T>` ``) hoặc escape các ký tự `<` và `>`.
+- **Hộp ghi chú (Admonitions):** Sử dụng cú pháp Docusaurus Admonitions (`:::note`, `:::tip`,
+  `:::info`, `:::warning`, `:::danger`) thay vì cú pháp Github-style (`> [!NOTE]`).
 
 ---
 
@@ -68,11 +74,11 @@ Trả lời rõ các câu hỏi sau:
 
 Áp dụng tiêu chí phù hợp với level:
 
-| Level     | Yêu cầu                                                                                        |
-| --------- | ---------------------------------------------------------------------------------------------- |
-| `begin`   | Không giả định kiến thức trước. Giải thích mọi khái niệm từ đầu. Dùng ví dụ đơn giản, gần gũi. |
-| `advance` | Giả định đã biết [Tên Ngôn Ngữ] cơ bản. Tập trung vào cách dùng hiệu quả, pattern, và edge case.       |
-| `master`  | Giả định có kinh nghiệm thực tế. Đi sâu vào internals, performance, và advanced patterns.      |
+| Level     | Yêu cầu                                                                                          |
+| --------- | ------------------------------------------------------------------------------------------------ |
+| `begin`   | Không giả định kiến thức trước. Giải thích mọi khái niệm từ đầu. Dùng ví dụ đơn giản, gần gũi.   |
+| `advance` | Giả định đã biết [Tên Ngôn Ngữ] cơ bản. Tập trung vào cách dùng hiệu quả, pattern, và edge case. |
+| `master`  | Giả định có kinh nghiệm thực tế. Đi sâu vào internals, performance, và advanced patterns.        |
 
 ### Bước 3: Nghiên Cứu Chủ Đề
 
@@ -101,7 +107,8 @@ Nội dung bắt buộc:
 
 - Số lượng: Tối thiểu 2 ví dụ code, tối đa 5.
 - Mỗi ví dụ phải có comment giải thích.
-- Code phải chạy được với [Phiên Bản Ngôn Ngữ].
+- Code phải chuẩn syntax và không có lỗi biên dịch/cú pháp. Đối với SQL/MongoDB, chỉ cần đảm bảo
+  syntax chính xác theo tài liệu chuẩn, không cần thiết lập môi trường để chạy.
 - Ví dụ đầu tiên: đơn giản nhất.
 - Ví dụ cuối: thực tế và phức tạp hơn.
 
@@ -153,7 +160,7 @@ Sau khi viết xong nội dung, Hermes thực hiện self-review theo tiêu chí
   "self_review": {
     "technical_accuracy": {
       "score": 0,
-      "note": "Code có chạy được không? API có tồn tại không?"
+      "note": "Code có đúng syntax không? API có tồn tại không?"
     },
     "teaching_quality": {
       "score": 0,
@@ -203,16 +210,24 @@ Nếu total_score < 6.0:
 
 Lưu vào đường dẫn đúng theo `file_naming_convention.md`:
 
+Lưu vào đường dẫn đúng theo `file_naming_convention.md`:
+
 ```
-output/sections/{level}/{lesson_id}_{section_id}_{slug}.md
+output/sections/{level}/{lesson_id}_{section_id}_{slug}.mdx
 ```
 
 Ví dụ:
 
 ```
-output/sections/begin/L01_S01_bien-va-gia-tri.md
-output/sections/advance/L03_S02_decorator-pattern.md
-output/sections/master/L05_S01_metaclass-internals.md
+output/sections/begin/L01_S01_bien-va-gia-tri.mdx
+output/sections/advance/L03_S02_decorator-pattern.mdx
+output/sections/master/L05_S01_metaclass-internals.mdx
+```
+
+Sau khi lưu thành công, Agent GỌI CLI COMMAND ĐỂ CẬP NHẬT TRẠNG THÁI:
+
+```bash
+hermes-course-generator state update --key "active_section_id" --value "{lesson_id}_{section_id}"
 ```
 
 ---
@@ -275,7 +290,7 @@ status: draft | reviewed | approved
 Khi hoàn thành, Hermes báo cáo:
 
 ```
-✅ Section đã tạo: output/sections/begin/L01_S01_bien-va-gia-tri.md
+✅ Section đã tạo: output/sections/begin/L01_S01_bien-va-gia-tri.mdx
 📊 Self-review score: 8.5/10
 🔍 Weaknesses: [...]
 🔧 Applied fixes: [...]

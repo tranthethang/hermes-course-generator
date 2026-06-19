@@ -1,7 +1,8 @@
 # Hermes Workflow
 
 > **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Workflow đầy đủ từ generate section đến merge lesson, bao gồm retry logic và changelog rules.
+> **Mục đích:** Workflow đầy đủ từ generate section đến merge lesson, bao gồm retry logic và
+> changelog rules.
 
 ---
 
@@ -106,8 +107,9 @@ STEPS:
 
   6. SAVE_SECTION:
      - Điền review_score và status: approved vào frontmatter
-     - Lưu: output/sections/{level}/{lesson_id}_{section_id}_{slug}.md
+     - Lưu: output/sections/{level}/{lesson_id}_{section_id}_{slug}.mdx
      - Lưu review: output/reviews/sections/{level}/{lesson_id}_{section_id}_review.json
+     - Chạy `hermes-course-generator state update --key "active_section_id" --value "{lesson_id}_{section_id}"`
 
   7. REPORT:
      ✅ Section saved: [file path]
@@ -115,7 +117,7 @@ STEPS:
      📌 Status: approved
 
 OUTPUT:
-  - output/sections/{level}/{lesson_id}_{section_id}_{slug}.md
+  - output/sections/{level}/{lesson_id}_{section_id}_{slug}.mdx
   - output/reviews/sections/{level}/{lesson_id}_{section_id}_review.json
 ```
 
@@ -186,42 +188,32 @@ TASK: merge_lesson(level, lesson_id)
 
 PRE-CONDITION:
   - check_sections_ready() đã pass
-  - template_lesson.md đã đọc
 
 STEPS:
-  1. READ_SECTIONS:
-     - Load tất cả section files theo thứ tự section_id
-     - Parse YAML frontmatter của từng section
+  1. CLI_MERGE:
+     - Chạy command: `hermes-course-generator merge --level {level} --lesson {lesson_id}`
+     - Command này tự động nối các section lại, bỏ đi metadata thừa, và tạo file `.mdx` mới chứa các dòng `<!-- HERMES:FILL ... -->`
 
-  2. MERGE_CONTENT:
-     - Kết hợp nội dung theo thứ tự S01, S02, S03...
-     - Phát hiện và xử lý trùng lặp
-     - Thêm transition text giữa sections
+  2. FILL_CONTENT:
+     - Mở file `.mdx` vừa được tạo ra.
+     - Thay thế các dòng `<!-- HERMES:FILL ... -->` bằng nội dung do bạn tự sinh ra (Intro, Recap, Exercises, Quiz).
+     - KHÔNG ĐƯỢC CHỈNH SỬA các đoạn văn bản code từ section đã được copy vào.
 
-  3. ADD_LESSON_CONTENT:
-     - Viết Lesson Introduction (objectives, prerequisites, time estimate)
-     - Viết Lesson Recap (summary của toàn lesson)
-     - Tạo 2–3 Bài Tập Tổng Hợp
-     - Tạo Quiz 5 câu
-
-  4. QUALITY_CHECK:
+  3. QUALITY_CHECK:
      - Chạy Checklist 2 trong quality_checklist.md
      IF any REQUIRED item fails:
        → FIX the issue
-       → RE-CHECK (1 lần duy nhất)
 
-  5. SAVE_LESSON:
-     - Lưu: output/lessons/{level}/{lesson_id}_{slug}.md
-     - Update changelog.md
+  4. SAVE_LESSON:
+     - Lưu lại file `.mdx` sau khi điền.
+     - Update trạng thái: `hermes-course-generator state update --key "active_lesson_id" --value "{lesson_id}"`
 
-  6. REPORT:
-     ✅ Lesson merged: [file path]
-     📦 Sections included: [S01, S02, S03, S04]
-     ➕ Added: Introduction, Recap, {n} Exercises, {n} Quiz questions
+  5. REPORT:
+     ✅ Lesson merged và filled: [file path]
      📌 Status: draft (chờ review)
 
 OUTPUT:
-  - output/lessons/{level}/{lesson_id}_{slug}.md
+  - output/lessons/{level}/{lesson_id}_{slug}.mdx
 ```
 
 ---
@@ -257,15 +249,15 @@ Mỗi khi tạo, sửa, hoặc merge file, Hermes phải cập nhật `output/ch
 
 ### Created
 
-- `output/sections/begin/L01_S01_bien-va-gia-tri.md` — score: 8.5
+- `output/sections/begin/L01_S01_bien-va-gia-tri.mdx` — score: 8.5
 
 ### Modified
 
-- `output/sections/begin/L01_S02_kieu-du-lieu.md` — score: 7.0 → 8.2 (applied 2 fixes)
+- `output/sections/begin/L01_S02_kieu-du-lieu.mdx` — score: 7.0 → 8.2 (applied 2 fixes)
 
 ### Merged
 
-- `output/lessons/begin/L01_bien-va-kieu-du-lieu.md` — 4 sections merged
+- `output/lessons/begin/L01_bien-va-kieu-du-lieu.mdx` — 4 sections merged
 
 ### Reviews
 

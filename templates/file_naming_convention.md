@@ -12,9 +12,12 @@ Slug là chuỗi ký tự được dùng làm tên file để thân thiện vớ
 ### Quy tắc tạo Slug bắt buộc:
 
 1. **Chuyển thành chữ thường (Lowercase):** Không viết hoa bất kỳ ký tự nào.
-2. **Loại bỏ dấu tiếng Việt:** Chuyển các chữ có dấu thành không dấu (ví dụ: `đ` -> `d`, `á` -> `a`, `ơ` -> `o`).
-3. **Thay khoảng trắng bằng dấu gạch ngang (`-`):** Không dùng khoảng trắng hoặc dấu gạch dưới (`_`) trong slug.
-4. **Loại bỏ ký tự đặc biệt:** Xóa bỏ tất cả các ký tự như `?`, `!`, `,`, `.`, `:`, `/`, `(`, `)`, `"`, `'`...
+2. **Loại bỏ dấu tiếng Việt:** Chuyển các chữ có dấu thành không dấu (ví dụ: `đ` -> `d`, `á` -> `a`,
+   `ơ` -> `o`).
+3. **Thay khoảng trắng bằng dấu gạch ngang (`-`):** Không dùng khoảng trắng hoặc dấu gạch dưới (`_`)
+   trong slug.
+4. **Loại bỏ ký tự đặc biệt:** Xóa bỏ tất cả các ký tự như `?`, `!`, `,`, `.`, `:`, `/`, `(`, `)`,
+   `"`, `'`...
 5. **Chỉ giữ lại chữ cái thường (a-z), chữ số (0-9) và dấu gạch ngang (-).**
 
 ### Ví dụ chuyển đổi:
@@ -35,7 +38,7 @@ Slug là chuỗi ký tự được dùng làm tên file để thân thiện vớ
 Format:
 
 ```
-{lesson_id}_{section_id}_{slug}.md
+{lesson_id}_{section_id}_{slug}.mdx
 ```
 
 - `{lesson_id}`: Định dạng `L` + 2 chữ số (ví dụ: `L01`, `L12`).
@@ -44,15 +47,15 @@ Format:
 
 Ví dụ cụ thể:
 
-- `L01_S01_khai-niem-ve-bien-va-gan-gia-tri.md`
-- `L02_S03_closures-va-bien-nonlocal.md`
+- `L01_S01_khai-niem-ve-bien-va-gan-gia-tri.mdx`
+- `L02_S03_closures-va-bien-nonlocal.mdx`
 
 ### 2.2 Đối với Lesson (Bài Học Lớn - Sau Khi Merge)
 
 Format:
 
 ```
-{lesson_id}_{slug}.md
+{lesson_id}_{slug}.mdx
 ```
 
 - `{lesson_id}`: Định dạng `L` + 2 chữ số.
@@ -60,8 +63,8 @@ Format:
 
 Ví dụ cụ thể:
 
-- `L01_bien-va-kieu-du-lieu-co-ban.md`
-- `L02_ham-va-pham-vi-bien.md`
+- `L01_bien-va-kieu-du-lieu-co-ban.mdx`
+- `L02_ham-va-pham-vi-bien.mdx`
 
 ### 2.3 Đối với File Review (Đánh Giá Chất Lượng)
 
@@ -94,7 +97,8 @@ Ví dụ cụ thể:
 
 ## 3. Cấu Trúc Thư Mục `output/`
 
-Toàn bộ file đầu ra phải được đặt chính xác trong các thư mục con sau. Hermes có trách nhiệm tự động tạo thư mục này nếu chúng chưa tồn tại.
+Toàn bộ file đầu ra phải được đặt chính xác trong các thư mục con sau. Hermes có trách nhiệm tự động
+tạo thư mục này nếu chúng chưa tồn tại.
 
 ```text
 output/
@@ -109,18 +113,24 @@ output/
 │   └── master/
 └── reviews/                           # Nơi lưu trữ các đánh giá chất lượng (JSON)
     ├── sections/                      # Đánh giá cho từng section riêng lẻ
+    │   ├── begin/
+    │   ├── advance/
+    │   └── master/
     └── lessons/                       # Đánh giá cho cả lesson sau khi merge
+        ├── begin/
+        ├── advance/
+        └── master/
 ```
 
 ### Bản đồ lưu file mẫu:
 
-- Nếu tạo Section `L01_S01` thuộc level `begin`:
-  ➔ Lưu vào: `output/sections/begin/L01_S01_khai-niem-ve-bien-va-gan-gia-tri.md`
-- Nếu lưu review của Section `L01_S01` level `begin`:
-  ➔ Lưu vào: `output/reviews/sections/L01_S01_review.json` _(Không chia nhỏ theo level trong reviews/sections)_
+- Nếu tạo Section `L01_S01` thuộc level `begin`: ➔ Lưu vào:
+  `output/sections/begin/L01_S01_khai-niem-ve-bien-va-gan-gia-tri.mdx`
+- Nếu lưu review của Section `L01_S01` level `begin`: ➔ Lưu vào:
+  `output/reviews/sections/begin/L01_S01_review.json`
 
-- Nếu merge Lesson `L01` thuộc level `begin`:
-  ➔ Lưu vào: `output/lessons/begin/L01_bien-va-kieu-du-lieu-co-ban.md`
+- Nếu merge Lesson `L01` thuộc level `begin`: ➔ Lưu vào:
+  `output/lessons/begin/L01_bien-va-kieu-du-lieu-co-ban.mdx`
 
-- Nếu lưu review của Lesson `L01` level `begin`:
-  ➔ Lưu vào: `output/reviews/lessons/L01_review.json` _(Không chia nhỏ theo level trong reviews/lessons)_
+- Nếu lưu review của Lesson `L01` level `begin`: ➔ Lưu vào:
+  `output/reviews/lessons/begin/L01_review.json`

@@ -23,15 +23,14 @@ created_at: "YYYY-MM-DD"
 
 ## Giới Thiệu Lesson
 
-{Giới thiệu tổng quan về chủ đề của lesson, nêu rõ các mục tiêu học tập, yêu cầu kiến thức trước và thời gian học ước tính.}
+{Giới thiệu tổng quan về chủ đề của lesson, nêu rõ các mục tiêu học tập, yêu cầu kiến thức trước và
+thời gian học ước tính.}
 
-:::info Mục Tiêu Học Tập
-Sau bài học này, bạn sẽ có thể:
+:::info Mục Tiêu Học Tập Sau bài học này, bạn sẽ có thể:
 
 - [ ] {Mục tiêu 1}
 - [ ] {Mục tiêu 2}
-- [ ] {Mục tiêu 3}
-      :::
+- [ ] {Mục tiêu 3} :::
 
 ---
 
@@ -49,15 +48,11 @@ Sau bài học này, bạn sẽ có thể:
 
 ### Bài 1: {Tên Bài} (Cơ bản)
 
-**Yêu cầu:** {Mô tả bài toán}
-**Input:** {Mẫu}
-**Output:** {Mong đợi}
+**Yêu cầu:** {Mô tả bài toán} **Input:** {Mẫu} **Output:** {Mong đợi}
 
 ### Bài 2: {Tên Bài} (Nâng cao)
 
-**Yêu cầu:** {Mô tả bài toán}
-**Input:** {Mẫu}
-**Output:** {Mong đợi}
+**Yêu cầu:** {Mô tả bài toán} **Input:** {Mẫu} **Output:** {Mong đợi}
 
 ## Quiz
 

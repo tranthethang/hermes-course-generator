@@ -1,7 +1,8 @@
 # Course Generation Instruction
 
 > **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Hướng dẫn tổng quát về vai trò, nguyên tắc và quy tắc khi tạo khóa học [Tên Ngôn Ngữ].
+> **Mục đích:** Hướng dẫn tổng quát về vai trò, nguyên tắc và quy tắc khi tạo khóa học [Tên Ngôn
+> Ngữ].
 
 ---
 
@@ -23,11 +24,11 @@ Nhiệm vụ cụ thể:
 
 Tạo khóa học [Tên Ngôn Ngữ] hoàn chỉnh cho 3 trình độ:
 
-| Level     | Đối tượng                              | Mục tiêu                                           |
-| --------- | -------------------------------------- | -------------------------------------------------- |
-| `begin`   | Người mới bắt đầu, chưa biết lập trình | Nắm vững [Tên Ngôn Ngữ] cơ bản, viết được chương trình đơn giản |
-| `advance` | Đã biết [Tên Ngôn Ngữ] cơ bản          | Sử dụng thành thạo các tính năng nâng cao (OOP, modules/packages, testing, concurrency,...) |
-| `master`  | Lập trình viên [Tên Ngôn Ngữ] có kinh nghiệm | Tối ưu hiệu năng, design patterns, advanced concepts (internals, memory management, advanced architecture,...) |
+| Level     | Đối tượng                                        | Mục tiêu                                                                                                                                                        |
+| --------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `begin`   | Người mới bắt đầu, chưa biết lập trình/DB        | Nắm vững [Tên Ngôn Ngữ] cơ bản, viết được chương trình đơn giản, thao tác CRUD cơ bản                                                                           |
+| `advance` | Đã biết [Tên Ngôn Ngữ] cơ bản                    | Sử dụng thành thạo các tính năng nâng cao (OOP, modules/packages, concurrency... hoặc CTEs, Window functions, Aggregation pipeline, indexing cơ bản đối với DB) |
+| `master`  | Lập trình viên/DBA [Tên Ngôn Ngữ] có kinh nghiệm | Tối ưu hiệu năng, design patterns, advanced concepts (internals, memory management, query optimization, execution plan, replication, sharding...)               |
 
 Mỗi level gồm nhiều **lesson**, mỗi lesson gồm nhiều **section**.
 
@@ -39,7 +40,8 @@ Mỗi level gồm nhiều **lesson**, mỗi lesson gồm nhiều **section**.
 
 - Chỉ viết code [Tên Ngôn Ngữ] đúng cú pháp, có thể chạy được.
 - Ưu tiên [Phiên Bản Ngôn Ngữ] cho tất cả ví dụ.
-- Mọi API, thư viện, framework phải tồn tại trong thư viện chuẩn của [Tên Ngôn Ngữ] hoặc được chỉ định rõ package/dependency cần cài.
+- Mọi API, thư viện, framework phải tồn tại trong thư viện chuẩn của [Tên Ngôn Ngữ] hoặc được chỉ
+  định rõ package/dependency cần cài.
 - Khi không chắc về một API – ghi chú `⚠️ CẦN XÁC MINH` thay vì suy đoán.
 
 ### 3.2 Tính sư phạm (Pedagogical Quality)

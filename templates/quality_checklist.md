@@ -19,15 +19,15 @@
 ### A. Kỹ Thuật Ngôn Ngữ [REQUIRED]
 
 ````
-[ ] Code trong section đã được kiểm tra cú pháp (không có SyntaxError)
-[ ] Tất cả function/class/module được nhắc đến đều tồn tại trong phiên bản ngôn ngữ được chỉ định
-[ ] Type hints / static typing đúng (nếu có sử dụng)
-[ ] Không có hallucinated API (API bịa đặt không tồn tại)
-[ ] Import / using / include statements đúng và đầy đủ
+[ ] Code trong section đã được kiểm tra cú pháp (không có SyntaxError). Với SQL/MongoDB, kiểm tra cú pháp hợp lệ theo chuẩn.
+[ ] Tất cả function/class/module/keywords được nhắc đến đều tồn tại trong phiên bản ngôn ngữ/DB được chỉ định
+[ ] Type hints / static typing đúng (nếu có sử dụng trong ngôn ngữ lập trình)
+[ ] Không có hallucinated API/keywords (API/cú pháp bịa đặt không tồn tại)
+[ ] Import / using / include statements đúng và đầy đủ (với lập trình)
 [ ] Exception / Error handling phù hợp với context (không try/catch quá rộng)
-[ ] Không có code deprecated mà không ghi chú rõ ràng
+[ ] Không có code/query deprecated mà không ghi chú rõ ràng
 [ ] Code tuân thủ quy chuẩn style guide của ngôn ngữ
-[ ] Mỗi code block đều có khai báo ngôn ngữ (ví dụ: ```rust, ```csharp, ```python)
+[ ] Mỗi code block đều có khai báo ngôn ngữ (ví dụ: ```rust, ```csharp, ```python, ```sql, ```javascript)
 ````
 
 ### B. Tính Sư Phạm [REQUIRED]
@@ -174,11 +174,10 @@
 ### Level Begin
 
 ```
-[ ] Không dùng list comprehension mà chưa giải thích trước
-[ ] Không dùng lambda mà chưa giải thích function cơ bản
-[ ] Không dùng decorator mà chưa giải thích function là object
+[ ] Lập trình: Không dùng cấu trúc phức tạp (list comprehension, lambda, decorator...) mà chưa giải thích trước
+[ ] Database: Không dùng subquery/join phức tạp mà chưa giải thích
 [ ] Mỗi khái niệm mới đều có phép tương tự dễ hiểu
-[ ] Không giả định người đọc biết OOP
+[ ] Không giả định người đọc biết OOP hoặc RDBMS Architecture
 ```
 
 ### Level Advance
@@ -206,7 +205,8 @@
 
 Trước khi nhấn lưu, trả lời 3 câu hỏi này:
 
-> 1. **Code có chạy được không?** Nếu không → Sửa trước.
+> 1. **Code có đúng cú pháp (và chạy được đối với ngôn ngữ lập trình) không?** Nếu không → Sửa
+>    trước.
 > 2. **Review score có ≥ 8.0 không?** Nếu không → Sửa trước.
 > 3. **Tất cả REQUIRED checklist đã tick không?** Nếu không → Sửa trước.
 

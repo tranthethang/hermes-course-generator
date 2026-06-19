@@ -1,7 +1,8 @@
 # Style Guide
 
 > **Dành cho:** Hermes AI Agent  
-> **Mục đích:** Quy tắc văn phong tiếng Việt, cách trình bày code, và hướng dẫn viết nội dung khóa học.
+> **Mục đích:** Quy tắc văn phong tiếng Việt, cách trình bày code, và hướng dẫn viết nội dung khóa
+> học.
 
 ---
 
@@ -33,7 +34,8 @@
 **Tránh:**
 
 - Câu bị động: ❌ "Biến được dùng để lưu trữ..." → ✅ "Biến lưu trữ..."
-- Câu dài có nhiều mệnh đề: ❌ "[Tên Ngôn Ngữ] là ngôn ngữ lập trình mạnh mẽ, linh hoạt, dễ học, được dùng rộng rãi..."
+- Câu dài có nhiều mệnh đề: ❌ "[Tên Ngôn Ngữ] là ngôn ngữ lập trình mạnh mẽ, linh hoạt, dễ học,
+  được dùng rộng rãi..."
 - Từ thừa: ❌ "Thực ra thì..." "Về cơ bản thì..." "Nói một cách đơn giản..."
 
 ### 1.4 Ví Dụ Văn Phong
@@ -44,7 +46,8 @@
 
 **✅ Viết như thế này:**
 
-> "List giống như một chiếc hộp chứa nhiều thứ khác nhau. Bạn có thể bỏ vào số, chuỗi, thậm chí là một list khác. Và bạn có thể thay đổi nội dung của hộp bất cứ lúc nào."
+> "List giống như một chiếc hộp chứa nhiều thứ khác nhau. Bạn có thể bỏ vào số, chuỗi, thậm chí là
+> một list khác. Và bạn có thể thay đổi nội dung của hộp bất cứ lúc nào."
 
 ---
 
@@ -58,7 +61,8 @@ Giữ nguyên tiếng Anh cho các thuật ngữ sau (KHÔNG dịch):
 - Tên kiểu dữ liệu đặc thù (Ví dụ: `list`, `dict`, `vector`, `struct`, `class`, `int`, `float`)
 - Tên từ khóa (Ví dụ: `for`, `while`, `if`, `fn`, `let`, `pub`, `def`, `return`, `import`)
 - Tên hàm/method (Ví dụ: `print()`, `len()`, `append()`, `unwrap()`)
-- Tên khái niệm kỹ thuật phổ biến: `function`, `variable`, `loop`, `recursion`, `decorator`, `generator`, `iterator`, `ownership`
+- Tên khái niệm kỹ thuật phổ biến: `function`, `variable`, `loop`, `recursion`, `decorator`,
+  `generator`, `iterator`, `ownership`
 - Tên các chuẩn/module/package đặc thù (Ví dụ: `PEP 8`, `Cargo.toml`, `std::collections`, `pathlib`)
 - Tên lỗi/exceptions (Ví dụ: `ValueError`, `NullReferenceException`, `Panic`)
 
@@ -110,7 +114,9 @@ Lần đầu xuất hiện trong section, dùng cả tiếng Anh lẫn tiếng V
 
 ## 4. Quy Tắc Viết Code Sample
 
-### 4.1 Tiêu Chuẩn Bắt Buộc (Ví dụ minh họa cho Python)
+### 4.1 Tiêu Chuẩn Bắt Buộc (Ví dụ minh họa cho Python/SQL/MongoDB)
+
+**Đối với ngôn ngữ lập trình (Ví dụ Python):**
 
 ```python
 # Python 3.12+
@@ -127,6 +133,34 @@ student_name = "Nguyen Van A"  # Hoặc tiếng Anh, chọn 1 cái và nhất qu
 
 # ✅ Comment giải thích bằng tiếng Việt
 danh_sach = [1, 2, 3, 4, 5]  # List chứa 5 số nguyên
+```
+
+**Đối với cơ sở dữ liệu (Ví dụ SQL):**
+
+```sql
+-- PostgreSQL 15+
+-- ✅ Comment dòng bắt đầu bằng --
+-- Lấy danh sách 5 nhân viên có lương cao nhất
+SELECT
+    first_name,
+    last_name,
+    salary
+FROM employees
+WHERE department = 'Engineering'
+ORDER BY salary DESC
+LIMIT 5;
+```
+
+**Đối với cơ sở dữ liệu (Ví dụ MongoDB):**
+
+```javascript
+// MongoDB 6.0+
+// ✅ Comment giải thích mục đích query
+// Tìm các user ở Việt Nam, được sắp xếp theo ngày đăng ký mới nhất
+db.users
+  .find({ country: "Vietnam" }, { username: 1, email: 1, registered_at: 1, _id: 0 })
+  .sort({ registered_at: -1 })
+  .limit(10);
 ```
 
 ### 4.2 Quy Tắc Comment
@@ -165,15 +199,19 @@ result = [x for x in range(10) if x % 2 == 0]
 
 ### 4.4 Quy Tắc Đặt Tên & Định Dạng (Style Guide/Naming Conventions)
 
-- Tuân thủ quy tắc đặt tên chuẩn của ngôn ngữ lập trình được dạy (ví dụ: `camelCase` cho Java/JavaScript; `snake_case` cho Python/Rust; `PascalCase` cho C#).
-- Tên biến/hàm: Tuân thủ chuẩn của ngôn ngữ (ví dụ: `snake_case` hoặc `camelCase`).
+- Tuân thủ quy tắc đặt tên chuẩn của ngôn ngữ lập trình được dạy (ví dụ: `camelCase` cho
+  Java/JavaScript; `snake_case` cho Python/Rust; `PascalCase` cho C#).
+- Tên biến/hàm/bảng/cột: Tuân thủ chuẩn của ngôn ngữ (ví dụ: `snake_case` cho Python và bảng SQL).
 - Tên class/struct/type: Thường là `PascalCase`.
 - Tên hằng số: Thường là `UPPER_SNAKE_CASE` hoặc theo chuẩn ngôn ngữ.
-- Định dạng (Formatting): Sử dụng công cụ formatter chuẩn của ngôn ngữ (ví dụ: `black` cho Python, `rustfmt` cho Rust, `prettier` cho JavaScript) để định dạng dòng và độ dài dòng.
+- SQL Keywords: Bắt buộc viết IN HOA (`SELECT`, `FROM`, `WHERE`).
+- Định dạng (Formatting): Sử dụng công cụ formatter chuẩn của ngôn ngữ để định dạng dòng và độ dài
+  dòng. Với SQL, đảm bảo xuống dòng ở mỗi mệnh đề chính.
 
 ### 4.5 Code Phải Runnable
 
-Mọi code block phải có thể chạy được ngay lập tức. Nếu cần import/khai báo thư viện ngoài, phải ghi rõ (Ví dụ minh họa cho Python):
+Mọi code block (đối với lập trình) phải có thể chạy được ngay lập tức. Nếu cần import/khai báo thư
+viện ngoài, phải ghi rõ (Ví dụ minh họa cho Python):
 
 ```python
 # Cần cài: pip install requests
@@ -183,18 +221,21 @@ response = requests.get("https://api.example.com/data")
 print(response.status_code)
 ```
 
+**Lưu ý:** Với SQL và MongoDB, chỉ yêu cầu độ chính xác về cú pháp (Syntax) theo tiêu chuẩn/tài liệu
+của HQTCSDL đó, không bắt buộc môi trường để chạy thực tế trong bước review.
+
 ---
 
 ## 5. Quy Tắc Viết Ví Dụ
 
 ### 5.1 Ví Dụ Phải Thực Tế
 
-| ❌ Tránh                         | ✅ Nên dùng                                                    |
-| -------------------------------- | -------------------------------------------------------------- |
-| `foo`, `bar`, `baz` làm tên biến | `student_scores`, `product_prices`                             |
-| `x = 10` không ngữ cảnh          | `age = 25  # Tuổi của người dùng`                              |
-| Khai báo hàm không rõ ràng       | Khai báo hàm có tên rõ nghĩa, kiểu dữ liệu (nếu có)           |
-| In `Hello World`                 | Xử lý dữ liệu thực tế (tên, điểm, giá...)                      |
+| ❌ Tránh                         | ✅ Nên dùng                                         |
+| -------------------------------- | --------------------------------------------------- |
+| `foo`, `bar`, `baz` làm tên biến | `student_scores`, `product_prices`                  |
+| `x = 10` không ngữ cảnh          | `age = 25  # Tuổi của người dùng`                   |
+| Khai báo hàm không rõ ràng       | Khai báo hàm có tên rõ nghĩa, kiểu dữ liệu (nếu có) |
+| In `Hello World`                 | Xử lý dữ liệu thực tế (tên, điểm, giá...)           |
 
 ### 5.2 Độ Phức Tạp Tăng Dần
 
@@ -215,8 +256,7 @@ Ví dụ 3 (nếu có): Kết hợp với kiến thức khác hoặc edge case
 ```markdown
 ### Bài Tập: [Tên bài tập rõ ràng]
 
-**Yêu cầu:**
-Mô tả cụ thể, không mơ hồ. Nêu rõ:
+**Yêu cầu:** Mô tả cụ thể, không mơ hồ. Nêu rõ:
 
 - Input là gì
 - Output là gì
@@ -229,7 +269,8 @@ Mô tả cụ thể, không mơ hồ. Nêu rõ:
 
 **Gợi ý (tùy chọn):**
 
-- Sử dụng tính năng/phương thức đặc thù (Ví dụ: list comprehension trong Python, `map` trong Rust, LINQ trong C#)
+- Sử dụng tính năng/phương thức đặc thù (Ví dụ: list comprehension trong Python, `map` trong Rust,
+  LINQ trong C#)
 
 **Mức độ:** Cơ bản / Nâng cao
 ```
@@ -264,7 +305,8 @@ print(x[-1])
 
 **Đáp án: C) `3`**
 
-Giải thích: Index `-1` trong Python trỏ đến phần tử cuối cùng của list. (Khi viết cho ngôn ngữ khác, hãy dùng ví dụ và giải thích tương ứng).
+Giải thích: Index `-1` trong Python trỏ đến phần tử cuối cùng của list. (Khi viết cho ngôn ngữ khác,
+hãy dùng ví dụ và giải thích tương ứng).
 
 </details>
 ```
@@ -280,35 +322,30 @@ Quiz rules:
 
 ## 8. Quy Tắc Tương Thích Docusaurus & MDX
 
-Khi viết tài liệu bài học, bắt buộc tuân thủ các quy tắc Docusaurus MDX để tránh lỗi trong quá trình compile và hiển thị:
+Khi viết tài liệu bài học, bắt buộc tuân thủ các quy tắc Docusaurus MDX để tránh lỗi trong quá trình
+compile và hiển thị:
 
 ### 8.1 Tránh Lỗi MDX Safety (Ký tự `<` và `>`)
 
-- Bộ phân tích MDX của Docusaurus sẽ hiểu nhầm các ký tự `<` và `>` đứng một mình (hoặc dạng tên kiểu dữ liệu như `<int>`, `<string>`, `<T>`) là các thẻ HTML/JSX chưa đóng. Điều này gây lỗi build hệ thống.
-- **Quy tắc:** Bắt buộc bọc các ký tự này hoặc các kiểu generic vào trong inline code (ví dụ: `` `<string>` `` hoặc `` `<T>` ``) hoặc dùng ký tự escape (`\<int\>`).
+- Bộ phân tích MDX của Docusaurus sẽ hiểu nhầm các ký tự `<` và `>` đứng một mình (hoặc dạng tên
+  kiểu dữ liệu như `<int>`, `<string>`, `<T>`) là các thẻ HTML/JSX chưa đóng. Điều này gây lỗi build
+  hệ thống.
+- **Quy tắc:** Bắt buộc bọc các ký tự này hoặc các kiểu generic vào trong inline code (ví dụ:
+  `` `<string>` `` hoặc `` `<T>` ``) hoặc dùng ký tự escape (`\<int\>`).
 
 ### 8.2 Sử dụng Hộp Thông Tin (Admonitions)
 
-Không sử dụng định dạng trích dẫn của Github (ví dụ: `> [!NOTE]`). Thay vào đó, hãy sử dụng Docusaurus Admonitions với cú pháp:
+Không sử dụng định dạng trích dẫn của Github (ví dụ: `> [!NOTE]`). Thay vào đó, hãy sử dụng
+Docusaurus Admonitions với cú pháp:
 
 ```markdown
-:::note Tên Tiêu Đề (Tùy chọn)
-Nội dung ghi chú ở đây.
-:::
+:::note Tên Tiêu Đề (Tùy chọn) Nội dung ghi chú ở đây. :::
 
-:::tip Mẹo hữu ích
-Nội dung mẹo ở đây.
-:::
+:::tip Mẹo hữu ích Nội dung mẹo ở đây. :::
 
-:::info Thông tin
-Nội dung thông tin ở đây.
-:::
+:::info Thông tin Nội dung thông tin ở đây. :::
 
-:::warning Cảnh báo
-Nội dung cảnh báo ở đây.
-:::
+:::warning Cảnh báo Nội dung cảnh báo ở đây. :::
 
-:::danger Nguy hiểm
-Nội dung lỗi nghiêm trọng/nguy hiểm ở đây.
-:::
+:::danger Nguy hiểm Nội dung lỗi nghiêm trọng/nguy hiểm ở đây. :::
 ```

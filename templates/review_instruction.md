@@ -23,13 +23,13 @@ Quy tắc bắt buộc:
 
 ### Chiều 1: Chính Xác Kỹ Thuật (Technical Accuracy) — Trọng số 30%
 
-| Điểm | Tiêu chí                                                                               |
-| ---- | -------------------------------------------------------------------------------------- |
+| Điểm | Tiêu chí                                                                                         |
+| ---- | ------------------------------------------------------------------------------------------------ |
 | 9–10 | Tất cả code chạy được, API đúng, phiên bản [Tên Ngôn Ngữ] ghi rõ, không có hallucinated function |
-| 7–8  | Code chạy được, có 1–2 lỗi nhỏ về style hoặc không tối ưu                              |
-| 5–6  | Code có lỗi runtime nhỏ hoặc dùng API lỗi thời (deprecated)                            |
-| 3–4  | Code có lỗi logic, API không tồn tại, hoặc thiếu xử lý exception                       |
-| 0–2  | Code sai hoàn toàn, hallucinated API, hoặc không thể chạy                              |
+| 7–8  | Code chạy được, có 1–2 lỗi nhỏ về style hoặc không tối ưu                                        |
+| 5–6  | Code có lỗi runtime nhỏ hoặc dùng API lỗi thời (deprecated)                                      |
+| 3–4  | Code có lỗi logic, API không tồn tại, hoặc thiếu xử lý exception                                 |
+| 0–2  | Code sai hoàn toàn, hallucinated API, hoặc không thể chạy                                        |
 
 Câu hỏi kiểm tra:
 
@@ -92,12 +92,12 @@ Câu hỏi kiểm tra:
 
 ```
 total_score = (
-  technical_accuracy * 0.30 +
-  teaching_quality   * 0.25 +
-  example_quality    * 0.20 +
-  exercise_quality   * 0.15 +
-  format_compliance  * 0.10
-)
+  technical_accuracy +
+  teaching_quality +
+  example_quality +
+  exercise_quality +
+  format_compliance
+) / 5
 ```
 
 Làm tròn đến 1 chữ số thập phân.
@@ -121,36 +121,31 @@ Hermes PHẢI xuất kết quả review theo đúng format JSON sau:
 ```json
 {
   "review_type": "section",
-  "target_file": "output/sections/begin/L01_S01_bien-va-gia-tri.md",
+  "target_file": "output/sections/begin/L01_S01_bien-va-gia-tri.mdx",
   "review_timestamp": "2026-06-18T10:00:00+07:00",
   "scores": {
     "technical_accuracy": {
       "score": 8.5,
-      "weight": 0.3,
       "notes": "Code chạy được, type hints đúng. Thiếu xử lý ValueError trong ví dụ 2."
     },
     "teaching_quality": {
       "score": 9.0,
-      "weight": 0.25,
       "notes": "Giải thích rõ ràng, phép tương tự tốt. Đúng level begin."
     },
     "example_quality": {
       "score": 8.0,
-      "weight": 0.2,
       "notes": "3 ví dụ tốt. Ví dụ 2 thiếu comment giải thích dòng phức tạp."
     },
     "exercise_quality": {
       "score": 7.5,
-      "weight": 0.15,
       "notes": "Bài tập rõ ràng nhưng thiếu output mẫu cụ thể."
     },
     "format_compliance": {
       "score": 10.0,
-      "weight": 0.1,
       "notes": "Đầy đủ YAML, đúng thứ tự heading, Markdown sạch."
     }
   },
-  "total_score": 8.5,
+  "total_score": 8.6,
   "result": "APPROVED",
   "strengths": [
     "Giải thích khái niệm biến rất rõ ràng cho người mới",
@@ -187,20 +182,20 @@ Nếu cần trình bày cho người đọc (không phải machine), dùng forma
 ```markdown
 ## Kết Quả Review
 
-**File:** `output/sections/begin/L01_S01_bien-va-gia-tri.md`  
+**File:** `output/sections/begin/L01_S01_bien-va-gia-tri.mdx`  
 **Thời gian:** 2026-06-18 10:00 +07:00  
 **Loại:** Section Review
 
 ### Điểm Số
 
-| Tiêu chí           | Điểm | Trọng số | Điểm có trọng số |
-| ------------------ | ---- | -------- | ---------------- |
-| Technical Accuracy | 8.5  | 30%      | 2.55             |
-| Teaching Quality   | 9.0  | 25%      | 2.25             |
-| Example Quality    | 8.0  | 20%      | 1.60             |
-| Exercise Quality   | 7.5  | 15%      | 1.13             |
-| Format Compliance  | 10.0 | 10%      | 1.00             |
-| **TỔNG**           |      |          | **8.53 / 10**    |
+| Tiêu chí            | Điểm         |
+| ------------------- | ------------ |
+| Technical Accuracy  | 8.5          |
+| Teaching Quality    | 9.0          |
+| Example Quality     | 8.0          |
+| Exercise Quality    | 7.5          |
+| Format Compliance   | 10.0         |
+| **TỔNG TRUNG BÌNH** | **8.6 / 10** |
 
 ### Kết Quả: ✅ APPROVED
 

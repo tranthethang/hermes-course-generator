@@ -23,9 +23,7 @@ status: draft
 
 {Giải thích chi tiết các khái niệm cốt lõi. Hãy dùng bảng so sánh hoặc ví dụ thực tế.}
 
-:::info Khái Niệm Quan Trọng
-{Nội dung lưu ý đặc biệt hoặc giải thích sâu về khái niệm.}
-:::
+:::info Khái Niệm Quan Trọng {Nội dung lưu ý đặc biệt hoặc giải thích sâu về khái niệm.} :::
 
 ## Ví Dụ Code
 
@@ -39,17 +37,13 @@ status: draft
 
 {Liệt kê 2-4 lỗi phổ biến nhất và cách khắc phục.}
 
-:::danger Lỗi Phổ Biến
-{Mô tả lỗi dễ mắc phải và cách debug.}
-:::
+:::danger Lỗi Phổ Biến {Mô tả lỗi dễ mắc phải và cách debug.} :::
 
 ## Best Practices
 
 {Các quy chuẩn viết code đẹp, tối ưu, dễ bảo trì.}
 
-:::tip Mẹo Hay
-{Mẹo tối ưu hiệu năng hoặc các thủ thuật lập trình hữu ích.}
-:::
+:::tip Mẹo Hay {Mẹo tối ưu hiệu năng hoặc các thủ thuật lập trình hữu ích.} :::
 
 ## Mini Exercise
 
