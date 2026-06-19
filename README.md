@@ -69,7 +69,8 @@ hermes-course-generator init --path /path/to/new-course
   - `hermes-course-reviewer` — Quality gate review, compiler validation, and lesson merging.
 - [templates/](templates) — Core instructional templates and style guides.
   - [hermes_workflow.md](templates/hermes_workflow.md) — The generation workflow.
-  - [file_naming_convention.md](templates/file_naming_convention.md) — Slugification and output structure.
+  - [file_naming_convention.md](templates/file_naming_convention.md) — Slugification and output
+    structure.
   - [style_guide.md](templates/style_guide.md) — Writing and styling standards.
   - [task_examples.md](templates/task_examples.md) — Examples for each AI task.
 
@@ -80,13 +81,21 @@ hermes-course-generator init --path /path/to/new-course
 The multi-agent workflow operates in three distinct phases:
 
 ### Phase 1: Setup
+
 Trigger the setup agent by prompting:
-> "I want to set up a new course for [Rust/Python/Go]. Please use the `hermes-course-setup` skill and interview me to collect the required settings."
+
+> "I want to set up a new course for [Rust/Python/Go]. Please use the `hermes-course-setup` skill
+> and interview me to collect the required settings."
 
 ### Phase 2: Writing Sections
+
 Trigger the writer agent for a specific section by prompting:
-> "Please write the section [Lesson ID] [Section ID] [Section Title] using the `hermes-course-writer` skill."
+
+> "Please write the section [Lesson ID] [Section ID] [Section Title] using the
+> `hermes-course-writer` skill."
 
 ### Phase 3: Reviewing & Merging Lessons
+
 Trigger the reviewer agent to check and merge approved sections into a lesson by prompting:
+
 > "Please review the sections and merge [Lesson ID] using the `hermes-course-reviewer` skill."
