@@ -25,12 +25,13 @@
 Hermes MUST read the following files **in order**:
 
 ```
-1. overview.md              → Understand the overall course goals and audience
-2. architecture.md          → Understand where the current lesson fits in the course
-3. template_section.md      → Check the mandatory section structure
-4. style_guide.md           → Apply writing style rules
-5. knowledge_sources.md     → Identify permitted reference sources
-6. quality_checklist.md     → Understand criteria before saving
+1. goal.md                  → Understand execution goals, autonomous rules, and error policies
+2. overview.md              → Understand the overall course goals and audience
+3. architecture.md          → Understand where the current lesson fits in the course
+4. template_section.md      → Check the mandatory section structure
+5. style_guide.md           → Apply writing style rules
+6. knowledge_sources.md     → Identify permitted reference sources
+7. quality_checklist.md     → Understand criteria before saving
 ```
 
 ---

@@ -37,9 +37,12 @@ The Agent prompts for the following parameters:
 The Agent runs the CLI command to generate the folder structure:
 `hermes-course-generator init --path <project_path>`
 
-This command creates the `output/` directory structure and copies the following template files into the workspace:
+This command creates the `output/` directory structure and copies the following template files into
+the workspace:
+
 - `course_instruction.md`
 - `file_naming_convention.md`
+- `goal.md`
 - `hermes_workflow.md`
 - `knowledge_sources.md`
 - `lesson_merge_instruction.md`
@@ -51,17 +54,21 @@ This command creates the `output/` directory structure and copies the following 
 - `template_lesson.md`
 - `template_section.md`
 
-Note: `overview.md` and `architecture.md` do NOT exist initially and are NOT copied by the CLI. They must be generated in Step 3.
+Note: `overview.md` and `architecture.md` do NOT exist initially and are NOT copied by the CLI. They
+must be generated in Step 3.
 
 ### Step 3: Automatically Generate Configuration Documents (Dynamic Generation)
 
 The Agent automatically generates 3 core personalized documents for the chosen language:
 
 - `overview.md`: Detailed language learning objectives and outcomes.
-- `architecture.md` (Syllabus): A detailed list of Lessons and Sections tailored to the language features.
-- `style_guide.md`: Language-specific coding standards combined with MDX safety rules (e.g., wrapping raw generics like `<T>` or `<string>` in inline code blocks instead of raw text).
+- `architecture.md` (Syllabus): A detailed list of Lessons and Sections tailored to the language
+  features.
+- `style_guide.md`: Language-specific coding standards combined with MDX safety rules (e.g.,
+  wrapping raw generics like `<T>` or `<string>` in inline code blocks instead of raw text).
 
-Do not assume these files exist before this step. Always inspect the actual folder structure using file listing tools before presenting the file list to the user.
+Do not assume these files exist before this step. Always inspect the actual folder structure using
+file listing tools before presenting the file list to the user.
 
 ### Step 4: Set Up State
 

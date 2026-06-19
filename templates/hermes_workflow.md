@@ -49,17 +49,18 @@ INPUT:
   - section_ids: [S01, S02, S03, ...]  # List of sections to create
 
 STEPS:
-  1. READ overview.md
-  2. READ architecture.md
-  3. READ style_guide.md
-  4. READ knowledge_sources.md
-  5. READ template_section.md
-  6. READ quality_checklist.md
-  7. VERIFY output directory structure:
+  1. READ goal.md
+  2. READ overview.md
+  3. READ architecture.md
+  4. READ style_guide.md
+  5. READ knowledge_sources.md
+  6. READ template_section.md
+  7. READ quality_checklist.md
+  8. VERIFY output directory structure:
        - Does output/sections/{level}/ exist?
        - Does output/reviews/sections/{level}/ exist?
        - If not → CREATE directories
-  8. REPORT: "Session initialized. Ready to generate {n} sections for Lesson {lesson_id} ({level})"
+  9. REPORT: "Session initialized. Ready to generate {n} sections for Lesson {lesson_id} ({level})"
 ```
 
 ---
@@ -298,6 +299,17 @@ ERROR: Template does not exist
   → STOP
   → REPORT: "Cannot find template_section.md or template_lesson.md"
   → REQUEST: "Please create template files first"
+
+ERROR: API rate limit (HTTP 429) or quota exceeded
+  → DO NOT stop execution
+  → APPLY exponential backoff with random jitter (e.g. wait 5s + jitter, then 10s, 20s, up to 60s max)
+  → RETRY up to 5 times
+  → IF all 5 retries fail, print warning, wait 120s, and attempt one final retry before prompting user
+
+ERROR: Transient API/network error (500, 502, 503, 504)
+  → RETRY after 3 seconds
+  → Attempt up to 3 retries
+  → IF failure persists, save progress, update state, and prompt user
 ```
 
 ---

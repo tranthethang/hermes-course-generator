@@ -110,12 +110,13 @@ Hermes MUST follow the "One Task at a Time" principle:
 Before starting to generate any section or lesson, Hermes MUST read in the following order:
 
 ```
-1. overview.md          → Understand the overall course goals
-2. architecture.md      → Understand the level/lesson/section structure
-3. style_guide.md       → Understand the writing style guidelines
-4. knowledge_sources.md → Identify permitted reference sources
-5. template_section.md  → Understand the required section structure
-6. template_lesson.md   → Understand the lesson structure (when merging)
+1. goal.md              → Understand execution goals, autonomous rules, and error policies
+2. overview.md          → Understand the overall course goals
+3. architecture.md      → Understand the level/lesson/section structure
+4. style_guide.md       → Understand the writing style guidelines
+5. knowledge_sources.md → Identify permitted reference sources
+6. template_section.md  → Understand the required section structure
+7. template_lesson.md   → Understand the lesson structure (when merging)
 ```
 
 ---
