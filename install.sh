@@ -43,6 +43,8 @@ mkdir -p ~/.agents/skills/hermes-course-generator
 cp "$SRC_DIR/skills/SKILL.md" ~/.agents/skills/hermes-course-generator/SKILL.md
 mkdir -p ~/.claude/skills/hermes-course-generator
 cp "$SRC_DIR/skills/SKILL.md" ~/.claude/skills/hermes-course-generator/SKILL.md
+mkdir -p ~/.hermes/skills/hermes-course-generator
+cp "$SRC_DIR/skills/SKILL.md" ~/.hermes/skills/hermes-course-generator/SKILL.md
 
 # Cleanup temp dir if remote mode
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ]; then

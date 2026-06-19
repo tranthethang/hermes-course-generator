@@ -15,7 +15,7 @@ else
     echo "[FAIL] Template folder NOT found at ~/.config/hermes-course-generator/templates."
     FAILED=1
 fi
-for agent in ".gemini/config" ".agents" ".claude"; do
+for agent in ".gemini/config" ".agents" ".claude" ".hermes"; do
     if [ -f "$HOME/$agent/skills/hermes-course-generator/SKILL.md" ]; then
         echo "[OK] Skill registered for: $agent"
     else
