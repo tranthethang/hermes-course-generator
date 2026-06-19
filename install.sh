@@ -37,14 +37,16 @@ cp "$SRC_DIR/bin/hermes-course-generator" ~/.local/bin/hermes-course-generator
 chmod +x ~/.local/bin/hermes-course-generator
 
 # Register skills
-mkdir -p ~/.gemini/config/skills/hermes-course-generator
-cp "$SRC_DIR/skills/SKILL.md" ~/.gemini/config/skills/hermes-course-generator/SKILL.md
-mkdir -p ~/.agents/skills/hermes-course-generator
-cp "$SRC_DIR/skills/SKILL.md" ~/.agents/skills/hermes-course-generator/SKILL.md
-mkdir -p ~/.claude/skills/hermes-course-generator
-cp "$SRC_DIR/skills/SKILL.md" ~/.claude/skills/hermes-course-generator/SKILL.md
-mkdir -p ~/.hermes/skills/hermes-course-generator
-cp "$SRC_DIR/skills/SKILL.md" ~/.hermes/skills/hermes-course-generator/SKILL.md
+for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer"; do
+    mkdir -p ~/.gemini/config/skills/"$skill"
+    cp "$SRC_DIR/skills/$skill/SKILL.md" ~/.gemini/config/skills/"$skill"/SKILL.md
+    mkdir -p ~/.agents/skills/"$skill"
+    cp "$SRC_DIR/skills/$skill/SKILL.md" ~/.agents/skills/"$skill"/SKILL.md
+    mkdir -p ~/.claude/skills/"$skill"
+    cp "$SRC_DIR/skills/$skill/SKILL.md" ~/.claude/skills/"$skill"/SKILL.md
+    mkdir -p ~/.hermes/skills/"$skill"
+    cp "$SRC_DIR/skills/$skill/SKILL.md" ~/.hermes/skills/"$skill"/SKILL.md
+done
 
 # Cleanup temp dir if remote mode
 if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ]; then
