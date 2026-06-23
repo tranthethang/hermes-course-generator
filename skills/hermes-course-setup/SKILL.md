@@ -27,6 +27,7 @@ Ask the user for the following required parameters:
 3. Target levels (begin, advance, master).
 4. Target audience (e.g., beginners with no programming background, intermediate developers).
 5. Course scope (estimated number of Lessons & Sections).
+6. Course language (en/vi, default: en).
 
 ### Step 2: Initialize Workspace Directory
 
@@ -50,14 +51,14 @@ Create the following files in the workspace root based on the target programming
    level.
 2. **`architecture.md`** (Syllabus): Defines the exact list of Lessons (e.g., L01, L02) and their
    corresponding Sections (e.g., S01, S02) with precise technical titles.
-3. **`style_guide.md`**: Contains language-specific code guidelines (e.g., naming conventions,
-   comments style) and Docusaurus MDX safety rules (e.g., wrapping generic brackets like `<T>` or
-   `<string>` in inline code blocks).
+3. **`style_guide.md`**: Contains language-specific course headings (supporting English and
+   Vietnamese), code guidelines (e.g., naming conventions, comments style), and Docusaurus MDX safety
+   rules (e.g., wrapping generic brackets like `<T>` or `<string>` in inline code blocks).
 
 ### Step 4: Configure State
 
 Update the initial state in `state.md` using the CLI or direct file updates to reflect the active
-level, lesson, and section.
+level, lesson, section, and the chosen `course_language` (e.g., "en" or "vi").
 
 ### Step 5: Report Completion
 

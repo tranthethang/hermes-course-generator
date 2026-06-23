@@ -42,6 +42,15 @@ def main():
             update_state(args.path, args.key, args.value)
 
 # -- utility functions --
+def read_state(target_path, key):
+    state_path = os.path.join(target_path, "state.md")
+    if not os.path.exists(state_path):
+        return None
+    with open(state_path, "r", encoding="utf-8") as f:
+        content = f.read()
+    match = re.search(rf'^{key}:\s*["\']?(.*?)["\']?\s*$', content, re.MULTILINE)
+    return match.group(1) if match else None
+
 def remove_vietnamese_diacritics(text):
     diacritics_map = {
         'a': 'áàảãạăắằẳẵặâấầẩẫậ', 'd': 'đ', 'e': 'éèẻẽẹêếềểễệ', 'i': 'íìỉĩị',
@@ -155,6 +164,7 @@ workspace_version: "1.0"
 technology: ""
 technology_version: ""
 course_name: ""
+course_language: "en"
 created_at: "{}"
 last_updated_at: "{}"
 active_level: ""
@@ -255,6 +265,7 @@ def merge_lesson(target_path, level, lesson_id):
     lesson_slug = slugify(lesson_title)
     lesson_id_lower = lesson_id.lower()
     current_date = datetime.now().strftime("%Y-%m-%d")
+    course_language = read_state(target_path, "course_language") or "en"
     
     # Build YAML frontmatter for lesson
     yaml_lines = [
@@ -275,25 +286,41 @@ def merge_lesson(target_path, level, lesson_id):
         yaml_lines.append(f"    file: \"{s['file']}\"")
     yaml_lines.extend([
         f'language_version: "{language_version}"',
+        f'course_language: "{course_language}"',
         "status: draft",
         f'created_at: "{current_date}"',
         "---\n"
     ])
     
     # Build body
-    body_lines = [
-        f"# {lesson_title}\n",
-        "## Lesson Introduction\n",
-        "{/* HERMES:FILL lesson_introduction */}\n",
-        ":::info Learning Objectives\n",
-        "After this lesson, you will be able to:\n",
-        "- [ ] {/* HERMES:FILL learning_objectives */}\n",
-        ":::\n",
-        "**Prerequisites:**\n",
-        "- {/* HERMES:FILL prerequisites */}\n",
-        "\n**Estimated Time:** {/* HERMES:FILL time_estimate */}\n",
-        "---\n"
-    ]
+    if course_language == "vi":
+        body_lines = [
+            f"# {lesson_title}\n",
+            "## Giới thiệu bài học\n",
+            "{/* HERMES:FILL lesson_introduction */}\n",
+            ":::info Mục tiêu bài học\n",
+            "Sau bài học này, bạn sẽ có thể:\n",
+            "- [ ] {/* HERMES:FILL learning_objectives */}\n",
+            ":::\n",
+            "**Tiên quyết:**\n",
+            "- {/* HERMES:FILL prerequisites */}\n",
+            "\n**Thời gian ước tính:** {/* HERMES:FILL time_estimate */}\n",
+            "---\n"
+        ]
+    else:
+        body_lines = [
+            f"# {lesson_title}\n",
+            "## Lesson Introduction\n",
+            "{/* HERMES:FILL lesson_introduction */}\n",
+            ":::info Learning Objectives\n",
+            "After this lesson, you will be able to:\n",
+            "- [ ] {/* HERMES:FILL learning_objectives */}\n",
+            ":::\n",
+            "**Prerequisites:**\n",
+            "- {/* HERMES:FILL prerequisites */}\n",
+            "\n**Estimated Time:** {/* HERMES:FILL time_estimate */}\n",
+            "---\n"
+        ]
     
     for s in sections_data:
         body_lines.append(f"{{/* TRANSITION_BEFORE_{s['id']} */}}\n")
@@ -302,14 +329,24 @@ def merge_lesson(target_path, level, lesson_id):
         body_lines.append(f"\n{{/* TRANSITION_AFTER_{s['id']} */}}\n")
         body_lines.append("---\n")
         
-    body_lines.extend([
-        "## Lesson Recap\n",
-        "{/* HERMES:FILL lesson_recap */}\n",
-        "## Comprehensive Exercises\n",
-        "{/* HERMES:FILL comprehensive_exercises */}\n",
-        "## Quiz\n",
-        "{/* HERMES:FILL quiz_5_questions */}\n"
-    ])
+    if course_language == "vi":
+        body_lines.extend([
+            "## Tóm tắt bài học\n",
+            "{/* HERMES:FILL lesson_recap */}\n",
+            "## Bài tập tổng hợp\n",
+            "{/* HERMES:FILL comprehensive_exercises */}\n",
+            "## Trắc nghiệm\n",
+            "{/* HERMES:FILL quiz_5_questions */}\n"
+        ])
+    else:
+        body_lines.extend([
+            "## Lesson Recap\n",
+            "{/* HERMES:FILL lesson_recap */}\n",
+            "## Comprehensive Exercises\n",
+            "{/* HERMES:FILL comprehensive_exercises */}\n",
+            "## Quiz\n",
+            "{/* HERMES:FILL quiz_5_questions */}\n"
+        ])
     
     lesson_content = "\n".join(yaml_lines) + "\n".join(body_lines)
     

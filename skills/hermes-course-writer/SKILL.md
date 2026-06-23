@@ -23,8 +23,7 @@ constraints:
    combined.
 4. **Emoji Prohibition:** Absolutely **NO emojis** anywhere in headings, lists, inline text, or
    comments.
-5. **Vietnamese Language:** All text must be in Vietnamese, except for standard technical English
-   terms. No foreign/untranslated symbols (e.g. Chinese characters) are allowed.
+5. **Course Language:** Content must be written in the language specified by `course_language` in `state.md` (e.g., "en" or "vi"). If `course_language` is "vi", all text must be in Vietnamese, except for standard technical English terms. If `course_language` is "en" (or default/not specified), all text must be in English. No foreign/untranslated symbols (e.g. Chinese characters) are allowed.
 6. **No Code Execution:** Absolutely DO NOT run code examples in the lesson using Bash commands or
    interpreters. Only review code via your internal logic and reasoning.
 
@@ -34,9 +33,10 @@ constraints:
 
 Before starting, read the following workspace files:
 
-1. `state.md` to check the current state. **CRITICAL:** If `locked_section` is NOT empty (e.g.,
-   `locked_section: "L01_S01"`), you MUST abort generation and inform the user that the workspace is
-   locked until the Reviewer approves the pending section.
+1. `state.md` to check the current state and determine the `course_language` (e.g., "en" or "vi").
+   **CRITICAL:** If `locked_section` is NOT empty (e.g., `locked_section: "L01_S01"`), you MUST abort
+   generation and inform the user that the workspace is locked until the Reviewer approves the
+   pending section.
 2. `overview.md` to align on objectives.
 3. `architecture.md` to find the exact lesson and section title.
 4. `style_guide.md` to follow writing and coding styles.
@@ -50,17 +50,33 @@ information, design patterns, and edge cases.
 ### Step 3: Write Section Content
 
 Draft the section file following the template structure. Ensure all mandated headings are included
-in order:
+in order, based on the target `course_language` in `state.md` (following `style_guide.md` Section 9.1):
 
-1. `# {Section Title}`
-2. `## Introduction` (with real-world analogies)
-3. `## Main Concepts` (pedagogical explanation of concepts before code)
-4. `## Code Examples` (simple to complex, with line-by-line comments)
-5. `## Common Mistakes` (2-4 mistakes with bad/good code comparisons)
-6. `## Best Practices` (2-3 clean code patterns)
-7. `## Mini Exercise` (requirements + sample input + expected output)
-8. `## Summary` (3-5 core takeaways)
-9. `## References` (links to official documents)
+- **For English courses (`en` or default):**
+  1. `# {Section Title}`
+  2. `## Introduction` (with real-world analogies)
+  3. `## Main Concepts` (pedagogical explanation of concepts before code)
+  4. `## Code Examples` (simple to complex, with line-by-line comments)
+  5. `## Common Mistakes` (2-4 mistakes with bad/good code comparisons)
+  6. `## Best Practices` (2-3 clean code patterns)
+  7. `## Mini Exercise` (requirements + sample input + expected output)
+  8. `## Summary` (3-5 core takeaways)
+  9. `## References` (links to official documents)
+
+- **For Vietnamese courses (`vi`):**
+  1. `# {Section Title}`
+  2. `## Giới thiệu` (with real-world analogies)
+  3. `## Khái niệm cốt lõi` (pedagogical explanation of concepts before code)
+  4. `## Ví dụ minh họa` (simple to complex, with line-by-line comments)
+  5. `## Lỗi thường gặp` (2-4 mistakes with bad/good code comparisons)
+  6. `## Thực hành tốt nhất` (2-3 clean code patterns)
+  7. `## Bài tập nhỏ` (requirements + sample input + expected output)
+  8. `## Tóm tắt` (3-5 core takeaways)
+  9. `## Tài liệu tham khảo` (links to official documents)
+
+**CRITICAL:** Custom second-level headings (using `##`) are strictly prohibited in the section file.
+Any additional subtopics or custom headers must use third-level (`###`) or fourth-level (`####`)
+headings under the main concepts section ("Main Concepts" or "Khái niệm cốt lõi").
 
 ### Step 4: Verify MDX Safety
 

@@ -22,8 +22,8 @@ Run a review check on the target section file under `output/sections/{level}/`:
 - **Line Count:** File must contain at least 120 lines.
 - **Code Block Count:** File must contain at least 2 code blocks with 10+ lines of total code.
 - **Emoji Cleanliness:** Verify that there are absolutely **no emojis** in the file.
-- **Language Cleanliness:** Verify that there are no Chinese or other non-Vietnamese/non-English
-  characters.
+- **Language Cleanliness:** Verify that the content is written in the target course language specified by `course_language` in `state.md`. If `course_language` is "vi", verify that there are no non-Vietnamese/non-English characters. If `course_language` is "en" (or default/not specified), verify that all content is in English. No Chinese or other foreign characters are allowed.
+- **Heading Compliance:** Verify that all headings follow the exact ordering and translations defined in `style_guide.md` Section 9.1 based on the target `course_language` (English headings for `en` or default; Vietnamese headings for `vi`). Ensure that no custom second-level headings (`##`) are used; all subheadings must be third-level (`###`) or fourth-level (`####`) under the main concepts section ("Main Concepts" or "Khái niệm cốt lõi").
 - **MDX Safety:** Ensure all comparison symbols and generics (e.g. `<T>`) are in inline code blocks
   or escaped.
 - **No Code Execution:** Absolutely DO NOT run any code examples in the lesson using Bash/compilers.
@@ -48,6 +48,7 @@ Assign a score from 0.0 to 10.0 based on these checks:
   quality and quantitative constraints pass.
 - **Needs Revision:** Set `status: needs-revision` and `review_score < 8.0` if any constraints are
   violated or content is shallow.
+- **Format Compliance Score Capping:** Under Dimension 5 (Format Compliance), if any mandatory heading (e.g. Introduction, Main Concepts, etc. for English; or Giới thiệu, Khái niệm cốt lõi, etc. for Vietnamese) is missing or custom level-2 (`##`) headings are used, the Format Compliance score must be capped at **5.0**. This will prevent the file from obtaining an overall score >= 8.0 (APPROVED).
 - Save the review results to:
   ```
   output/reviews/sections/{level}/{lesson_id}_{section_id}_review.json
@@ -83,19 +84,19 @@ placeholders.
 
 ### Step 3: Inject Lesson-Level Content
 
-Open the merged file and replace the `{/* HERMES:FILL ... */}` placeholders with detailed content:
+Open the merged file and replace the `{/* HERMES:FILL ... */}` placeholders with detailed content in the target language specified by `course_language` in `state.md` (e.g. English for `en`, Vietnamese for `vi`), adhering to the headings in `style_guide.md` Section 9.2:
 
-- **Lesson Introduction:** Clear context, prerequisite notes, and estimated completion time.
-- **Learning Objectives:** Structured list of what the learner will accomplish.
-- **Recap:** A 5-8 bullet-point summary of the core lesson concepts.
-- **Comprehensive Exercises:** 2-3 exercises combining knowledge from all sections, each with
-  requirements, sample input, and expected output.
-- **Quiz:** Exactly 5 questions (2 theory, 2 code-reading, 1 debug) with 4 options each, and answers
-  hidden inside `<details>` tags.
+- **Lesson Introduction & Learning Objectives:** Clear context, prerequisite notes, and estimated completion time.
+  - Learning objectives (3-5 objectives) must be wrapped in the Docusaurus admonition (e.g., `:::info Learning Objectives After this lesson, you will be able to: ... :::` or `:::info Mục tiêu bài học Sau bài học này, bạn sẽ có thể: ... :::` for Vietnamese).
+  - Prerequisites must be wrapped in admonition (e.g., `:::note Prerequisites ... :::` or `:::note Tiên quyết ... :::` for Vietnamese).
+  - Estimated study time must be wrapped in admonition (e.g., `:::info Estimated Time: 45 minutes :::` or `:::info Thời gian ước tính: 45 phút :::` for Vietnamese).
+- **Recap:** A 5-8 bullet-point summary of the core lesson concepts. Use the target language heading (e.g., `## Lesson Recap` or `## Tóm tắt bài học`).
+- **Comprehensive Exercises:** 2-3 exercises combining knowledge from all sections, each with requirements, sample input, and expected output. Use the target language heading (e.g., `## Comprehensive Exercises` or `## Bài tập tổng hợp`).
+- **Quiz:** Exactly 5 questions (2 theory, 2 code-reading, 1 debug) with 4 options each, and answers hidden inside `<details>` tags using appropriate summary (e.g., `<summary>Answer</summary>` or `<summary>Đáp án</summary>`). Use the target language heading (e.g., `## Quiz` or `## Trắc nghiệm`).
 
 ### Step 4: Final Lesson Review & Changelog Update
 
-- Self-review the merged lesson file using Checklist 2 in `quality_checklist.md`.
+- Self-review the merged lesson file using Checklist 2 in `quality_checklist.md`. Verify that all lesson headings follow `style_guide.md` Section 9.2 exactly based on the target course language.
 - Save the review results to `output/reviews/lessons/{level}/{lesson_id}_review.json`.
 - Update state:
   ```bash

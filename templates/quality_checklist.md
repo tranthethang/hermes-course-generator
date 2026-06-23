@@ -50,8 +50,8 @@
 [ ] YAML frontmatter is complete in Docusaurus format (id, title, sidebar_label, sidebar_position, level, lesson_id, section_id, language_version, review_score, status).
 [ ] Uses Docusaurus Admonitions (:::note, :::tip, :::info, :::warning, :::danger) instead of GitHub-style (> [!NOTE]).
 [ ] MDX Safety: No raw HTML-like tags (such as <T>, <string>) in plain text. All must be in code blocks, inline code, or escaped.
-[ ] Heading order and translations follow style_guide.md Section 9.1 exactly (Giới thiệu, Khái niệm cốt lõi, Ví dụ minh họa, Lỗi thường gặp, Thực hành tốt nhất, Bài tập nhỏ, Tóm tắt, Tài liệu tham khảo).
-[ ] No custom second-level headings (##) are used in the section file; all custom subheadings must be level-3 (###) or level-4 (####) under Khái niệm cốt lõi.
+[ ] Heading order follows style_guide.md Section 9.1 exactly (in English for English courses; translated to Vietnamese if course_language is "vi").
+[ ] No custom second-level headings (##) are used in the section file; all custom subheadings must be level-3 (###) or level-4 (####) under the main concepts section ("Khái niệm cốt lõi" if "vi", "Main Concepts" if "en" or default).
 [ ] Heading levels are not skipped (e.g., no going from ## straight to ####).
 [ ] Code blocks use triple backticks with the specified language.
 [ ] No broken links.
@@ -65,7 +65,7 @@
 [ ] Filename follows file_naming_convention.md exactly.
 [ ] Terminology is consistent throughout the section.
 [ ] No content copied verbatim from external sources.
-[ ] Written in Vietnamese (except for English technical terms).
+[ ] Written in the target course language specified by course_language in state.md (Vietnamese if "vi", English if "en" or default).
 [ ] Uncertain information is marked with a REQUIRES VERIFICATION tag.
 [ ] References section is included (at least 1 source).
 ```
@@ -108,7 +108,7 @@
 ```
 [ ] YAML frontmatter of the lesson is complete in Docusaurus format (id, title, sidebar_label, sidebar_position, ...).
 [ ] Lesson Introduction section is included using Docusaurus admonition format (including learning objectives, prerequisites, and estimated time).
-[ ] Lesson level headings follow style_guide.md Section 9.2 exactly (Giới thiệu bài học, Tóm tắt bài học, Bài tập tổng hợp, Trắc nghiệm).
+[ ] Lesson level headings follow style_guide.md Section 9.2 exactly (in English for English courses; translated to Vietnamese if course_language is "vi").
 [ ] Sections are arranged in the correct order (S01 → S02 → ...) and sidebar_position corresponds.
 [ ] Lesson Recap section is included at the end of the lesson.
 [ ] At least 2 Comprehensive Exercises are included.

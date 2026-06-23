@@ -80,15 +80,12 @@ Questions to check:
 
 | Score | Criteria                                                                                                                                                                 |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 9–10  | Complete YAML frontmatter, all required Vietnamese headings present (style_guide.md Sec 9.1), correct heading levels (no custom ## headings), clean Markdown formatting. |
+| 9–10  | Complete YAML frontmatter, all required headings present based on target language (style_guide.md Sec 9.1), correct heading levels (no custom ## headings), clean Markdown formatting. |
 | 7–8   | Correct structure but missing 1–2 fields in frontmatter.                                                                                                                 |
 | 5–6   | Missing 1 mandatory heading or uses custom ## headings.                                                                                                                  |
 | 0–4   | Missing more than 1 mandatory heading or fails to follow standard headings.                                                                                              |
 
-**Critical Rule:** If any mandatory heading (Giới thiệu, Khái niệm cốt lõi, Ví dụ minh họa, Lỗi
-thường gặp, Thực hành tốt nhất, Bài tập nhỏ, Tóm tắt, Tài liệu tham khảo) is missing, or if custom
-level-2 (##) headings are used, the Format Compliance score is capped at **5.0**. This will prevent
-the file from obtaining an overall score >= 8.0 (APPROVED).
+**Critical Rule:** If any mandatory heading (e.g., Introduction, Main Concepts, Code Examples, Common Mistakes, Best Practices, Mini Exercise, Summary, References for English courses; or Giới thiệu, Khái niệm cốt lõi, Ví dụ minh họa, Lỗi thường gặp, Thực hành tốt nhất, Bài tập nhỏ, Tóm tắt, Tài liệu tham khảo for Vietnamese courses) is missing, or if custom level-2 (##) headings are used, the Format Compliance score is capped at **5.0**. This will prevent the file from obtaining an overall score >= 8.0 (APPROVED).
 
 ---
 
