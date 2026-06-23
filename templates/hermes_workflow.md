@@ -78,13 +78,13 @@ INPUT:
   - section_ids: [S01, S02, S03, ...]  # List of sections to create
 
 STEPS:
-  1. READ goal.md
-  2. READ overview.md
-  3. READ architecture.md
-  4. READ style_guide.md
-  5. READ knowledge_sources.md
-  6. READ template_section.md
-  7. READ quality_checklist.md
+  1. READ goal.md (from `./goal.md` in the current working directory)
+  2. READ overview.md (from `./overview.md` in the current working directory)
+  3. READ architecture.md (from `./architecture.md` in the current working directory)
+  4. READ style_guide.md (from `./style_guide.md` in the current working directory)
+  5. READ knowledge_sources.md (from `./knowledge_sources.md` in the current working directory)
+  6. READ template_section.md (from `./template_section.md` in the current working directory)
+  7. READ quality_checklist.md (from `./quality_checklist.md` in the current working directory)
   8. VERIFY output directory structure:
        - Does output/sections/{level}/ exist?
        - Does output/reviews/sections/{level}/ exist?
@@ -100,12 +100,12 @@ STEPS:
 TASK: generate_section(level, lesson_id, section_id, section_title)
 
 PRE-CONDITION:
-  - Read: template_section.md
+  - Read: template_section.md (from `./template_section.md` in the current working directory)
   - Identified: level, lesson_id, section_id
 
 STEPS:
   1. UNDERSTAND_CONTEXT:
-     - Read architecture.md again to know where this section is positioned
+     - Read architecture.md (from `./architecture.md` in the current working directory) again to know where this section is positioned
      - List prerequisites (what the previous section taught)
 
   2. RESEARCH:
@@ -113,12 +113,12 @@ STEPS:
      - Note key APIs, related specifications/standards
 
   3. WRITE_CONTENT:
-     - Apply template_section.md
-     - Apply style_guide.md
+     - Apply template_section.md (from `./template_section.md` in the current working directory)
+     - Apply style_guide.md (from `./style_guide.md` in the current working directory)
      - Target: 500–1500 words depending on level
 
   4. SELF_REVIEW:
-     - Calculate score according to review_instruction.md
+     - Calculate score according to review_instruction.md (from `./review_instruction.md` in the current working directory)
      - Export JSON review result
 
   5. DECISION:

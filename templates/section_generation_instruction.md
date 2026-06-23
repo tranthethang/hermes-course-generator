@@ -22,16 +22,16 @@
 
 ## 2. Inputs to Read Before Starting
 
-Hermes MUST read the following files **in order**:
+Hermes MUST read the following files **in order** from the current working directory of the project (using `./` to ensure they are read from the active workspace directory, not the skill installation directory):
 
 ```
-1. goal.md                  → Understand execution goals, autonomous rules, and error policies
-2. overview.md              → Understand the overall course goals and audience
-3. architecture.md          → Understand where the current lesson fits in the course
-4. template_section.md      → Check the mandatory section structure
-5. style_guide.md           → Apply writing style rules
-6. knowledge_sources.md     → Identify permitted reference sources
-7. quality_checklist.md     → Understand criteria before saving
+1. goal.md                  → (read from `./goal.md`) Understand execution goals, autonomous rules, and error policies
+2. overview.md              → (read from `./overview.md`) Understand the overall course goals and audience
+3. architecture.md          → (read from `./architecture.md`) Understand where the current lesson fits in the course
+4. template_section.md      → (read from `./template_section.md`) Check the mandatory section structure
+5. style_guide.md           → (read from `./style_guide.md`) Apply writing style rules
+6. knowledge_sources.md     → (read from `./knowledge_sources.md`) Identify permitted reference sources
+7. quality_checklist.md     → (read from `./quality_checklist.md`) Understand criteria before saving
 ```
 
 ---

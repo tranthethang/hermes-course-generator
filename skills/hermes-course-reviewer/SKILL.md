@@ -16,14 +16,16 @@ files, grades them, and merges them into complete, publication-ready lessons.
 
 ### Step 1: Validate Structural and Quantitative Constraints
 
+First, read `state.md` and `style_guide.md` from the current working directory of the project (using `./state.md` and `./style_guide.md` to ensure they are read from the active workspace directory, not the skill installation directory).
+
 Run a review check on the target section file under `output/sections/{level}/`:
 
 - **Word/Character Count:** File must contain at least 500 words (~3,000 characters).
 - **Line Count:** File must contain at least 120 lines.
 - **Code Block Count:** File must contain at least 2 code blocks with 10+ lines of total code.
 - **Emoji Cleanliness:** Verify that there are absolutely **no emojis** in the file.
-- **Language Cleanliness:** Verify that the content is written in the target course language specified by `course_language` in `state.md`. If `course_language` is "vi", verify that there are no non-Vietnamese/non-English characters. If `course_language` is "en" (or default/not specified), verify that all content is in English. No Chinese or other foreign characters are allowed.
-- **Heading Compliance:** Verify that all headings follow the exact ordering and translations defined in `style_guide.md` Section 9.1 based on the target `course_language` (English headings for `en` or default; Vietnamese headings for `vi`). Ensure that no custom second-level headings (`##`) are used; all subheadings must be third-level (`###`) or fourth-level (`####`) under the main concepts section ("Main Concepts" or "Khái niệm cốt lõi").
+- **Language Cleanliness:** Verify that the content is written in the target course language specified by `course_language` in `state.md` (read from `./state.md`). If `course_language` is "vi", verify that there are no non-Vietnamese/non-English characters. If `course_language` is "en" (or default/not specified), verify that all content is in English. No Chinese or other foreign characters are allowed.
+- **Heading Compliance:** Verify that all headings follow the exact ordering and translations defined in `style_guide.md` (read from `./style_guide.md`) Section 9.1 based on the target `course_language` (English headings for `en` or default; Vietnamese headings for `vi`). Ensure that no custom second-level headings (`##`) are used; all subheadings must be third-level (`###`) or fourth-level (`####`) under the main concepts section ("Main Concepts" or "Khái niệm cốt lõi").
 - **MDX Safety:** Ensure all comparison symbols and generics (e.g. `<T>`) are in inline code blocks
   or escaped.
 - **No Code Execution:** Absolutely DO NOT run any code examples in the lesson using Bash/compilers.
@@ -31,7 +33,7 @@ Run a review check on the target section file under `output/sections/{level}/`:
 
 ### Step 2: Evaluate Technical and Pedagogical Quality
 
-Read the content and evaluate it against `quality_checklist.md`:
+Read the content and evaluate it against `quality_checklist.md` (read from `./quality_checklist.md` in the current working directory of the project):
 
 - **Explanations:** Check if concepts are explained clearly BEFORE showing code.
 - **Examples:** Confirm that code examples are realistic, useful, and follow best practices.
@@ -84,7 +86,7 @@ placeholders.
 
 ### Step 3: Inject Lesson-Level Content
 
-Open the merged file and replace the `{/* HERMES:FILL ... */}` placeholders with detailed content in the target language specified by `course_language` in `state.md` (e.g. English for `en`, Vietnamese for `vi`), adhering to the headings in `style_guide.md` Section 9.2:
+Open the merged file and replace the `{/* HERMES:FILL ... */}` placeholders with detailed content in the target language specified by `course_language` in `state.md` (read from `./state.md` in the current working directory, e.g., English for `en`, Vietnamese for `vi`), adhering to the headings in `style_guide.md` Section 9.2 (read from `./style_guide.md` in the current working directory):
 
 - **Lesson Introduction & Learning Objectives:** Clear context, prerequisite notes, and estimated completion time.
   - Learning objectives (3-5 objectives) must be wrapped in the Docusaurus admonition (e.g., `:::info Learning Objectives After this lesson, you will be able to: ... :::` or `:::info Mục tiêu bài học Sau bài học này, bạn sẽ có thể: ... :::` for Vietnamese).
@@ -96,7 +98,7 @@ Open the merged file and replace the `{/* HERMES:FILL ... */}` placeholders with
 
 ### Step 4: Final Lesson Review & Changelog Update
 
-- Self-review the merged lesson file using Checklist 2 in `quality_checklist.md`. Verify that all lesson headings follow `style_guide.md` Section 9.2 exactly based on the target course language.
+- Self-review the merged lesson file using Checklist 2 in `quality_checklist.md` (read from `./quality_checklist.md` in the current working directory). Verify that all lesson headings follow `style_guide.md` Section 9.2 exactly based on the target course language (read from `./style_guide.md` in the current working directory).
 - Save the review results to `output/reviews/lessons/{level}/{lesson_id}_review.json`.
 - Update state:
   ```bash

@@ -107,16 +107,16 @@ Hermes MUST follow the "One Task at a Time" principle:
 
 ## 6. File Reading Order Before Creating Content
 
-Before starting to generate any section or lesson, Hermes MUST read in the following order:
+Before starting to generate any section or lesson, Hermes MUST read the following files from the current working directory of the project (using `./` to ensure they are read from the active workspace directory, not the skill installation directory) in the following order:
 
 ```
-1. goal.md              → Understand execution goals, autonomous rules, and error policies
-2. overview.md          → Understand the overall course goals
-3. architecture.md      → Understand the level/lesson/section structure
-4. style_guide.md       → Understand the writing style guidelines
-5. knowledge_sources.md → Identify permitted reference sources
-6. template_section.md  → Understand the required section structure
-7. template_lesson.md   → Understand the lesson structure (when merging)
+1. goal.md              → (read from `./goal.md`) Understand execution goals, autonomous rules, and error policies
+2. overview.md          → (read from `./overview.md`) Understand the overall course goals
+3. architecture.md      → (read from `./architecture.md`) Understand the level/lesson/section structure
+4. style_guide.md       → (read from `./style_guide.md`) Understand the writing style guidelines
+5. knowledge_sources.md → (read from `./knowledge_sources.md`) Identify permitted reference sources
+6. template_section.md  → (read from `./template_section.md`) Understand the required section structure
+7. template_lesson.md   → (read from `./template_lesson.md`) Understand the lesson structure (when merging)
 ```
 
 ---

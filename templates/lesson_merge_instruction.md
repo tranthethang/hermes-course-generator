@@ -69,11 +69,11 @@ The Agent's tasks are:
 - The placeholders and transition comments must be deleted after they are replaced with real
   content.
 - All headings must follow the exact heading translations defined in `style_guide.md` Section
-  9.2 (based on the target course language).
+  9.2 (read from `./style_guide.md` in the current working directory, based on the target course language).
 
 ### Step 3: Verify the Complete Lesson
 
-After filling placeholders, run the checklist in `quality_checklist.md` under "Checklist before
+After filling placeholders, run the checklist in `quality_checklist.md` (read from `./quality_checklist.md` in the current working directory) under "Checklist before
 merging lesson".
 
 Specifically check:
