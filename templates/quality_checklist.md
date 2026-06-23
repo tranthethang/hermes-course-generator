@@ -40,7 +40,7 @@
 [ ] The first example is the simplest, followed by more complex ones.
 [ ] A Common Mistakes section is included with at least 2 mistakes.
 [ ] A Best Practices section is included with at least 2 points.
-[ ] A clear Mini Exercise is included (with sample input and expected output).
+[ ] Exactly 1 clear Mini Exercise is included (with sample input and expected output). Multiple exercises are not allowed.
 [ ] A Summary is included at the end of the section (3–5 bullet points).
 ```
 
@@ -50,7 +50,8 @@
 [ ] YAML frontmatter is complete in Docusaurus format (id, title, sidebar_label, sidebar_position, level, lesson_id, section_id, language_version, review_score, status).
 [ ] Uses Docusaurus Admonitions (:::note, :::tip, :::info, :::warning, :::danger) instead of GitHub-style (> [!NOTE]).
 [ ] MDX Safety: No raw HTML-like tags (such as <T>, <string>) in plain text. All must be in code blocks, inline code, or escaped.
-[ ] Heading order follows template_section.md.
+[ ] Heading order and translations follow style_guide.md Section 9.1 exactly (Giới thiệu, Khái niệm cốt lõi, Ví dụ minh họa, Lỗi thường gặp, Thực hành tốt nhất, Bài tập nhỏ, Tóm tắt, Tài liệu tham khảo).
+[ ] No custom second-level headings (##) are used in the section file; all custom subheadings must be level-3 (###) or level-4 (####) under Khái niệm cốt lõi.
 [ ] Heading levels are not skipped (e.g., no going from ## straight to ####).
 [ ] Code blocks use triple backticks with the specified language.
 [ ] No broken links.
@@ -106,7 +107,8 @@
 
 ```
 [ ] YAML frontmatter of the lesson is complete in Docusaurus format (id, title, sidebar_label, sidebar_position, ...).
-[ ] Lesson Introduction section is included (learning objectives, prerequisites, estimated time) using Docusaurus info admonition for learning objectives.
+[ ] Lesson Introduction section is included using Docusaurus admonition format (including learning objectives, prerequisites, and estimated time).
+[ ] Lesson level headings follow style_guide.md Section 9.2 exactly (Giới thiệu bài học, Tóm tắt bài học, Bài tập tổng hợp, Trắc nghiệm).
 [ ] Sections are arranged in the correct order (S01 → S02 → ...) and sidebar_position corresponds.
 [ ] Lesson Recap section is included at the end of the lesson.
 [ ] At least 2 Comprehensive Exercises are included.
@@ -118,7 +120,7 @@
 ```
 [ ] Clear duplicate content between sections has been removed.
 [ ] Terminology is consistent throughout the lesson.
-[ ] Transition text is added between sections (sentences leading from one section to the next).
+[ ] Transition text (1-2 sentences leading from one section to the next) is added between all section boundaries (do not leave empty spaces).
 [ ] Useful code examples are not deleted even if they seem similar.
 [ ] Code meaning is not changed during editing.
 ```
@@ -127,7 +129,7 @@
 
 ```
 [ ] Lesson filename follows file_naming_convention.md exactly.
-[ ] Heading hierarchy is correct.
+[ ] Heading hierarchy is correct (all merged section headings are shifted to level-3 ### headings under their respective section title).
 [ ] All section IDs and titles in YAML frontmatter match the actual content.
 [ ] No broken links or incorrect references.
 ```

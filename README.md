@@ -2,7 +2,6 @@
 
 ![Hermes Course Generator Toolset](assets/repo.png)
 
-
 The **Hermes Course Generator** is an automated toolset designed to set up, compile, and manage
 programming courses (e.g., Rust, Python, Go) using AI Agents. It generates a standard directory
 structure compatible with Docusaurus MDX and integrates directly with AI workflow templates.

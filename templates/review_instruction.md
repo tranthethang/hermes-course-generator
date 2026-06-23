@@ -78,13 +78,17 @@ Questions to check:
 
 ### Dimension 5: Format Compliance — Weight 10%
 
-| Score | Criteria                                                                     |
-| ----- | ---------------------------------------------------------------------------- |
-| 9–10  | Complete YAML frontmatter, correct heading order, clean Markdown formatting. |
-| 7–8   | Correct structure but missing 1–2 fields in frontmatter.                     |
-| 5–6   | Missing some required headings.                                              |
-| 3–4   | Significant structural deviations from template.                             |
-| 0–2   | Does not follow template.                                                    |
+| Score | Criteria                                                                                                                                                                 |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 9–10  | Complete YAML frontmatter, all required Vietnamese headings present (style_guide.md Sec 9.1), correct heading levels (no custom ## headings), clean Markdown formatting. |
+| 7–8   | Correct structure but missing 1–2 fields in frontmatter.                                                                                                                 |
+| 5–6   | Missing 1 mandatory heading or uses custom ## headings.                                                                                                                  |
+| 0–4   | Missing more than 1 mandatory heading or fails to follow standard headings.                                                                                              |
+
+**Critical Rule:** If any mandatory heading (Giới thiệu, Khái niệm cốt lõi, Ví dụ minh họa, Lỗi
+thường gặp, Thực hành tốt nhất, Bài tập nhỏ, Tóm tắt, Tài liệu tham khảo) is missing, or if custom
+level-2 (##) headings are used, the Format Compliance score is capped at **5.0**. This will prevent
+the file from obtaining an overall score >= 8.0 (APPROVED).
 
 ---
 
@@ -142,7 +146,7 @@ Hermes MUST export review results in the following JSON format:
     },
     "format_compliance": {
       "score": 10.0,
-      "notes": "Complete YAML, correct heading order, clean Markdown."
+      "notes": "Complete YAML, all standard Vietnamese headings present with correct hierarchy, clean Markdown."
     }
   },
   "total_score": 8.6,

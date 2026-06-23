@@ -10,7 +10,10 @@
 
 ```mermaid
 flowchart TD
-    Start([START]) --> ReadInstr[READ INSTRUCTIONS<br/>Mandatory: read all instruction files]
+    Start([START]) --> ResearchSyllabus[RESEARCH SYLLABUS<br/>Search course roadmaps & design architecture]
+    ResearchSyllabus --> UserApprove{user approved?}
+    UserApprove -- Yes --> ReadInstr[READ INSTRUCTIONS<br/>Mandatory: read all instruction files]
+    UserApprove -- No --> ResearchSyllabus
     ReadInstr --> GetParams[GET TASK PARAMS<br/>Identify: level, lesson_id, section_id]
 
     subgraph SectionGenLoop [Section Generation Loop (repeat for each section)]
@@ -38,7 +41,33 @@ flowchart TD
 
 ---
 
-## 2. Phase 1: Initialization
+## 2. Phase 0: Market Research & Syllabus Benchmarking
+
+```
+TASK: research_and_design_syllabus
+
+INPUT:
+  - target_language: [Language/Technology name]
+  - target_audience: [Target Audience description]
+
+STEPS:
+  1. SEARCH online course platforms (Coursera, Udemy, edX, Google Comprehensive Rust, etc.) for existing syllabi and roadmaps of the target language.
+  2. IDENTIFY key concepts, IDE tools, best practices, and popular project/exercise ideas from top-tier sources.
+  3. CREATE a roadmap_benchmark.md document summarizing:
+       - Top 3 benchmarked courses and their key modules.
+       - Recommended tools (e.g., rust-analyzer, formatters, debuggers) to include.
+       - Suggested changes or enhancements to standard curricula.
+  4. DESIGN or UPDATE the architecture.md file using the benchmark insights to ensure a comprehensive, modern, and competitive curriculum.
+  5. PRESENT the architecture.md and roadmap_benchmark.md to the user and obtain explicit approval before proceeding to Phase 1.
+
+OUTPUT:
+  - roadmap_benchmark.md
+  - architecture.md
+```
+
+---
+
+## 3. Phase 1: Initialization
 
 ```
 TASK: init_session
@@ -65,7 +94,7 @@ STEPS:
 
 ---
 
-## 3. Phase 2: Generate Section
+## 4. Phase 2: Generate Section
 
 ```
 TASK: generate_section(level, lesson_id, section_id, section_title)

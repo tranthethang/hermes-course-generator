@@ -321,3 +321,38 @@ Do not use GitHub markdown syntax (e.g. `> [!NOTE]`). Instead, use Docusaurus Ad
 - Do NOT use HTML comments `<!-- comment -->`.
 - MDX only supports JSX-style comments: `{/* comment */}`.
 - Example: `{/* TRANSITION_BEFORE_S01 */}` instead of `<!-- TRANSITION_BEFORE_S01 -->`.
+
+---
+
+## 9. Standard Vietnamese Headings
+
+To maintain consistency across all lessons and sections, all generated files must use the exact
+Vietnamese headings listed below. Custom second-level headings (using `##`) are strictly prohibited
+in section files. Any additional subtopics or custom headers must use third-level (`###`) or
+fourth-level (`####`) headings under the "Khái niệm cốt lõi" section.
+
+### 9.1 Section Headings
+
+| English Template Heading | Required Vietnamese Translation | Purpose                             |
+| ------------------------ | ------------------------------- | ----------------------------------- |
+| Introduction             | Giới thiệu                      | Context and analogies               |
+| Main Concepts            | Khái niệm cốt lõi               | Theory and custom subheadings (###) |
+| Code Examples            | Ví dụ minh họa                  | Practical code blocks               |
+| Common Mistakes          | Lỗi thường gặp                  | Incorrect vs correct code           |
+| Best Practices           | Thực hành tốt nhất              | Style and performance tips          |
+| Mini Exercise            | Bài tập nhỏ                     | Exactly one exercise                |
+| Summary                  | Tóm tắt                         | Bullet points wrap-up               |
+| References               | Tài liệu tham khảo              | Official documentation links        |
+
+### 9.2 Lesson Headings (Merged File)
+
+| English Template Heading | Required Vietnamese Translation | Purpose                         |
+| ------------------------ | ------------------------------- | ------------------------------- |
+| Lesson Introduction      | Giới thiệu bài học              | Learning goals and requirements |
+| Lesson Recap             | Tóm tắt bài học                 | Overall summary                 |
+| Comprehensive Exercises  | Bài tập tổng hợp                | Exercises combining sections    |
+| Quiz                     | Trắc nghiệm                     | Self-assessment questions       |
+
+All merged sections in the lesson file will have their headings automatically shifted down to
+third-level (`###`) headings under their respective section titles (e.g., `## Giới thiệu`,
+`## Khái niệm cốt lõi` under the main section title `## [Section Name]`).
