@@ -46,7 +46,7 @@ curl -fsSL https://raw.githubusercontent.com/tranthethang/hermes-course-generato
 Ensure all components and global configuration directories are correctly configured:
 
 ```bash
-./verify.sh
+curl -fsSL https://raw.githubusercontent.com/tranthethang/hermes-course-generator/main/verify.sh | bash
 ```
 
 ### 4. Initialize Workspace
