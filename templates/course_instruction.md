@@ -129,3 +129,12 @@ Files should only be saved to `output/` when:
 - Or the Lesson has been merged correctly from approved sections.
 
 Refer to `review_instruction.md` and `quality_checklist.md` for details.
+
+---
+
+## 8. Source of Truth and Language Consistency
+
+The `state.md` file in the active workspace root is the absolute source of truth for the course configuration, including the `course_language` (e.g., `en` or `vi`).
+
+- **Never override state.md:** Under no circumstances should Hermes modify or update the `course_language` field in `state.md` to match the language of previous workspaces, past conversation history, recalled memories, or the language in which the user is chatting.
+- **Enforce the config:** If `course_language` in `state.md` is set to `en`, the course content must be generated entirely in English. If it is set to `vi`, the course content must be generated entirely in Vietnamese. Do not attempt to "align" `state.md` to a different language based on memory.

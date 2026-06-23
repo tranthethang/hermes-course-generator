@@ -57,8 +57,8 @@ Create the following files in the workspace root based on the target programming
 
 ### Step 4: Configure State
 
-Update the initial state in `state.md` using the CLI or direct file updates to reflect the active
-level, lesson, section, and the chosen `course_language` (e.g., "en" or "vi").
+Update the initial state in `state.md` using the CLI or direct file updates to reflect the active level, lesson, section, and the chosen `course_language` (e.g., "en" or "vi").
+**CRITICAL:** The selected `course_language` is the absolute source of truth. Under no circumstances should you alter or "align" `course_language` in `state.md` based on your conversation language, recalled memory from other sessions, or because the user is communicating in a different language.
 
 ### Step 5: Report Completion
 

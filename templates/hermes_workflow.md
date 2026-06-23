@@ -85,11 +85,14 @@ STEPS:
   5. READ knowledge_sources.md (from `./knowledge_sources.md` in the current working directory)
   6. READ template_section.md (from `./template_section.md` in the current working directory)
   7. READ quality_checklist.md (from `./quality_checklist.md` in the current working directory)
-  8. VERIFY output directory structure:
+  8. VERIFY course_language:
+       - Read course_language from state.md (from `./state.md` in the current working directory).
+       - CRITICAL: The course_language value (en or vi) is the absolute source of truth. Under no circumstances should you modify course_language in state.md to match past memories, other projects, or the user's conversational language.
+  9. VERIFY output directory structure:
        - Does output/sections/{level}/ exist?
        - Does output/reviews/sections/{level}/ exist?
-       - If not → CREATE directories
-  9. REPORT: "Session initialized. Ready to generate {n} sections for Lesson {lesson_id} ({level})"
+       - If not -> CREATE directories
+  10. REPORT: "Session initialized. Ready to generate {n} sections for Lesson {lesson_id} ({level})"
 ```
 
 ---
