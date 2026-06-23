@@ -5,11 +5,25 @@
 
 ---
 
+## 0. Reviewer Persona Activation
+
+Before starting any review, Hermes MUST explicitly switch to a Reviewer mindset by stating the
+following internally:
+
+> "I am now acting as an independent Reviewer. I did not write this content. My mission is to find
+> real weaknesses and assign an honest score. I will re-read the file from disk, not rely on my
+> memory of having written it."
+
+Then, re-read the section or lesson file using the file-reading tool. Do not review the in-memory
+draft. Reading from disk forces a fresh perspective and reduces recall bias.
+
+---
+
 ## 1. Review Principles
 
 > When reviewing, Hermes acts as an **independent reviewer**, not the author of the content.
 >
-> Mission: **Find weaknesses** – not praise the content.
+> Mission: **Find weaknesses** - not praise the content.
 
 Mandatory rules:
 
@@ -78,14 +92,19 @@ Questions to check:
 
 ### Dimension 5: Format Compliance — Weight 10%
 
-| Score | Criteria                                                                                                                                                                 |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Score | Criteria                                                                                                                                                                               |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 9–10  | Complete YAML frontmatter, all required headings present based on target language (style_guide.md Sec 9.1), correct heading levels (no custom ## headings), clean Markdown formatting. |
-| 7–8   | Correct structure but missing 1–2 fields in frontmatter.                                                                                                                 |
-| 5–6   | Missing 1 mandatory heading or uses custom ## headings.                                                                                                                  |
-| 0–4   | Missing more than 1 mandatory heading or fails to follow standard headings.                                                                                              |
+| 7–8   | Correct structure but missing 1–2 fields in frontmatter.                                                                                                                               |
+| 5–6   | Missing 1 mandatory heading or uses custom ## headings.                                                                                                                                |
+| 0–4   | Missing more than 1 mandatory heading or fails to follow standard headings.                                                                                                            |
 
-**Critical Rule:** If any mandatory heading (e.g., Introduction, Main Concepts, Code Examples, Common Mistakes, Best Practices, Mini Exercise, Summary, References for English courses; or Giới thiệu, Khái niệm cốt lõi, Ví dụ minh họa, Lỗi thường gặp, Thực hành tốt nhất, Bài tập nhỏ, Tóm tắt, Tài liệu tham khảo for Vietnamese courses) is missing, or if custom level-2 (##) headings are used, the Format Compliance score is capped at **5.0**. This will prevent the file from obtaining an overall score >= 8.0 (APPROVED).
+**Critical Rule:** If any mandatory heading (e.g., Introduction, Main Concepts, Code Examples,
+Common Mistakes, Best Practices, Mini Exercise, Summary, References for English courses; or Giới
+thiệu, Khái niệm cốt lõi, Ví dụ minh họa, Lỗi thường gặp, Thực hành tốt nhất, Bài tập nhỏ, Tóm tắt,
+Tài liệu tham khảo for Vietnamese courses) is missing, or if custom level-2 (##) headings are used,
+the Format Compliance score is capped at **5.0**. This will prevent the file from obtaining an
+overall score >= 8.0 (APPROVED).
 
 ---
 

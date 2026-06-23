@@ -22,7 +22,9 @@
 
 ## 2. Inputs to Read Before Starting
 
-Hermes MUST read the following files **in order** from the current working directory of the project (using `./` to ensure they are read from the active workspace directory, not the skill installation directory):
+Hermes MUST read the following files **in order** from the current working directory of the project
+(using `./` to ensure they are read from the active workspace directory, not the skill installation
+directory):
 
 ```
 1. goal.md                  → (read from `./goal.md`) Understand execution goals, autonomous rules, and error policies
@@ -103,7 +105,8 @@ Mandatory content requirements:
 - Explain concepts using clear, natural language.
 - Use relatable real-world analogies.
 - Explain WHY this concept is important.
-- Length: 150–400 words (depending on topic complexity).
+- Length of the explanation text (under Main Concepts): 150-400 words depending on topic complexity.
+  Note: total section length (all headings combined) should be 500-1500 words.
 
 #### 4.2 Code Examples
 
@@ -122,24 +125,24 @@ Mandatory content requirements:
 
 #### 4.3 Common Mistakes
 
-- List 2–4 common mistakes.
+- List 2-4 common mistakes.
 - Each mistake needs: description + bad code + good code + explanation.
+- Use the following pattern for each mistake:
 
-```python
-# INCORRECT
-my_list = [1, 2, 3]
-print(my_list[3])  # IndexError: list index out of range
+```[language]
+// INCORRECT
+// [bad code demonstrating the mistake]
+// Error: [what error this produces]
 
-# CORRECT
-my_list = [1, 2, 3]
-if len(my_list) > 3:
-    print(my_list[3])
+// CORRECT
+// [corrected code]
 ```
 
 #### 4.4 Best Practices
 
-- List 2–3 best practices related to the topic.
-- Reference coding style rules (e.g. PEP 8) where applicable.
+- List 2-3 best practices related to the topic.
+- Reference official style guides or specifications (e.g., language-specific style guides, RFCs)
+  where applicable.
 
 #### 4.5 Mini Exercise
 

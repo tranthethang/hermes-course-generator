@@ -1,8 +1,8 @@
 # Style Guide
 
 > **Target Audience:** Hermes AI Agent  
-> **Purpose:** Guidelines for course writing style, code formatting, and course content
-> generation (supporting both English and Vietnamese).
+> **Purpose:** Guidelines for course writing style, code formatting, and course content generation
+> (supporting both English and Vietnamese).
 
 ---
 
@@ -326,7 +326,11 @@ Do not use GitHub markdown syntax (e.g. `> [!NOTE]`). Instead, use Docusaurus Ad
 
 ## 9. Standard Course Headings (Language Specific)
 
-To maintain consistency across all lessons and sections, all generated files must use the exact headings listed below. Custom second-level headings (using `##`) are strictly prohibited in section files. Any additional subtopics or custom headers must use third-level (`###`) or fourth-level (`####`) headings under the main concepts section ("Khái niệm cốt lõi" in Vietnamese, or "Main Concepts" in English).
+To maintain consistency across all lessons and sections, all generated files must use the exact
+headings listed below. Custom second-level headings (using `##`) are strictly prohibited in section
+files. Any additional subtopics or custom headers must use third-level (`###`) or fourth-level
+(`####`) headings under the main concepts section ("Khái niệm cốt lõi" in Vietnamese, or "Main
+Concepts" in English).
 
 - For **English** courses (`course_language: "en"` or default): Use the English Template Headings.
 - For **Vietnamese** courses (`course_language: "vi"`): Use the Required Vietnamese Translations.

@@ -107,7 +107,9 @@ Hermes MUST follow the "One Task at a Time" principle:
 
 ## 6. File Reading Order Before Creating Content
 
-Before starting to generate any section or lesson, Hermes MUST read the following files from the current working directory of the project (using `./` to ensure they are read from the active workspace directory, not the skill installation directory) in the following order:
+Before starting to generate any section or lesson, Hermes MUST read the following files from the
+current working directory of the project (using `./` to ensure they are read from the active
+workspace directory, not the skill installation directory) in the following order:
 
 ```
 1. goal.md              → (read from `./goal.md`) Understand execution goals, autonomous rules, and error policies
@@ -134,7 +136,13 @@ Refer to `review_instruction.md` and `quality_checklist.md` for details.
 
 ## 8. Source of Truth and Language Consistency
 
-The `state.md` file in the active workspace root is the absolute source of truth for the course configuration, including the `course_language` (e.g., `en` or `vi`).
+The `state.md` file in the active workspace root is the absolute source of truth for the course
+configuration, including the `course_language` (e.g., `en` or `vi`).
 
-- **Never override state.md:** Under no circumstances should Hermes modify or update the `course_language` field in `state.md` to match the language of previous workspaces, past conversation history, recalled memories, or the language in which the user is chatting.
-- **Enforce the config:** If `course_language` in `state.md` is set to `en`, the course content must be generated entirely in English. If it is set to `vi`, the course content must be generated entirely in Vietnamese. Do not attempt to "align" `state.md` to a different language based on memory.
+- **Never override state.md:** Under no circumstances should Hermes modify or update the
+  `course_language` field in `state.md` to match the language of previous workspaces, past
+  conversation history, recalled memories, or the language in which the user is chatting.
+- **Enforce the config:** If `course_language` in `state.md` is set to `en`, the course content must
+  be generated entirely in English. If it is set to `vi`, the course content must be generated
+  entirely in Vietnamese. Do not attempt to "align" `state.md` to a different language based on
+  memory.

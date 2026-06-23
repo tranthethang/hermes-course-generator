@@ -79,3 +79,37 @@ The execution is considered successful when:
 1. All sections for the active lesson are generated and have a review score of 8.0 or higher.
 2. The lesson is merged, fully filled, and passes the quality checklist.
 3. The `state.md` and `output/changelog.md` are updated to reflect the successful generation.
+
+---
+
+## 5. Session Context Budget
+
+Reading all instruction files on every task is expensive in long sessions. Apply this strategy to
+reduce redundant reads without losing context accuracy:
+
+### First task of a session (init_session or first generate_section):
+
+Read all files in full as specified by the file reading order in `course_instruction.md`.
+
+### Subsequent tasks in the same session:
+
+Only re-read the following files:
+
+```
+1. state.md             -> Always re-read. It changes with every completed task.
+2. architecture.md      -> Re-read ONLY the relevant level section (begin / advance / master),
+                          not the entire file. Skip other levels.
+```
+
+Skip re-reading these files unless a quality error is found that requires re-checking:
+
+```
+- style_guide.md        -> Stable. Only re-read if a formatting error occurs.
+- knowledge_sources.md  -> Stable. Only re-read when researching a new topic domain.
+- template_section.md   -> Stable. Only re-read if the structure of the output seems wrong.
+- quality_checklist.md  -> Stable. Only re-read if a checklist item question arises.
+- goal.md               -> Read once per session. Does not change.
+```
+
+This reduces context consumption by approximately 60-70% on sections 2 and beyond in a session
+without reducing output quality.

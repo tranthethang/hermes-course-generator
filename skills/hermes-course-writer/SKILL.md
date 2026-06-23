@@ -23,7 +23,12 @@ constraints:
    combined.
 4. **Emoji Prohibition:** Absolutely **NO emojis** anywhere in headings, lists, inline text, or
    comments.
-5. **Course Language:** Content must be written in the language specified by `course_language` in `state.md` (e.g., "en" or "vi"). If `course_language` is "vi", all text must be in Vietnamese, except for standard technical English terms. If `course_language` is "en" (or default/not specified), all text must be in English. No foreign/untranslated symbols (e.g. Chinese characters) are allowed. **CRITICAL:** Do NOT modify `course_language` in `state.md` based on past memories or chat context; `state.md` is the absolute source of truth.
+5. **Course Language:** Content must be written in the language specified by `course_language` in
+   `state.md` (e.g., "en" or "vi"). If `course_language` is "vi", all text must be in Vietnamese,
+   except for standard technical English terms. If `course_language` is "en" (or default/not
+   specified), all text must be in English. No foreign/untranslated symbols (e.g. Chinese
+   characters) are allowed. **CRITICAL:** Do NOT modify `course_language` in `state.md` based on
+   past memories or chat context; `state.md` is the absolute source of truth.
 6. **No Code Execution:** Absolutely DO NOT run code examples in the lesson using Bash commands or
    interpreters. Only review code via your internal logic and reasoning.
 
@@ -31,17 +36,23 @@ constraints:
 
 ### Step 1: Read Context and Plan
 
-Before starting, read the following workspace files from the current working directory of the project (using `./state.md`, `./overview.md`, `./architecture.md`, `./style_guide.md`, `./template_section.md` to ensure they are read from the active workspace directory, not the skill installation directory):
+Before starting, read the following workspace files from the current working directory of the
+project (using `./state.md`, `./overview.md`, `./architecture.md`, `./style_guide.md`,
+`./template_section.md` to ensure they are read from the active workspace directory, not the skill
+installation directory):
 
-1. `state.md` (read from `./state.md`) to check the current state and determine the `course_language` (e.g., "en" or "vi").
-   **CRITICAL:** Under no circumstances should you modify or update the `course_language` in `state.md` to align with past memories, other courses, or the language you are conversing in. The language specified in `state.md` is the absolute source of truth.
-   **CRITICAL:** If `locked_section` is NOT empty (e.g., `locked_section: "L01_S01"`), you MUST abort
-   generation and inform the user that the workspace is locked until the Reviewer approves the
-   pending section.
+1. `state.md` (read from `./state.md`) to check the current state and determine the
+   `course_language` (e.g., "en" or "vi"). **CRITICAL:** Under no circumstances should you modify or
+   update the `course_language` in `state.md` to align with past memories, other courses, or the
+   language you are conversing in. The language specified in `state.md` is the absolute source of
+   truth. **CRITICAL:** If `locked_section` is NOT empty (e.g., `locked_section: "L01_S01"`), you
+   MUST abort generation and inform the user that the workspace is locked until the Reviewer
+   approves the pending section.
 2. `overview.md` (read from `./overview.md`) to align on objectives.
 3. `architecture.md` (read from `./architecture.md`) to find the exact lesson and section title.
 4. `style_guide.md` (read from `./style_guide.md`) to follow writing and coding styles.
-5. `template_section.md` (read from `./template_section.md`) to understand the mandatory layout structure.
+5. `template_section.md` (read from `./template_section.md`) to understand the mandatory layout
+   structure.
 
 ### Step 2: Research the Topic
 
@@ -51,7 +62,8 @@ information, design patterns, and edge cases.
 ### Step 3: Write Section Content
 
 Draft the section file following the template structure. Ensure all mandated headings are included
-in order, based on the target `course_language` in `state.md` (following `style_guide.md` Section 9.1):
+in order, based on the target `course_language` in `state.md` (following `style_guide.md` Section
+9.1):
 
 - **For English courses (`en` or default):**
   1. `# {Section Title}`

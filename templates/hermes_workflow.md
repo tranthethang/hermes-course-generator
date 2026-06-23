@@ -118,7 +118,9 @@ STEPS:
   3. WRITE_CONTENT:
      - Apply template_section.md (from `./template_section.md` in the current working directory)
      - Apply style_guide.md (from `./style_guide.md` in the current working directory)
-     - Target: 500–1500 words depending on level
+     - Target total section length: 500-1500 words depending on level
+       (The explanation sub-section under Main Concepts: 150-400 words; remaining words
+        distributed across examples, mistakes, best practices, exercise, and summary)
 
   4. SELF_REVIEW:
      - Calculate score according to review_instruction.md (from `./review_instruction.md` in the current working directory)
@@ -159,7 +161,7 @@ OUTPUT:
 
 ---
 
-## 4. Detailed Retry Logic
+## 5. Detailed Retry Logic
 
 ```
 FUNCTION retry_section(section_content, review_result, attempt_number):
@@ -202,17 +204,25 @@ STEPS:
      - status == "approved"?
      - review_score >= 8.0?
   3. Compare with the section_ids list from architecture.md
+  4. CROSS-SECTION CONSISTENCY CHECK:
+     - Read all approved section files for this lesson.
+     - Verify terminology is consistent across sections (same term used for the same concept).
+     - Verify no concept is used in a later section that was not introduced in an earlier section.
+     - Verify code style is consistent (e.g., type annotation style, naming conventions are uniform).
+     - If an inconsistency is found: NOTE it in the report and flag the affected section(s) for
+       a targeted fix before merging.
 
 REPORT:
   Ready sections: [S01, S02, S03]
   Missing sections: [S04]
   Not approved: [S05 (score: 7.5)]
+  Consistency issues: [S02 uses 'binding' where S01 used 'variable' for the same concept]
 
-IF all sections are ready:
-  → PROCEED to merge_lesson
+IF all sections are ready AND no consistency blockers:
+  -> PROCEED to merge_lesson
 ELSE:
-  → REPORT missing/not-approved sections
-  → STOP (wait to generate missing sections)
+  -> REPORT missing/not-approved sections and consistency issues
+  -> STOP (wait to resolve before merging)
 ```
 
 ---
@@ -261,17 +271,45 @@ TASK: review_lesson(level, lesson_id)
 
 STEPS:
   1. Load lesson file
-  2. Review according to review_instruction.md (Lesson Review section)
-  3. Calculate overall score
-  4. Export review result
-  5. Save: output/reviews/lessons/{level}/{lesson_id}_review.json
+  2. Activate Reviewer Persona (see review_instruction.md Section 0)
+  3. Review according to review_instruction.md (Lesson Review section)
+  4. Calculate overall score
+  5. Export review result
+  6. Save: output/reviews/lessons/{level}/{lesson_id}_review.json
 
   IF score >= 8.0:
-    → Update lesson status: reviewed
-    → REPORT: "Lesson ready for publish"
+    -> Update lesson status: reviewed
+    -> REPORT: "Lesson ready for publish"
   ELSE:
-    → REPORT weaknesses and required_fixes
-    → STOP (wait for fixing each issue)
+    -> REPORT weaknesses and required_fixes
+    -> STOP (wait for fixing each issue)
+```
+
+---
+
+## 8. Phase 6: Course Completion Verification
+
+```
+TASK: verify_course_complete
+
+TRIGGER: Run after the last lesson of the last level is reviewed.
+
+STEPS:
+  1. VERIFY all lessons in architecture.md have a corresponding file in output/lessons/{level}/.
+  2. VERIFY all lesson files have status: reviewed.
+  3. CHECK for any remaining sections with status: needs-revision and report them.
+  4. RUN format.sh (if available) to format all output files consistently.
+  5. GENERATE output/COURSE_SUMMARY.md with:
+       - Course name and version
+       - Total lessons per level (begin / advance / master)
+       - Total sections across the course
+       - Average section review score
+       - Generation date range (first changelog entry to last)
+       - List of any sections that required more than 1 fix attempt
+  6. REPORT: "Course complete. All lessons reviewed. Ready for Docusaurus integration."
+
+OUTPUT:
+  - output/COURSE_SUMMARY.md
 ```
 
 ---

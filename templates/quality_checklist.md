@@ -156,17 +156,21 @@
 
 ---
 
-## Checklist 3: Advanced [Language Name] Techniques (For Advance and Master Levels)
+## Checklist 3: Advanced Language-Specific Techniques (For Advance and Master Levels)
 
-Apply additionally to sections/lessons belonging to `advance` or `master`:
+Apply additionally to all sections/lessons at `advance` or `master` level. These checks complement
+Checklist 1 and focus on depth of coverage expected at higher levels.
 
 ```
-[ ] Type hints are complete and accurate (especially Generic types, Protocol).
-[ ] Performance implications are mentioned (if any).
-[ ] Thread safety / async safety is clearly stated (if relevant).
-[ ] Alternative approaches are compared when there are multiple solutions.
-[ ] Code examples are not too simplistic for the level.
-[ ] Related standards/specifications (such as PEP, RFC, specifications) are mentioned when discussing design decisions.
+[ ] Advanced type system features are demonstrated correctly (generics, type parameters, associated types, protocols, interfaces — as applicable to the language).
+[ ] Performance implications are discussed (time complexity, memory allocation, stack vs. heap, zero-cost abstractions where relevant).
+[ ] Concurrency and thread-safety considerations are explicitly stated when the topic involves shared state, async operations, or parallel execution.
+[ ] At least one alternative approach or pattern is compared against the primary approach shown, with a rationale for when to prefer each.
+[ ] Code examples are not simplified to the point of being unrealistic; they reflect production-quality usage patterns.
+[ ] Relevant language specifications, standards, or official RFCs (e.g., PEP, RFC, ECMA spec, language reference) are cited when explaining design decisions.
+[ ] Error handling follows language-idiomatic patterns (e.g., Result/Option for Rust, checked exceptions for Java, error values for Go) — not generic try/catch where avoidable.
+[ ] Ownership, memory safety, or resource management implications are described where the language enforces or encourages specific patterns.
+[ ] If unsafe or low-level constructs are shown, a SAFETY comment or invariant explanation is included.
 ```
 
 ---
@@ -195,10 +199,11 @@ Apply additionally to sections/lessons belonging to `advance` or `master`:
 
 ```
 [ ] Performance is discussed (time/space complexity when relevant).
-[ ] Runtime architecture/compiler internals of [Language Name] are mentioned if appropriate.
-[ ] Compared with other patterns/approaches.
-[ ] Code examples are at a production-ready level.
-[ ] Maintainability and scalability are discussed.
+[ ] Runtime architecture or compiler internals of the target language are mentioned where they explain the behavior demonstrated in examples.
+[ ] At least two patterns or approaches are compared with explicit trade-off analysis.
+[ ] Code examples are at a production-ready level (not toy programs).
+[ ] Maintainability and scalability considerations are discussed.
+[ ] The section explains not just HOW but WHY the language or runtime behaves this way at a fundamental level.
 ```
 
 ---

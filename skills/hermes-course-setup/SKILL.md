@@ -52,13 +52,16 @@ Create the following files in the workspace root based on the target programming
 2. **`architecture.md`** (Syllabus): Defines the exact list of Lessons (e.g., L01, L02) and their
    corresponding Sections (e.g., S01, S02) with precise technical titles.
 3. **`style_guide.md`**: Contains language-specific course headings (supporting English and
-   Vietnamese), code guidelines (e.g., naming conventions, comments style), and Docusaurus MDX safety
-   rules (e.g., wrapping generic brackets like `<T>` or `<string>` in inline code blocks).
+   Vietnamese), code guidelines (e.g., naming conventions, comments style), and Docusaurus MDX
+   safety rules (e.g., wrapping generic brackets like `<T>` or `<string>` in inline code blocks).
 
 ### Step 4: Configure State
 
-Update the initial state in `state.md` using the CLI or direct file updates to reflect the active level, lesson, section, and the chosen `course_language` (e.g., "en" or "vi").
-**CRITICAL:** The selected `course_language` is the absolute source of truth. Under no circumstances should you alter or "align" `course_language` in `state.md` based on your conversation language, recalled memory from other sessions, or because the user is communicating in a different language.
+Update the initial state in `state.md` using the CLI or direct file updates to reflect the active
+level, lesson, section, and the chosen `course_language` (e.g., "en" or "vi"). **CRITICAL:** The
+selected `course_language` is the absolute source of truth. Under no circumstances should you alter
+or "align" `course_language` in `state.md` based on your conversation language, recalled memory from
+other sessions, or because the user is communicating in a different language.
 
 ### Step 5: Report Completion
 
