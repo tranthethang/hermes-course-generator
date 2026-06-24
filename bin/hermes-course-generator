@@ -524,6 +524,18 @@ def check_mdx_safety(content):
                 context = line_clean[max(0, idx-15):min(len(line_clean), idx+10)].strip()
                 errors.append(f"MDX safety error at line {line_num}: Unescaped '>' found in: '{context}'. Wrap in backticks or escape as '\\>'.")
                 
+        # Check for unescaped '{'
+        for match in re.finditer(r'(?<!\\)\{', line_clean):
+            idx = match.start()
+            context = line_clean[max(0, idx-10):min(len(line_clean), idx+15)].strip()
+            errors.append(f"MDX safety error at line {line_num}: Unescaped '{{' found in: '{context}'. Wrap in backticks, use JSX expression '{{\"{{\"}}', or escape as '\\{{'.")
+            
+        # Check for unescaped '}'
+        for match in re.finditer(r'(?<!\\)\}', line_clean):
+            idx = match.start()
+            context = line_clean[max(0, idx-10):min(len(line_clean), idx+15)].strip()
+            errors.append(f"MDX safety error at line {line_num}: Unescaped '}}' found in: '{context}'. Wrap in backticks, use JSX expression '{{\"}}\"}}', or escape as '\\}}'.")
+            
     return errors
 
 def cmd_verify(target_path, level_arg):

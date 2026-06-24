@@ -71,10 +71,10 @@ hermes-course-generator init --path /path/to/new-course
 | `hermes-course-generator merge --level <level> --lesson <lesson_id>` | Merges individual section files (`.mdx`) into a single lesson.                     |
 | `hermes-course-generator state update --key <key> --value <val>`     | Programmatically updates fields in `state.md` to track progress.                   |
 | `hermes-course-generator verify [--path <path>] [--level <level>]`   | Verifies section formatting, metadata keys, and MDX safety (unescaped `<` / `>`).  |
-| `hermes-course-generator reorder [--path <path>] [--level <level>]`  | Scans and sequentially reorders Docusaurus sidebar positions in section files.    |
+| `hermes-course-generator reorder [--path <path>] [--level <level>]`  | Scans and sequentially reorders Docusaurus sidebar positions in section files.     |
 | `./format.sh`                                                        | Automatically formats all Markdown and MDX files in the workspace using Prettier.  |
-| `./verify_sections.sh <workspace_path> [level]`                      | Wrapper script to verify section files format and MDX safety in a workspace.      |
-| `./reorder_sections.sh <workspace_path> [level] [mode]`              | Wrapper script to scan and reorder sidebar positions in a workspace.              |
+| `./verify_sections.sh <workspace_path> [level]`                      | Wrapper script to verify section files format and MDX safety in a workspace.       |
+| `./reorder_sections.sh <workspace_path> [level] [mode]`              | Wrapper script to scan and reorder sidebar positions in a workspace.               |
 | `./uninstall.sh`                                                     | Removes the CLI tool, configurations, and global skills from your system.          |
 
 ---
@@ -85,7 +85,8 @@ hermes-course-generator init --path /path/to/new-course
 - [skills/](skills) — Definitions of global specialized skills for AI Agents:
   - `hermes-course-setup` — Workspace setup and initial configuration.
   - `hermes-course-writer` — Detailed research and step-by-step section drafting.
-  - `hermes-course-validator` — Verification of section formatting, metadata, MDX safety, and sidebar reordering.
+  - `hermes-course-validator` — Verification of section formatting, metadata, MDX safety, and
+    sidebar reordering.
   - `hermes-course-reviewer` — Quality gate review, compiler validation, and lesson merging.
 - [templates/](templates) — Core instructional templates and style guides.
   - [hermes_workflow.md](templates/hermes_workflow.md) — The generation workflow.
@@ -118,7 +119,8 @@ Trigger the writer agent for a specific section by prompting:
 
 ### Phase 3: Section Validation & Reordering
 
-Trigger the validator agent to verify formatting, MDX safety, and sequentially reorder sidebar positions:
+Trigger the validator agent to verify formatting, MDX safety, and sequentially reorder sidebar
+positions:
 
 > "Please verify the section files for [Level] and reorder their sidebar positions using the
 > `hermes-course-validator` skill."

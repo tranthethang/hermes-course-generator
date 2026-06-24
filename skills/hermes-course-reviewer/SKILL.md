@@ -38,8 +38,8 @@ Run a review check on the target section file under `output/sections/{level}/`:
   `course_language` (English headings for `en` or default; Vietnamese headings for `vi`). Ensure
   that no custom second-level headings (`##`) are used; all subheadings must be third-level (`###`)
   or fourth-level (`####`) under the main concepts section ("Main Concepts" or "Khái niệm cốt lõi").
-- **MDX Safety:** Ensure all comparison symbols and generics (e.g. `<T>`) are in inline code blocks
-  or escaped.
+- **MDX Safety:** Ensure all comparison symbols, generics (e.g. `<T>`), and literal curly braces
+  (`{`, `}`) in plain text are in inline code blocks or escaped.
 - **No Code Execution:** Absolutely DO NOT run any code examples in the lesson using Bash/compilers.
   Review code purely via LLM analytical logic.
 

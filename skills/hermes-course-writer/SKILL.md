@@ -95,11 +95,11 @@ headings under the main concepts section ("Main Concepts" or "Khái niệm cốt
 
 ### Step 4: Verify MDX Safety
 
-Ensure that any comparison operators (`<`, `>`) or generic type parameters (e.g. `<T>`, `<string>`)
-are:
+Ensure that any comparison operators (`<`, `>`), generic type parameters (e.g. `<T>`, `<string>`),
+or literal curly braces (`{`, `}`) in plain text are:
 
-- Wrapped inside inline code blocks (e.g. `` `<T>` ``)
-- Or properly escaped (e.g. `\<T\>`) This prevents Docusaurus compilation failures.
+- Wrapped inside inline code blocks (e.g. `` `<T>` `` or `` `{tên}` ``)
+- Or properly escaped (e.g. `\<T\>` or `\{tên\}`) This prevents Docusaurus compilation failures.
 
 ### Step 5: Verify Code Correctness
 

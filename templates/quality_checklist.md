@@ -49,7 +49,7 @@
 ```
 [ ] YAML frontmatter is complete in Docusaurus format (id, title, sidebar_label, sidebar_position, level, lesson_id, section_id, language_version, review_score, status).
 [ ] Uses Docusaurus Admonitions (:::note, :::tip, :::info, :::warning, :::danger) instead of GitHub-style (> [!NOTE]).
-[ ] MDX Safety: No raw HTML-like tags (such as <T>, <string>) in plain text. All must be in code blocks, inline code, or escaped.
+[ ] MDX Safety: No raw HTML-like tags (such as <T>, <string>) or literal curly braces ({, }) in plain text. All must be in code blocks, inline code, or escaped.
 [ ] Heading order follows style_guide.md (read from `./style_guide.md` in the current working directory) Section 9.1 exactly (in English for English courses; translated to Vietnamese if course_language is "vi").
 [ ] No custom second-level headings (##) are used in the section file; all custom subheadings must be level-3 (###) or level-4 (####) under the main concepts section ("Khái niệm cốt lõi" if "vi", "Main Concepts" if "en" or default).
 [ ] Heading levels are not skipped (e.g., no going from ## straight to ####).

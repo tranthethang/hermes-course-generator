@@ -292,29 +292,31 @@ Quiz rules:
 When writing lesson docs, you must comply with Docusaurus MDX rules to prevent compile and display
 errors:
 
-### 8.1 Avoid MDX Safety Errors (Characters `<` and `>`)
+### 8.1 Avoid MDX Safety Errors (Characters `<`, `>`, `{`, and `}`)
 
 - The Docusaurus MDX parser will misinterpret `<` and `>` characters standing alone (or inside
-  generic formats like `<int>`, `<string>`, `<T>`) as unclosed HTML/JSX tags. This breaks system
-  builds.
-- **Rule:** You must wrap these characters or generic types in inline code (e.g., `` `<string>` ``
-  or `` `<T>` ``) or use escape characters (`\<int\>`).
+  generic formats like `<int>`, `<string>`, `<T>`) as unclosed HTML/JSX tags.
+- Similarly, curly braces `{` and `}` standing alone (or inside formatting syntax like `{tên}`,
+  `{giá_trí}`) are interpreted by the parser as JavaScript/JSX expressions. If they are not valid
+  JavaScript or refer to undefined variables, they will fail the build.
+- **Rule:** You must wrap these characters, generic types, or literal braces in inline code (e.g.,
+  `` `<string>` ``, `` `{tên}` ``) or use escape characters (`\<int\>`, `\{tên\}`).
 - **Examples of Incorrect vs Correct Usage:**
   - **Incorrect (will fail compilation):**
     - `# Box<T>: Heap Allocation`
     - `### Rc<RefCell<T>>: Shared Mutable Data`
-    - `### Shared State with Arc<Mutex<T>>`
     - `Result is always >= min and <= max`
-    - `[Using Box<T> to Point to Data](url)`
+    - `Xin chào {tên}, bạn {tuổi} tuổi`
+    - `In kết quả dạng: {giá_trí:.1f}`
   - **Correct (compiled successfully):**
     - `# Box\<T\>: Heap Allocation` (escaped) or `# Box<T>: Heap Allocation` (backticks)
     - `### Rc\<RefCell\<T\>\>: Shared Mutable Data` (escaped) or
       `### Rc<RefCell<T>>: Shared Mutable Data` (backticks)
-    - `### Shared State with Arc\<Mutex\<T\>\>` (escaped) or `### Shared State with Arc<Mutex<T>>`
-      (backticks)
     - `Result is always \>= min and \<= max` (escaped) or `Result is always >= min and <= max`
       (backticks)
-    - `[Using Box\<T\> to Point to Data](url)` (escaped)
+    - `Xin chào \{tên\}, bạn \{tuổi\} tuổi` (escaped) or `Xin chào {tên}, bạn {tuổi} tuổi`
+      (backticks)
+    - `In kết quả dạng: \{giá_trí:.1f\}` (escaped) or `In kết quả dạng: {giá_trí:.1f}` (backticks)
 
 ### 8.2 Use Admonitions
 

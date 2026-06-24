@@ -39,6 +39,8 @@ hermes-course-generator verify --path <workspace_path> --level <level>
    - No custom Level-2 headings (`##`) are allowed.
    - All standard Level-2 headings must exist and be in the correct order depending on language
      (English vs Vietnamese).
+4. **MDX Safety:** Ensure all comparison symbols, generics (e.g. `<T>`), and literal curly braces
+   (`{`, `}`) in plain text are wrapped in inline code blocks or escaped.
 
 ### Task 2: Fix and Reorder Sidebar Positions
 

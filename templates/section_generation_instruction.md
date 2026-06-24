@@ -11,10 +11,12 @@
 - **Generate individually:** Hermes only creates **ONE** section per task. Never generate multiple
   sections at once.
 - **Docusaurus compatible:** All Markdown content generated must be compatible with Docusaurus MDX.
-- **MDX Safety (Extremely Important):** Absolutely DO NOT write raw comparison operators or generic
-  type brackets directly in plain text (e.g., `<T>`, `<string>`, `<int>`). The Docusaurus MDX parser
-  will misinterpret these as unclosed HTML/JSX tags and fail compilation. You must write these
-  inside backticks (e.g., `` `<T>` ``) or escape the `<` and `>` characters.
+- **MDX Safety (Extremely Important):** Absolutely DO NOT write raw comparison operators, generic
+  type brackets (e.g., `<T>`, `<string>`, `<int>`), or literal curly braces (`{`, `}`) directly in
+  plain text. The Docusaurus MDX parser will misinterpret `<` and `>` as unclosed HTML/JSX tags, and
+  `{` and `}` as invalid JavaScript/JSX expressions, causing compilation to fail. You must write
+  these inside backticks (e.g., `` `<T>` ``, `` `{tên}` ``) or escape them (e.g., `\<T\>`,
+  `\{tên\}`).
 - **Admonitions:** Use Docusaurus Admonitions syntax (`:::note`, `:::tip`, `:::info`, `:::warning`,
   `:::danger`) instead of GitHub-style (`> [!NOTE]`).
 
