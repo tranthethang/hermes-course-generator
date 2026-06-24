@@ -544,28 +544,6 @@ def cmd_verify(target_path, level_arg):
     if os.path.exists(state_path):
         course_language = read_state(os.path.dirname(state_path), "course_language") or "en"
     levels = ["begin", "advance", "master"] if level_arg == "all" else [level_arg]
-    if course_language == "vi":
-        expected_headings = [
-            "Giới thiệu",
-            "Khái niệm cốt lõi",
-            "Ví dụ minh họa",
-            "Lỗi thường gặp",
-            "Thực hành tốt nhất",
-            "Bài tập nhỏ",
-            "Tóm tắt",
-            "Tài liệu tham khảo"
-        ]
-    else:
-        expected_headings = [
-            "Introduction",
-            "Main Concepts",
-            "Code Examples",
-            "Common Mistakes",
-            "Best Practices",
-            "Mini Exercise",
-            "Summary",
-            "References"
-        ]
     overall_passed = True
     for lvl in levels:
         sections_dir = resolve_sections_dir(target_path, lvl)
@@ -580,6 +558,34 @@ def cmd_verify(target_path, level_arg):
             with open(file_path, "r", encoding="utf-8") as file:
                 content = file.read()
             file_errors = []
+            
+            # Detect language of the file (fallback to course_language)
+            file_lang = course_language
+            if "## Giới thiệu" in content or "## Khái niệm cốt lõi" in content or "## Ví dụ minh họa" in content:
+                file_lang = "vi"
+
+            if file_lang == "vi":
+                file_expected_headings = [
+                    "Giới thiệu",
+                    "Khái niệm cốt lõi",
+                    "Ví dụ minh họa",
+                    "Lỗi thường gặp",
+                    "Thực hành tốt nhất",
+                    "Bài tập nhỏ",
+                    "Tóm tắt",
+                    "Tài liệu tham khảo"
+                ]
+            else:
+                file_expected_headings = [
+                    "Introduction",
+                    "Main Concepts",
+                    "Code Examples",
+                    "Common Mistakes",
+                    "Best Practices",
+                    "Mini Exercise",
+                    "Summary",
+                    "References"
+                ]
             if not content.startswith("---"):
                 file_errors.append("Missing frontmatter metadata block at the start of the file.")
                 meta = {}
@@ -646,17 +652,17 @@ def cmd_verify(target_path, level_arg):
                         file_errors.append(f"Level-1 heading '{l1_headings[0]}' does not match 'section_title' '{meta['section_title']}'.")
             l2_headings = [h[3:].strip() for h in headings if h.startswith("## ") and not h.startswith("###")]
             for h2 in l2_headings:
-                if h2 not in expected_headings and h2 not in ["Prerequisites", "Tiên quyết"]:
+                if h2 not in file_expected_headings and h2 not in ["Prerequisites", "Tiên quyết"]:
                     file_errors.append(f"Forbidden custom level-2 heading found: '## {h2}'. Custom subheadings must use level-3 (###) or level-4 (####).")
-            missing_headings = [eh for eh in expected_headings if eh not in l2_headings]
+            missing_headings = [eh for eh in file_expected_headings if eh not in l2_headings]
             if missing_headings:
                 file_errors.append(f"Missing standard level-2 headings: {missing_headings}.")
             else:
                 curr_idx = -1
                 out_of_order = False
                 for h2 in l2_headings:
-                    if h2 in expected_headings:
-                        idx = expected_headings.index(h2)
+                    if h2 in file_expected_headings:
+                        idx = file_expected_headings.index(h2)
                         if idx < curr_idx:
                             out_of_order = True
                         curr_idx = idx
