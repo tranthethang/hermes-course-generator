@@ -22,18 +22,19 @@
 
 ## 2. Inputs to Read Before Starting
 
-Hermes MUST read the following files **in order** from the current working directory of the project
-(using `./` to ensure they are read from the active workspace directory, not the skill installation
-directory):
+Hermes MUST read the following files from the active workspace. Since the workspace root may be the
+course directory, these configuration files might be located directly in the current directory `./`
+or inside the `./output/` subdirectory. Search both locations (preferring `./` if present, then
+falling back to `./output/`):
 
 ```
-1. goal.md                  → (read from `./goal.md`) Understand execution goals, autonomous rules, and error policies
-2. overview.md              → (read from `./overview.md`) Understand the overall course goals and audience
-3. architecture.md          → (read from `./architecture.md`) Understand where the current lesson fits in the course
-4. template_section.md      → (read from `./template_section.md`) Check the mandatory section structure
-5. style_guide.md           → (read from `./style_guide.md`) Apply writing style rules
-6. knowledge_sources.md     → (read from `./knowledge_sources.md`) Identify permitted reference sources
-7. quality_checklist.md     → (read from `./quality_checklist.md`) Understand criteria before saving
+1. goal.md                  → (read from `./goal.md` or `./output/goal.md`) Understand execution goals, autonomous rules, and error policies
+2. overview.md              → (read from `./overview.md` or `./output/overview.md`) Understand the overall course goals and audience
+3. architecture.md          → (read from `./architecture.md` or `./output/architecture.md`) Understand where the current lesson fits in the course
+4. template_section.md      → (read from `./template_section.md` or `./output/template_section.md`) Check the mandatory section structure
+5. style_guide.md           → (read from `./style_guide.md` or `./output/style_guide.md`) Apply writing style rules
+6. knowledge_sources.md     → (read from `./knowledge_sources.md` or `./output/knowledge_sources.md`) Identify permitted reference sources
+7. quality_checklist.md     → (read from `./quality_checklist.md` or `./output/quality_checklist.md`) Understand criteria before saving
 ```
 
 ---

@@ -16,7 +16,7 @@ else
     FAILED=1
 fi
 for agent in ".gemini/config" ".agents" ".claude" ".hermes"; do
-    for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer"; do
+    for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer" "hermes-course-validator"; do
         if [ -f "$HOME/$agent/skills/$skill/SKILL.md" ]; then
             echo "[OK] Skill '$skill' registered for: $agent"
         else

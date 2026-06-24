@@ -308,7 +308,7 @@ Please merge the sections of Lesson L01 level "begin" into a complete lesson fil
 
 ### Hermes's Realistic Response
 
-`````markdown
+````markdown
 # Execution progress: merge_lesson (begin - L01)
 
 1. Checked section file statuses:
@@ -462,7 +462,7 @@ No garbage collector or runtime overhead is involved.
 
 </details>
 ```
-`````
+````
 
 ---
 

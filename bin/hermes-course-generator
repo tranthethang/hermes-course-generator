@@ -30,6 +30,17 @@ def main():
     state_update.add_argument("--path", default=os.getcwd(), help="Workspace path")
     state_update.add_argument("--key", required=True, help="State key to update")
     state_update.add_argument("--value", required=True, help="State value")
+
+    # verify
+    verify_parser = subparsers.add_parser("verify", help="Verify all section files for format, metadata, and headings")
+    verify_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
+    verify_parser.add_argument("--level", choices=["begin", "advance", "master", "all"], default="all", help="Level to verify")
+
+    # reorder
+    reorder_parser = subparsers.add_parser("reorder", help="Scan and reorder sidebar positions in section files")
+    reorder_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
+    reorder_parser.add_argument("--level", choices=["begin", "advance", "master", "all"], default="all", help="Level to reorder")
+    reorder_parser.add_argument("--mode", choices=["flat", "nested"], default="flat", help="Reorder mode: flat (sequential 1..N) or nested (1..6 per lesson)")
     
     args = parser.parse_args()
     
@@ -40,6 +51,11 @@ def main():
     elif args.command == "state":
         if args.state_command == "update":
             update_state(args.path, args.key, args.value)
+    elif args.command == "verify":
+        success = cmd_verify(args.path, args.level)
+        sys.exit(0 if success else 1)
+    elif args.command == "reorder":
+        cmd_reorder(args.path, args.level, args.mode)
 
 # -- utility functions --
 def read_state(target_path, key):
@@ -268,12 +284,18 @@ def merge_lesson(target_path, level, lesson_id):
     course_language = read_state(target_path, "course_language") or "en"
     
     # Build YAML frontmatter for lesson
+    try:
+        sidebar_pos_match = re.search(r'\d+', lesson_id)
+        sidebar_pos = int(sidebar_pos_match.group()) if sidebar_pos_match else 1
+    except Exception:
+        sidebar_pos = 1
+
     yaml_lines = [
         "---",
         f"id: {lesson_id_lower}_{lesson_slug}",
         f'title: "{lesson_title}"',
         f'sidebar_label: "{lesson_title}"',
-        "sidebar_position: 1",
+        f"sidebar_position: {sidebar_pos}",
         f"level: {level}",
         f'lesson_id: "{lesson_id}"',
         f'lesson_title: "{lesson_title}"',
@@ -369,6 +391,365 @@ def merge_lesson(target_path, level, lesson_id):
         
     # Auto update state.md if possible
     update_state(target_path, "last_updated_at", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+def resolve_sections_dir(target_path, level):
+    path1 = os.path.join(target_path, "output", "sections", level)
+    if os.path.exists(path1):
+        return path1
+    path2 = os.path.join(target_path, "sections", level)
+    if os.path.exists(path2):
+        return path2
+    path3 = os.path.join(target_path, level)
+    if os.path.exists(path3):
+        return path3
+    return path1
+
+def resolve_config_file(target_path, filename):
+    path1 = os.path.join(target_path, filename)
+    if os.path.exists(path1):
+        return path1
+    path2 = os.path.join(target_path, "output", filename)
+    if os.path.exists(path2):
+        return path2
+    return path1
+
+def parse_architecture(arch_path):
+    lessons = {}
+    sections = {}
+    if not os.path.exists(arch_path):
+        return lessons, sections
+    with open(arch_path, "r", encoding="utf-8") as f:
+        content = f.read()
+    current_lesson_id = None
+    for line in content.split("\n"):
+        line = line.strip()
+        lesson_match = re.match(r'^###\s*(L\d{2}):\s*(.*)$', line)
+        if lesson_match:
+            current_lesson_id = lesson_match.group(1).upper()
+            lessons[current_lesson_id] = lesson_match.group(2).strip()
+            continue
+        if current_lesson_id:
+            sec_match = re.match(r'^-\s*(S\d{2}):\s*(.*)$', line)
+            if sec_match:
+                sec_id = sec_match.group(1).upper()
+                sections[(current_lesson_id, sec_id)] = sec_match.group(2).strip()
+    return lessons, sections
+
+def check_mdx_safety(content):
+    lines = content.splitlines()
+    cleaned_lines = []
+    
+    in_yaml = False
+    in_code_block = False
+    in_mdx_comment = False
+    
+    for line_num, line in enumerate(lines, 1):
+        stripped = line.strip()
+        
+        # 1. YAML frontmatter
+        if line_num == 1 and stripped == "---":
+            in_yaml = True
+            cleaned_lines.append(" " * len(line))
+            continue
+        elif in_yaml:
+            if stripped == "---":
+                in_yaml = False
+            cleaned_lines.append(" " * len(line))
+            continue
+            
+        # 2. Fenced code block
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            cleaned_lines.append(" " * len(line))
+            continue
+        elif in_code_block:
+            cleaned_lines.append(" " * len(line))
+            continue
+            
+        # 3. MDX comment
+        if in_mdx_comment:
+            if "*/}" in line:
+                in_mdx_comment = False
+                idx = line.find("*/}")
+                line = " " * (idx+3) + line[idx+3:]
+            else:
+                cleaned_lines.append(" " * len(line))
+                continue
+        elif "{/*" in line:
+            if "*/}" in line:
+                pass
+            else:
+                in_mdx_comment = True
+                idx = line.find("{/*")
+                line = line[:idx] + " " * (len(line) - idx)
+                
+        # 4. Blank out inline code
+        def blank_inline(match):
+            return "`" + " " * (len(match.group(0)) - 2) + "`"
+        line_clean = re.sub(r'`[^`\n]*`', blank_inline, line)
+        
+        # 5. Blank out single-line MDX comments
+        line_clean = re.sub(r'\{\/\*.*?\*\/\}', lambda m: " " * len(m.group(0)), line_clean)
+        
+        cleaned_lines.append(line_clean)
+        
+    errors = []
+    for line_num, line_clean in enumerate(cleaned_lines, 1):
+        if re.match(r'^\s*>', line_clean):
+            continue
+            
+        # Check for unescaped '<'
+        for match in re.finditer(r'(?<!\\)<', line_clean):
+            idx = match.start()
+            suffix = line_clean[idx:]
+            is_allowed = False
+            for tag in ['<details>', '</details>', '<summary>', '</summary>', '<br />', '<br/>']:
+                if suffix.lower().startswith(tag):
+                    is_allowed = True
+                    break
+            if not is_allowed:
+                context = line_clean[max(0, idx-10):min(len(line_clean), idx+15)].strip()
+                errors.append(f"MDX safety error at line {line_num}: Unescaped '<' found in: '{context}'. Wrap in backticks or escape as '\\<'.")
+                
+        # Check for unescaped '>'
+        for match in re.finditer(r'(?<!\\)>', line_clean):
+            idx = match.start()
+            prefix = line_clean[:idx+1]
+            is_allowed = False
+            for tag in ['<details>', '</details>', '<summary>', '</summary>', '<br />', '<br/>']:
+                if prefix.lower().endswith(tag):
+                    is_allowed = True
+                    break
+            if not is_allowed:
+                context = line_clean[max(0, idx-15):min(len(line_clean), idx+10)].strip()
+                errors.append(f"MDX safety error at line {line_num}: Unescaped '>' found in: '{context}'. Wrap in backticks or escape as '\\>'.")
+                
+    return errors
+
+def cmd_verify(target_path, level_arg):
+    state_path = resolve_config_file(target_path, "state.md")
+    course_language = "en"
+    if os.path.exists(state_path):
+        course_language = read_state(os.path.dirname(state_path), "course_language") or "en"
+    levels = ["begin", "advance", "master"] if level_arg == "all" else [level_arg]
+    if course_language == "vi":
+        expected_headings = [
+            "Giới thiệu",
+            "Khái niệm cốt lõi",
+            "Ví dụ minh họa",
+            "Lỗi thường gặp",
+            "Thực hành tốt nhất",
+            "Bài tập nhỏ",
+            "Tóm tắt",
+            "Tài liệu tham khảo"
+        ]
+    else:
+        expected_headings = [
+            "Introduction",
+            "Main Concepts",
+            "Code Examples",
+            "Common Mistakes",
+            "Best Practices",
+            "Mini Exercise",
+            "Summary",
+            "References"
+        ]
+    overall_passed = True
+    for lvl in levels:
+        sections_dir = resolve_sections_dir(target_path, lvl)
+        if not os.path.exists(sections_dir):
+            print(f"Skipping level '{lvl}': directory {sections_dir} does not exist.")
+            continue
+        print(f"Verifying sections for level: {lvl}")
+        files = [f for f in os.listdir(sections_dir) if f.endswith(".mdx")]
+        files.sort()
+        for f in files:
+            file_path = os.path.join(sections_dir, f)
+            with open(file_path, "r", encoding="utf-8") as file:
+                content = file.read()
+            file_errors = []
+            if not content.startswith("---"):
+                file_errors.append("Missing frontmatter metadata block at the start of the file.")
+                meta = {}
+                body = content
+            else:
+                try:
+                    meta, body = parse_frontmatter(content)
+                    required_keys = [
+                        "id", "title", "sidebar_label", "sidebar_position", 
+                        "level", "lesson_id", "lesson_title", "section_id", 
+                        "section_title", "language_version", "review_score", "status"
+                    ]
+                    for rk in required_keys:
+                        if rk not in meta or str(meta[rk]).strip() == "":
+                            file_errors.append(f"Missing or empty metadata key: '{rk}'.")
+                    if "sidebar_position" in meta:
+                        try:
+                            int(meta["sidebar_position"])
+                        except ValueError:
+                            file_errors.append(f"Metadata 'sidebar_position' must be an integer, got '{meta['sidebar_position']}'.")
+                    if "review_score" in meta:
+                        try:
+                            float(meta["review_score"])
+                        except ValueError:
+                            file_errors.append(f"Metadata 'review_score' must be a float, got '{meta['review_score']}'.")
+                    if "level" in meta and meta["level"] not in ["begin", "advance", "master"]:
+                        file_errors.append(f"Metadata 'level' must be 'begin', 'advance', or 'master', got '{meta['level']}'.")
+                    if "status" in meta and meta["status"] not in ["draft", "reviewed", "approved"]:
+                        file_errors.append(f"Metadata 'status' must be 'draft', 'reviewed', or 'approved', got '{meta['status']}'.")
+                    if "lesson_id" in meta and not re.match(r'^L\d{2}$', meta["lesson_id"]):
+                        file_errors.append(f"Metadata 'lesson_id' must match format Lxx, got '{meta['lesson_id']}'.")
+                    if "section_id" in meta and not re.match(r'^S\d{2}$', meta["section_id"]):
+                        file_errors.append(f"Metadata 'section_id' must match format Sxx, got '{meta['section_id']}'.")
+                except Exception as e:
+                    file_errors.append(f"Failed to parse frontmatter: {str(e)}")
+                    meta = {}
+                    body = content
+            
+            # Check MDX safety errors
+            safety_errors = check_mdx_safety(content)
+            file_errors.extend(safety_errors)
+
+            lines = body.split("\n")
+            headings = []
+            in_code_block = False
+            for line in lines:
+                stripped = line.strip()
+                if stripped.startswith("```"):
+                    in_code_block = not in_code_block
+                    continue
+                if not in_code_block and stripped.startswith("#"):
+                    headings.append(stripped)
+            l1_headings = [h for h in headings if h.startswith("# ") and not h.startswith("##")]
+            if len(l1_headings) == 0:
+                file_errors.append("Missing Level-1 heading (# Section Title).")
+            elif len(l1_headings) > 1:
+                file_errors.append(f"Multiple Level-1 headings found: {l1_headings}.")
+            else:
+                if "section_title" in meta:
+                    l1_title = re.sub(r'[^a-zA-Z0-9\s]', '', l1_headings[0][2:].strip().lower())
+                    l1_title = re.sub(r'^l\d{2}\s*s\d{2}\s*[\s:]*', '', l1_title)
+                    meta_title = re.sub(r'[^a-zA-Z0-9\s]', '', str(meta["section_title"]).strip().lower().strip('"\''))
+                    if meta_title not in l1_title and l1_title not in meta_title:
+                        file_errors.append(f"Level-1 heading '{l1_headings[0]}' does not match 'section_title' '{meta['section_title']}'.")
+            l2_headings = [h[3:].strip() for h in headings if h.startswith("## ") and not h.startswith("###")]
+            for h2 in l2_headings:
+                if h2 not in expected_headings and h2 not in ["Prerequisites", "Tiên quyết"]:
+                    file_errors.append(f"Forbidden custom level-2 heading found: '## {h2}'. Custom subheadings must use level-3 (###) or level-4 (####).")
+            missing_headings = [eh for eh in expected_headings if eh not in l2_headings]
+            if missing_headings:
+                file_errors.append(f"Missing standard level-2 headings: {missing_headings}.")
+            else:
+                curr_idx = -1
+                out_of_order = False
+                for h2 in l2_headings:
+                    if h2 in expected_headings:
+                        idx = expected_headings.index(h2)
+                        if idx < curr_idx:
+                            out_of_order = True
+                        curr_idx = idx
+                if out_of_order:
+                    file_errors.append("Standard level-2 headings are not in the correct order.")
+            if file_errors:
+                overall_passed = False
+                print(f"[FAIL] {f}:")
+                for err in file_errors:
+                    print(f"  - {err}")
+            else:
+                print(f"[OK] {f}")
+    if overall_passed:
+        print("\nVerification PASSED! All checked files are fully compliant.")
+        return True
+    else:
+        print("\nVerification FAILED! Some files do not meet the requirements.")
+        return False
+
+def cmd_reorder(target_path, level_arg, mode):
+    arch_path = resolve_config_file(target_path, "architecture.md")
+    arch_lessons, arch_sections = parse_architecture(arch_path)
+    levels = ["begin", "advance", "master"] if level_arg == "all" else [level_arg]
+    for lvl in levels:
+        sections_dir = resolve_sections_dir(target_path, lvl)
+        if not os.path.exists(sections_dir):
+            print(f"Skipping level '{lvl}': directory {sections_dir} does not exist.")
+            continue
+        print(f"Reordering sections for level: {lvl} (mode: {mode})")
+        files = [f for f in os.listdir(sections_dir) if f.endswith(".mdx")]
+        file_sort_keys = []
+        for f in files:
+            match = re.match(r'^(L\d{2})_(S\d{2})', f)
+            if match:
+                file_sort_keys.append((match.group(1).upper(), match.group(2).upper(), f))
+            else:
+                file_sort_keys.append(("ZZZ", "ZZZ", f))
+        file_sort_keys.sort()
+        lesson_counters = {}
+        for idx, (lesson_id, sec_id, f) in enumerate(file_sort_keys):
+            file_path = os.path.join(sections_dir, f)
+            with open(file_path, "r", encoding="utf-8") as file:
+                content = file.read()
+            has_frontmatter = content.startswith("---")
+            meta = {}
+            body = content
+            if has_frontmatter:
+                meta, body = parse_frontmatter(content)
+            if not has_frontmatter or not meta:
+                les_id = lesson_id if lesson_id != "ZZZ" else "L01"
+                s_id = sec_id if sec_id != "ZZZ" else "S01"
+                les_title = arch_lessons.get(les_id, "Introduction")
+                s_title = arch_sections.get((les_id, s_id), "")
+                if not s_title:
+                    l1_match = re.search(r'^#\s+(.*)$', body, re.MULTILINE)
+                    if l1_match:
+                        s_title = l1_match.group(1).strip()
+                        s_title = re.sub(r'^L\d{2}\s*S\d{2}[:\s]*', '', s_title)
+                    else:
+                        s_title = "Section Title"
+                slug_str = slugify(s_title)
+                meta = {
+                    "id": f"{les_id.lower()}_{s_id.lower()}_{slug_str}",
+                    "title": s_title,
+                    "sidebar_label": s_title,
+                    "sidebar_position": 1,
+                    "level": lvl,
+                    "lesson_id": les_id,
+                    "lesson_title": les_title,
+                    "section_id": s_id,
+                    "section_title": s_title,
+                    "language_version": "1.0.0",
+                    "review_score": "0.0",
+                    "status": "draft"
+                }
+            if mode == "flat":
+                sidebar_pos = idx + 1
+            else:
+                les_id = meta.get("lesson_id", "L01")
+                lesson_counters[les_id] = lesson_counters.get(les_id, 0) + 1
+                sidebar_pos = lesson_counters[les_id]
+            meta["sidebar_position"] = sidebar_pos
+            yaml_lines = ["---"]
+            ordered_keys = [
+                "id", "title", "sidebar_label", "sidebar_position", 
+                "level", "lesson_id", "lesson_title", "section_id", 
+                "section_title", "language_version", "review_score", "status"
+            ]
+            for k in ordered_keys:
+                if k in meta:
+                    val = meta[k]
+                    if k in ["title", "sidebar_label", "lesson_id", "lesson_title", "section_id", "section_title", "language_version"]:
+                        val = str(val).strip().strip('"\'')
+                        yaml_lines.append(f'{k}: "{val}"')
+                    else:
+                        yaml_lines.append(f'{k}: {val}')
+            for k, val in meta.items():
+                if k not in ordered_keys:
+                    yaml_lines.append(f'{k}: {val}')
+            yaml_lines.append("---")
+            new_content = "\n".join(yaml_lines) + "\n" + body.strip() + "\n"
+            with open(file_path, "w", encoding="utf-8") as file:
+                file.write(new_content)
+            print(f"  Updated {f}: sidebar_position={sidebar_pos}")
+    print("Reordering and metadata fix completed.")
 
 if __name__ == "__main__":
     main()

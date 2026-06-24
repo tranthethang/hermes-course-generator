@@ -37,7 +37,7 @@ cp "$SRC_DIR/bin/hermes-course-generator" ~/.local/bin/hermes-course-generator
 chmod +x ~/.local/bin/hermes-course-generator
 
 # Register skills
-for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer"; do
+for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer" "hermes-course-validator"; do
     mkdir -p ~/.gemini/config/skills/"$skill"
     cp "$SRC_DIR/skills/$skill/SKILL.md" ~/.gemini/config/skills/"$skill"/SKILL.md
     mkdir -p ~/.agents/skills/"$skill"

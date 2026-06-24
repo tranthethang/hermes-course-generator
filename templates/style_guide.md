@@ -299,6 +299,22 @@ errors:
   builds.
 - **Rule:** You must wrap these characters or generic types in inline code (e.g., `` `<string>` ``
   or `` `<T>` ``) or use escape characters (`\<int\>`).
+- **Examples of Incorrect vs Correct Usage:**
+  - **Incorrect (will fail compilation):**
+    - `# Box<T>: Heap Allocation`
+    - `### Rc<RefCell<T>>: Shared Mutable Data`
+    - `### Shared State with Arc<Mutex<T>>`
+    - `Result is always >= min and <= max`
+    - `[Using Box<T> to Point to Data](url)`
+  - **Correct (compiled successfully):**
+    - `# Box\<T\>: Heap Allocation` (escaped) or `# Box<T>: Heap Allocation` (backticks)
+    - `### Rc\<RefCell\<T\>\>: Shared Mutable Data` (escaped) or
+      `### Rc<RefCell<T>>: Shared Mutable Data` (backticks)
+    - `### Shared State with Arc\<Mutex\<T\>\>` (escaped) or `### Shared State with Arc<Mutex<T>>`
+      (backticks)
+    - `Result is always \>= min and \<= max` (escaped) or `Result is always >= min and <= max`
+      (backticks)
+    - `[Using Box\<T\> to Point to Data](url)` (escaped)
 
 ### 8.2 Use Admonitions
 

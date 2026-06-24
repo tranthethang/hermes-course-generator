@@ -36,23 +36,25 @@ constraints:
 
 ### Step 1: Read Context and Plan
 
-Before starting, read the following workspace files from the current working directory of the
-project (using `./state.md`, `./overview.md`, `./architecture.md`, `./style_guide.md`,
-`./template_section.md` to ensure they are read from the active workspace directory, not the skill
-installation directory):
+Before starting, read the following workspace files. Since the active workspace root may be the
+course directory, these configuration files might be located directly in the current directory `./`
+or inside the `./output/` subdirectory. Search both locations (preferring `./` if present, then
+falling back to `./output/`):
 
-1. `state.md` (read from `./state.md`) to check the current state and determine the
-   `course_language` (e.g., "en" or "vi"). **CRITICAL:** Under no circumstances should you modify or
-   update the `course_language` in `state.md` to align with past memories, other courses, or the
-   language you are conversing in. The language specified in `state.md` is the absolute source of
-   truth. **CRITICAL:** If `locked_section` is NOT empty (e.g., `locked_section: "L01_S01"`), you
-   MUST abort generation and inform the user that the workspace is locked until the Reviewer
-   approves the pending section.
-2. `overview.md` (read from `./overview.md`) to align on objectives.
-3. `architecture.md` (read from `./architecture.md`) to find the exact lesson and section title.
-4. `style_guide.md` (read from `./style_guide.md`) to follow writing and coding styles.
-5. `template_section.md` (read from `./template_section.md`) to understand the mandatory layout
-   structure.
+1. `state.md` (read from `./state.md` or `./output/state.md`) to check the current state and
+   determine the `course_language` (e.g., "en" or "vi"). **CRITICAL:** Under no circumstances should
+   you modify or update the `course_language` in `state.md` to align with past memories, other
+   courses, or the language you are conversing in. The language specified in `state.md` is the
+   absolute source of truth. **CRITICAL:** If `locked_section` is NOT empty (e.g.,
+   `locked_section: "L01_S01"`), you MUST abort generation and inform the user that the workspace is
+   locked until the Reviewer approves the pending section.
+2. `overview.md` (read from `./overview.md` or `./output/overview.md`) to align on objectives.
+3. `architecture.md` (read from `./architecture.md` or `./output/architecture.md`) to find the exact
+   lesson and section title.
+4. `style_guide.md` (read from `./style_guide.md` or `./output/style_guide.md`) to follow writing
+   and coding styles.
+5. `template_section.md` (read from `./template_section.md` or `./output/template_section.md`) to
+   understand the mandatory layout structure.
 
 ### Step 2: Research the Topic
 
