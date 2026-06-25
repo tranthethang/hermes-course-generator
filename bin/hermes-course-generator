@@ -540,6 +540,92 @@ def check_mdx_safety(content):
             
     return errors
 
+def run_docusaurus_build_check(target_path):
+    print("\nRunning Docusaurus compilation check...")
+    sample_path = os.path.join(target_path, "sample")
+    
+    # 1. Khởi tạo project Docusaurus nếu chưa có
+    if not os.path.exists(sample_path):
+        print("[INFO] Initializing sample Docusaurus project...")
+        try:
+            # Dùng capture_output=True và text=True để handle lỗi an toàn
+            subprocess.run(
+                ["npx", "-y", "create-docusaurus@latest", "sample", "classic", "--package-manager", "npm", "--javascript"],
+                cwd=target_path,
+                check=True,
+                capture_output=True,
+                text=True
+            )
+        except subprocess.CalledProcessError as e:
+            # Thu thập stderr dễ dàng và an toàn hơn
+            print(f"[FAIL] Failed to initialize sample Docusaurus:\n{e.stderr.strip() if e.stderr else 'Unknown Error'}")
+            return False
+
+    # 2. Cấu hình cảnh báo broken links
+    config_path = os.path.join(sample_path, "docusaurus.config.js")
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                cfg = f.read()
+            
+            cfg = re.sub(r"onBrokenLinks:\s*['\"](throw|warn|ignore|error)['\"]", "onBrokenLinks: 'warn'", cfg)
+            if "onBrokenMarkdownLinks" not in cfg:
+                cfg = re.sub(r"(onBrokenLinks:\s*['\"]warn['\"],?)", r"\1\n  onBrokenMarkdownLinks: 'warn',", cfg)
+            else:
+                cfg = re.sub(r"onBrokenMarkdownLinks:\s*['\"](throw|warn|ignore|error)['\"]", "onBrokenMarkdownLinks: 'warn'", cfg)
+            
+            with open(config_path, "w", encoding="utf-8") as f:
+                f.write(cfg)
+        except Exception as e:
+            print(f"[WARN] Failed to configure sample/docusaurus.config.js: {e}")
+
+    # 3. Tối ưu: Dọn dẹp nhanh thư mục docs mặc định
+    docs_dir = os.path.join(sample_path, "docs")
+    shutil.rmtree(docs_dir, ignore_errors=True)
+    os.makedirs(docs_dir, exist_ok=True)
+
+    # 4. Tối ưu: Copy sections vào Docusaurus (thay thế khối code dài dòng cũ)
+    setup_failed = False
+    for lvl in ["begin", "advance", "master"]:
+        src_dir = os.path.abspath(os.path.join(target_path, "output", "sections", lvl))
+        dst_dir = os.path.join(sample_path, "docs", lvl)
+        
+        if os.path.exists(src_dir):
+            try:
+                # Dọn sạch đích bằng 1 dòng trước khi copy đè
+                shutil.rmtree(dst_dir, ignore_errors=True)
+                shutil.copytree(src_dir, dst_dir)
+            except Exception as ce:
+                print(f"[FAIL] Failed to copy level '{lvl}' to Docusaurus docs: {ce}")
+                setup_failed = True
+
+    if setup_failed:
+        print("\nVerification FAILED! Docusaurus environment could not be set up.")
+        return False
+
+    # 5. Build Docusaurus
+    print("Compiling MDX files...")
+    try:
+        res = subprocess.run(
+            ["npm", "run", "build"],
+            cwd=sample_path,
+            capture_output=True,
+            text=True
+        )
+        if res.returncode == 0:
+            print("[OK] Docusaurus compilation check passed.")
+            return True
+        else:
+            print("[FAIL] Docusaurus compilation check failed!")
+            print("\n--- Compiler Build Output ---")
+            print(res.stdout)
+            print(res.stderr)
+            print("-----------------------------\n")
+            return False
+    except Exception as e:
+        print(f"[FAIL] Failed to execute npm run build: {e}")
+        return False
+
 def cmd_verify(target_path, level_arg, build=False):
     state_path = resolve_config_file(target_path, "state.md")
     course_language = "en"
@@ -678,114 +764,8 @@ def cmd_verify(target_path, level_arg, build=False):
             else:
                 print(f"[OK] {f}")
     if build:
-        print("\nRunning Docusaurus compilation check...")
-        sample_path = os.path.join(target_path, "sample")
-        if not os.path.exists(sample_path):
-            print("[INFO] Initializing sample Docusaurus project...")
-            # Run create-docusaurus in non-interactive mode
-            try:
-                subprocess.run(
-                    ["npx", "-y", "create-docusaurus@latest", "sample", "classic", "--package-manager", "npm", "--javascript"],
-                    cwd=target_path,
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.PIPE
-                )
-            except subprocess.CalledProcessError as e:
-                print(f"[FAIL] Failed to initialize sample Docusaurus: {e.stderr.decode().strip()}")
-                overall_passed = False
-                return False
-        
-        # Configure Docusaurus to warn on broken links
-        config_path = os.path.join(sample_path, "docusaurus.config.js")
-        if os.path.exists(config_path):
-            try:
-                with open(config_path, "r", encoding="utf-8") as f:
-                    cfg = f.read()
-                
-                # Replace onBrokenLinks to 'warn'
-                cfg = re.sub(r"onBrokenLinks:\s*['\"](throw|warn|ignore|error)['\"]", "onBrokenLinks: 'warn'", cfg)
-                # Set onBrokenMarkdownLinks to 'warn'
-                if "onBrokenMarkdownLinks" not in cfg:
-                    cfg = re.sub(
-                        r"(onBrokenLinks:\s*['\"]warn['\"],?)",
-                        r"\1\n  onBrokenMarkdownLinks: 'warn',",
-                        cfg
-                    )
-                else:
-                    cfg = re.sub(r"onBrokenMarkdownLinks:\s*['\"](throw|warn|ignore|error)['\"]", "onBrokenMarkdownLinks: 'warn'", cfg)
-                
-                with open(config_path, "w", encoding="utf-8") as f:
-                    f.write(cfg)
-            except Exception as e:
-                print(f"[WARN] Failed to configure sample/docusaurus.config.js: {e}")
-
-        # Clean default docs
-        docs_dir = os.path.join(sample_path, "docs")
-        if os.path.exists(docs_dir):
-            try:
-                for entry in os.listdir(docs_dir):
-                    entry_path = os.path.join(docs_dir, entry)
-                    if os.path.islink(entry_path) or os.path.exists(entry_path):
-                        if os.path.islink(entry_path):
-                            os.unlink(entry_path)
-                        elif os.path.isdir(entry_path):
-                            shutil.rmtree(entry_path)
-                        else:
-                            os.remove(entry_path)
-            except Exception as e:
-                print(f"[WARN] Failed to clear default docs in sample/docs: {e}")
-
-        setup_failed = False
-        # Copy level directories instead of symlinking (Docusaurus does not support directory symlinks)
-        for lvl in ["begin", "advance", "master"]:
-            src_dir = os.path.abspath(os.path.join(target_path, "output", "sections", lvl))
-            dst_dir = os.path.join(sample_path, "docs", lvl)
-            
-            # Remove destination if it exists (symlink or dir)
-            if os.path.islink(dst_dir) or os.path.exists(dst_dir):
-                try:
-                    if os.path.islink(dst_dir):
-                        os.unlink(dst_dir)
-                    elif os.path.isdir(dst_dir):
-                        shutil.rmtree(dst_dir)
-                    else:
-                        os.remove(dst_dir)
-                except Exception as e:
-                    print(f"[WARN] Failed to remove existing directory {dst_dir}: {e}")
-            
-            # Copy if source exists
-            if os.path.exists(src_dir):
-                try:
-                    shutil.copytree(src_dir, dst_dir)
-                except Exception as ce:
-                    print(f"[FAIL] Failed to copy level '{lvl}' to Docusaurus docs: {ce}")
-                    setup_failed = True
-
-        if setup_failed:
-            print("\nVerification FAILED! Docusaurus environment could not be set up.")
-            return False
-
-        # Run npm run build
-        print("Compiling MDX files...")
-        try:
-            res = subprocess.run(
-                ["npm", "run", "build"],
-                cwd=sample_path,
-                capture_output=True,
-                text=True
-            )
-            if res.returncode == 0:
-                print("[OK] Docusaurus compilation check passed.")
-            else:
-                print("[FAIL] Docusaurus compilation check failed!")
-                print("\n--- Compiler Build Output ---")
-                print(res.stdout)
-                print(res.stderr)
-                print("-----------------------------\n")
-                overall_passed = False
-        except Exception as e:
-            print(f"[FAIL] Failed to execute npm run build: {e}")
+        build_passed = run_docusaurus_build_check(target_path)
+        if not build_passed:
             overall_passed = False
 
     if overall_passed:
