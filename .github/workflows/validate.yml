@@ -1,0 +1,63 @@
+name: Validate CLI and Skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install python-frontmatter PyYAML jsonschema pytest
+      - name: Run unit tests
+        run: |
+          python -m pytest tests/ -v
+      - name: Syntax check CLI
+        run: |
+          python -m py_compile bin/hermes-course-generator && echo "CLI syntax OK"
+
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install PyYAML
+        run: |
+          pip install PyYAML
+      - name: Check SKILL.md files exist
+        run: |
+          for skill in hermes-course-setup hermes-course-writer hermes-course-reviewer hermes-course-validator hermes-course-evaluator; do
+            if [ ! -f "skills/$skill/SKILL.md" ]; then
+              echo "MISSING: skills/$skill/SKILL.md"
+              exit 1
+            fi
+            echo "OK: skills/$skill/SKILL.md"
+          done
+      - name: Check SKILL.md has required frontmatter
+        run: |
+          python tests/check_skills.py
+
+  lint-markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install markdownlint
+        run: |
+          npm install -g markdownlint-cli2
+      - name: Lint Markdown files
+        run: |
+          markdownlint-cli2 "templates/**/*.md" "skills/**/*.md" "AGENTS.md" "README.md"
+        continue-on-error: true

@@ -3,6 +3,7 @@ name: hermes-course-reviewer
 description: >-
   Review and grade course sections and lessons against strict quality criteria, run automated
   validations, export review JSONs, and merge approved sections.
+allowed-tools: [read_file, write_file, run_command]
 ---
 
 # Skill: Hermes Course Reviewer

@@ -69,9 +69,12 @@ hermes-course-generator init --path /path/to/new-course
 | :------------------------------------------------------------------- | :--------------------------------------------------------------------------------- |
 | `hermes-course-generator init`                                       | Initializes a workspace, copying instruction templates and setting up directories. |
 | `hermes-course-generator merge --level <level> --lesson <lesson_id>` | Merges individual section files (`.mdx`) into a single lesson.                     |
-| `hermes-course-generator state update --key <key> --value <val>`     | Programmatically updates fields in `state.md` to track progress.                   |
+| `hermes-course-generator state update --key <key> --value <val>`     | Programmatically updates fields in `state.json` to track progress.                 |
+| `hermes-course-generator status --level <level> [--json]`            | Displays section completion status. Use `--json` for machine-readable output.      |
 | `hermes-course-generator verify [--path <path>] [--level <level>]`   | Verifies section formatting, metadata keys, and MDX safety (unescaped `<` / `>`).  |
 | `hermes-course-generator reorder [--path <path>] [--level <level>]`  | Scans and sequentially reorders Docusaurus sidebar positions in section files.     |
+| `hermes-course-generator evaluate --level <level> --file <file>`     | Evaluates a single section file structure and MDX safety, returning a JSON report.  |
+| `hermes-course-generator clear-lock`                                 | Clears the locked section in the workspace state.                                  |
 | `./format.sh`                                                        | Automatically formats all Markdown and MDX files in the workspace using Prettier.  |
 | `./verify_sections.sh <workspace_path> [level]`                      | Wrapper script to verify section files format and MDX safety in a workspace.       |
 | `./reorder_sections.sh <workspace_path> [level] [mode]`              | Wrapper script to scan and reorder sidebar positions in a workspace.               |
@@ -88,6 +91,7 @@ hermes-course-generator init --path /path/to/new-course
   - `hermes-course-validator` — Verification of section formatting, metadata, MDX safety, and
     sidebar reordering.
   - `hermes-course-reviewer` — Quality gate review, compiler validation, and lesson merging.
+  - `hermes-course-evaluator` — Independent quality grading, scoring rubric evaluation, and status validation.
 - [templates/](templates) — Core instructional templates and style guides.
   - [hermes_workflow.md](templates/hermes_workflow.md) — The generation workflow.
   - [file_naming_convention.md](templates/file_naming_convention.md) — Slugification and output
@@ -149,6 +153,24 @@ positions for all files in a level by prompting:
 > progress when ALL section files for the specified level have been validated and reordered, or if a
 > critical, unrecoverable error occurs."
 
+### Phase 2.5: Independent Evaluation (Optional)
+
+Trigger the evaluator agent to perform independent, unbiased quality grading on generated sections
+before the final review phase. This agent operates separately from the Writer and Reviewer and
+cannot modify content — it only scores and records structured results.
+
+> "Please use the `hermes-course-evaluator` skill to evaluate all section files for the level
+> [Level] (begin/advance/master). For each section file, run
+> `hermes-course-generator evaluate --level [Level] --file [filename]` to perform structural and
+> MDX safety checks, then apply the 5-dimension scoring rubric to grade the section. Record the
+> result as a JSON review file in `output/reviews/sections/[Level]/`. Do not modify any section
+> content.
+>
+> **Important Execution Instructions:** Do NOT stop, pause, or ask for user confirmation/interaction
+> after processing each section. Evaluate all sections in the level autonomously. Only report
+> progress when ALL section files for the specified level have been evaluated, or if a
+> critical, unrecoverable error occurs."
+
 ### Phase 4: Reviewing & Merging Lessons
 
 Trigger the reviewer agent to check and merge approved sections into lessons automatically and
@@ -164,3 +186,85 @@ sequentially by prompting:
 > after processing each lesson. You must review and merge all lessons in the level autonomously.
 > Only report progress when ALL lessons for the specified level have been processed, or if a
 > critical, unrecoverable error occurs."
+
+---
+
+## Development & Contributing
+
+### Requirements
+
+- Python 3.11+
+- NPM (for markdownlint)
+- pip (for Python dependencies)
+
+### Setup
+
+Create a virtual environment and install dependencies:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt pytest
+```
+
+Install the CLI and skills locally:
+
+```bash
+bash install.sh
+```
+
+### Running Tests
+
+Unit tests cover core CLI functions including `slugify`, `parse_frontmatter`, MDX safety checks,
+and state JSON CRUD operations. Run them before submitting any changes to `bin/hermes-course-generator`
+or to any `skills/` file:
+
+```bash
+.venv/bin/pytest tests/ -v
+```
+
+To validate that all skill files have the required YAML frontmatter fields (`name`, `description`,
+`allowed-tools`):
+
+```bash
+.venv/bin/python tests/check_skills.py
+```
+
+### CI/CD
+
+GitHub Actions runs three automated checks on every push and pull request to `main`:
+
+- `test-cli` — installs Python dependencies, runs `pytest tests/ -v`, and verifies CLI syntax.
+- `validate-skills` — checks that all `SKILL.md` files exist and have valid frontmatter.
+- `lint-markdown` — runs `markdownlint-cli2` across `templates/`, `skills/`, and root Markdown files.
+
+Configuration: [.github/workflows/validate.yml](.github/workflows/validate.yml)
+
+### Workspace State Format
+
+Starting from this version, the workspace state is stored as `state.json` (previously `state.md`).
+The CLI auto-migrates existing `state.md` files to `state.json` on first run and backs up the
+original as `state.md.bak`.
+
+State schema:
+
+```json
+{
+  "workspace_version": "1.0",
+  "technology": "",
+  "technology_version": "",
+  "course_name": "",
+  "course_language": "en",
+  "created_at": "",
+  "last_updated_at": "",
+  "active_level": "",
+  "active_lesson_id": "",
+  "active_section_id": "",
+  "locked_section": ""
+}
+```
+
+To query state programmatically (machine-readable JSON output):
+
+```bash
+hermes-course-generator status --level begin --json
+```

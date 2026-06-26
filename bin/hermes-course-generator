@@ -6,8 +6,45 @@ import argparse
 import re
 import subprocess
 from datetime import datetime
+import json
+
+try:
+    import frontmatter as fm_lib
+    _HAS_FRONTMATTER = True
+except ImportError:
+    _HAS_FRONTMATTER = False
+
+try:
+    import jsonschema
+    _HAS_JSONSCHEMA = True
+except ImportError:
+    _HAS_JSONSCHEMA = False
 
 TEMPLATE_DIR = os.path.expanduser("~/.config/hermes-course-generator/templates")
+
+STATE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "workspace_version": {"type": "string"},
+        "technology": {"type": "string"},
+        "technology_version": {"type": "string"},
+        "course_name": {"type": "string"},
+        "course_language": {"type": "string"},
+        "created_at": {"type": "string"},
+        "last_updated_at": {"type": "string"},
+        "active_level": {"type": "string"},
+        "active_lesson_id": {"type": "string"},
+        "active_section_id": {"type": "string"},
+        "locked_section": {"type": "string"}
+    },
+    "required": [
+        "workspace_version", "technology", "technology_version", "course_name",
+        "course_language", "created_at", "last_updated_at", "active_level",
+        "active_lesson_id", "active_section_id", "locked_section"
+    ],
+    "additionalProperties": True
+}
+
 
 def main():
     parser = argparse.ArgumentParser(description="Hermes Course Generator CLI")
@@ -24,13 +61,20 @@ def main():
     merge_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
     
     # state
-    state_parser = subparsers.add_parser("state", help="Manage state.md")
+    state_parser = subparsers.add_parser("state", help="Manage state.json")
     state_subparsers = state_parser.add_subparsers(dest="state_command", required=True)
     
-    state_update = state_subparsers.add_parser("update", help="Update state.md")
+    state_update = state_subparsers.add_parser("update", help="Update state.json")
     state_update.add_argument("--path", default=os.getcwd(), help="Workspace path")
     state_update.add_argument("--key", required=True, help="State key to update")
     state_update.add_argument("--value", required=True, help="State value")
+
+    state_clear_lock = state_subparsers.add_parser("clear-lock", help="Clear locked section in state.json")
+    state_clear_lock.add_argument("--path", default=os.getcwd(), help="Workspace path")
+
+    # clear-lock (top-level shortcut)
+    clear_lock_parser = subparsers.add_parser("clear-lock", help="Clear locked section in state.json")
+    clear_lock_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
 
     # verify
     verify_parser = subparsers.add_parser("verify", help="Verify all section files for format, metadata, and headings")
@@ -48,6 +92,13 @@ def main():
     status_parser = subparsers.add_parser("status", help="Scan workspace status and progress")
     status_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
     status_parser.add_argument("--level", choices=["begin", "advance", "master", "all"], default=None, help="Level to check status")
+    status_parser.add_argument("--json", action="store_true", help="Output status as structured JSON")
+
+    # evaluate
+    evaluate_parser = subparsers.add_parser("evaluate", help="Evaluate a single section file and output JSON report")
+    evaluate_parser.add_argument("--level", required=True, choices=["begin", "advance", "master"], help="Level of the section")
+    evaluate_parser.add_argument("--file", required=True, help="Filename of the section (e.g. L01_S01_intro.mdx)")
+    evaluate_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
 
     args = parser.parse_args()
     
@@ -58,23 +109,94 @@ def main():
     elif args.command == "state":
         if args.state_command == "update":
             update_state(args.path, args.key, args.value)
+        elif args.state_command == "clear-lock":
+            clear_locked_section(args.path)
+    elif args.command == "clear-lock":
+        clear_locked_section(args.path)
     elif args.command == "verify":
         success = cmd_verify(args.path, args.level, args.build)
         sys.exit(0 if success else 1)
     elif args.command == "reorder":
         cmd_reorder(args.path, args.level, args.mode)
     elif args.command == "status":
-        cmd_status(args.path, args.level)
+        cmd_status(args.path, args.level, args.json)
+    elif args.command == "evaluate":
+        success = cmd_evaluate(args.path, args.level, args.file)
+        sys.exit(0 if success else 1)
 
 # -- utility functions --
+def migrate_state_if_needed(target_path):
+    state_path_md = os.path.join(target_path, "state.md")
+    state_path_json = os.path.join(target_path, "state.json")
+    if os.path.exists(state_path_md) and not os.path.exists(state_path_json):
+        print(f"Migrating state.md to state.json in {target_path}...")
+        try:
+            with open(state_path_md, "r", encoding="utf-8") as f:
+                content = f.read()
+            
+            keys = [
+                "workspace_version", "technology", "technology_version", "course_name",
+                "course_language", "created_at", "last_updated_at", "active_level",
+                "active_lesson_id", "active_section_id", "locked_section"
+            ]
+            state_data = {}
+            for k in keys:
+                match = re.search(rf'^{k}:\s*["\']?(.*?)["\']?\s*$', content, re.MULTILINE)
+                state_data[k] = match.group(1) if match else ""
+            
+            if not state_data.get("workspace_version"):
+                state_data["workspace_version"] = "1.0"
+            if not state_data.get("course_language"):
+                state_data["course_language"] = "en"
+            now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            if not state_data.get("created_at"):
+                state_data["created_at"] = now_str
+            if not state_data.get("last_updated_at"):
+                state_data["last_updated_at"] = now_str
+                
+            with open(state_path_json, "w", encoding="utf-8") as f:
+                json.dump(state_data, f, indent=2)
+            
+            bak_path = state_path_md + ".bak"
+            if os.path.exists(bak_path):
+                os.remove(bak_path)
+            os.rename(state_path_md, bak_path)
+            print(f"Migration completed. Backed up state.md to state.md.bak")
+        except Exception as e:
+            print(f"Error during state migration: {e}", file=sys.stderr)
+
 def read_state(target_path, key):
-    state_path = os.path.join(target_path, "state.md")
-    if not os.path.exists(state_path):
-        return None
-    with open(state_path, "r", encoding="utf-8") as f:
-        content = f.read()
-    match = re.search(rf'^{key}:\s*["\']?(.*?)["\']?\s*$', content, re.MULTILINE)
-    return match.group(1) if match else None
+    migrate_state_if_needed(target_path)
+    state_path_json = os.path.join(target_path, "state.json")
+    if os.path.exists(state_path_json):
+        try:
+            with open(state_path_json, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return data.get(key)
+        except Exception:
+            pass
+            
+    state_path_md = os.path.join(target_path, "state.md")
+    if os.path.exists(state_path_md):
+        try:
+            with open(state_path_md, "r", encoding="utf-8") as f:
+                content = f.read()
+            match = re.search(rf'^{key}:\s*["\']?(.*?)["\']?\s*$', content, re.MULTILINE)
+            return match.group(1) if match else None
+        except Exception:
+            pass
+            
+    # Try reading from bak as absolute fallback
+    state_path_bak = os.path.join(target_path, "state.md.bak")
+    if os.path.exists(state_path_bak):
+        try:
+            with open(state_path_bak, "r", encoding="utf-8") as f:
+                content = f.read()
+            match = re.search(rf'^{key}:\s*["\']?(.*?)["\']?\s*$', content, re.MULTILINE)
+            return match.group(1) if match else None
+        except Exception:
+            pass
+    return None
 
 def remove_vietnamese_diacritics(text):
     diacritics_map = {
@@ -98,6 +220,12 @@ def slugify(text):
     return text
 
 def parse_frontmatter(content):
+    if _HAS_FRONTMATTER:
+        try:
+            post = fm_lib.loads(content)
+            return dict(post.metadata), post.content
+        except Exception:
+            pass
     if not content.startswith("---"):
         return {}, content
     parts = content.split("---", 2)
@@ -181,23 +309,24 @@ def init_workspace(target_path):
     for subdir in subdirs:
         os.makedirs(os.path.join(target_path, subdir), exist_ok=True)
         
-    state_path = os.path.join(target_path, "state.md")
-    if not os.path.exists(state_path):
-        with open(state_path, "w", encoding="utf-8") as f:
-            state_content = """# Workspace State
-workspace_version: "1.0"
-technology: ""
-technology_version: ""
-course_name: ""
-course_language: "en"
-created_at: "{}"
-last_updated_at: "{}"
-active_level: ""
-active_lesson_id: ""
-active_section_id: ""
-locked_section: ""
-""".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            f.write(state_content)
+    state_path_json = os.path.join(target_path, "state.json")
+    if not os.path.exists(state_path_json):
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        default_state = {
+            "workspace_version": "1.0",
+            "technology": "",
+            "technology_version": "",
+            "course_name": "",
+            "course_language": "en",
+            "created_at": now_str,
+            "last_updated_at": now_str,
+            "active_level": "",
+            "active_lesson_id": "",
+            "active_section_id": "",
+            "locked_section": ""
+        }
+        with open(state_path_json, "w", encoding="utf-8") as f:
+            json.dump(default_state, f, indent=2)
             
     changelog_path = os.path.join(target_path, "output/changelog.md")
     if not os.path.exists(changelog_path):
@@ -208,34 +337,56 @@ locked_section: ""
 
 def update_state(target_path, key, value):
     target_path = os.path.abspath(target_path)
-    state_path = os.path.join(target_path, "state.md")
-    if not os.path.exists(state_path):
-        print(f"Error: state.md not found at {state_path}")
-        return
-        
-    with open(state_path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-        
-    new_lines = []
-    key_found = False
-    for line in lines:
-        if line.startswith(f"{key}:"):
-            new_lines.append(f'{key}: "{value}"\n')
-            key_found = True
-        else:
-            new_lines.append(line)
+    migrate_state_if_needed(target_path)
+    
+    state_path_json = os.path.join(target_path, "state.json")
+    state_data = {}
+    if os.path.exists(state_path_json):
+        try:
+            with open(state_path_json, "r", encoding="utf-8") as f:
+                state_data = json.load(f)
+        except Exception as e:
+            print(f"Warning: Failed to load existing state.json: {e}", file=sys.stderr)
             
-    if not key_found:
-        new_lines.append(f'{key}: "{value}"\n')
+    if not state_data:
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        state_data = {
+            "workspace_version": "1.0",
+            "technology": "",
+            "technology_version": "",
+            "course_name": "",
+            "course_language": "en",
+            "created_at": now_str,
+            "last_updated_at": now_str,
+            "active_level": "",
+            "active_lesson_id": "",
+            "active_section_id": "",
+            "locked_section": ""
+        }
         
-    # update timestamp
-    for i, line in enumerate(new_lines):
-        if line.startswith("last_updated_at:"):
-            new_lines[i] = f'last_updated_at: "{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}"\n'
-            
-    with open(state_path, "w", encoding="utf-8") as f:
-        f.writelines(new_lines)
-    print(f"Updated {key} to {value} in state.md")
+    state_data[key] = value
+    state_data["last_updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    if _HAS_JSONSCHEMA:
+        try:
+            jsonschema.validate(instance=state_data, schema=STATE_SCHEMA)
+        except jsonschema.exceptions.ValidationError as ve:
+            print(f"Validation error: State update failed validation against schema: {ve.message}", file=sys.stderr)
+            raise ValueError(f"State validation failed: {ve.message}")
+    else:
+        required_keys = STATE_SCHEMA["required"]
+        for rk in required_keys:
+            if rk not in state_data:
+                raise ValueError(f"State validation failed: Missing required key '{rk}'")
+            if not isinstance(state_data[rk], str):
+                raise ValueError(f"State validation failed: Key '{rk}' must be a string, got {type(state_data[rk])}")
+                
+    with open(state_path_json, "w", encoding="utf-8") as f:
+        json.dump(state_data, f, indent=2)
+    print(f"Updated {key} to {value} in state.json")
+
+def clear_locked_section(target_path):
+    update_state(target_path, "locked_section", "")
 
 def merge_lesson(target_path, level, lesson_id):
     target_path = os.path.abspath(target_path)
@@ -790,34 +941,37 @@ def cmd_verify(target_path, level_arg, build=False):
         print("\nVerification FAILED! Some files do not meet the requirements.")
         return False
 
-def cmd_status(target_path, level_arg=None):
-    state_path = resolve_config_file(target_path, "state.md")
-    if not os.path.exists(state_path):
-        print(f"Error: state.md not found at {state_path}")
+def cmd_status(target_path, level_arg=None, json_mode=False):
+    # Support both state.json and state.md
+    state_path_json = os.path.join(target_path, "state.json")
+    state_path_md = os.path.join(target_path, "state.md")
+    if not os.path.exists(state_path_json) and not os.path.exists(state_path_md):
+        print(f"Error: State file not found in {target_path}", file=sys.stderr)
         sys.exit(1)
         
-    tech = read_state(os.path.dirname(state_path), "technology") or ""
-    tech_ver = read_state(os.path.dirname(state_path), "technology_version") or ""
-    course_name = read_state(os.path.dirname(state_path), "course_name") or ""
-    lang = read_state(os.path.dirname(state_path), "course_language") or "en"
-    active_lvl = read_state(os.path.dirname(state_path), "active_level") or ""
-    active_les = read_state(os.path.dirname(state_path), "active_lesson_id") or ""
-    active_sec = read_state(os.path.dirname(state_path), "active_section_id") or ""
-    locked_sec = read_state(os.path.dirname(state_path), "locked_section") or ""
+    tech = read_state(target_path, "technology") or ""
+    tech_ver = read_state(target_path, "technology_version") or ""
+    course_name = read_state(target_path, "course_name") or ""
+    lang = read_state(target_path, "course_language") or "en"
+    active_lvl = read_state(target_path, "active_level") or ""
+    active_les = read_state(target_path, "active_lesson_id") or ""
+    active_sec = read_state(target_path, "active_section_id") or ""
+    locked_sec = read_state(target_path, "locked_section") or ""
     
-    print("Workspace Status:")
-    print(f"- Technology: {tech} ({tech_ver})")
-    print(f"- Course Name: {course_name}")
-    print(f"- Language: {lang}")
-    print(f"- Active Level: {active_lvl}")
-    print(f"- Active Lesson: {active_les}")
-    print(f"- Active Section: {active_sec}")
-    print(f"- Locked Section: {locked_sec if locked_sec else 'None'}")
-    print()
-    
+    if not json_mode:
+        print("Workspace Status:")
+        print(f"- Technology: {tech} ({tech_ver})")
+        print(f"- Course Name: {course_name}")
+        print(f"- Language: {lang}")
+        print(f"- Active Level: {active_lvl}")
+        print(f"- Active Lesson: {active_les}")
+        print(f"- Active Section: {active_sec}")
+        print(f"- Locked Section: {locked_sec if locked_sec else 'None'}")
+        print()
+        
     arch_path = resolve_config_file(target_path, "architecture.md")
     if not os.path.exists(arch_path):
-        print(f"Error: architecture.md not found at {arch_path}")
+        print(f"Error: architecture.md not found at {arch_path}", file=sys.stderr)
         sys.exit(1)
         
     arch_lessons, arch_sections, lesson_levels = parse_architecture(arch_path)
@@ -829,20 +983,47 @@ def cmd_status(target_path, level_arg=None):
     else:
         levels_to_check = ["begin", "advance", "master"]
         
+    json_output = {
+        "workspace": {
+            "technology": tech,
+            "technology_version": tech_ver,
+            "course_name": course_name,
+            "course_language": lang,
+            "active_level": active_lvl,
+            "active_lesson_id": active_les,
+            "active_section_id": active_sec,
+            "locked_section": locked_sec
+        },
+        "levels": {}
+    }
+    
     for lvl in levels_to_check:
-        print(f"Level: {lvl}")
-        print("-" * 80)
-        print(f"{'Lesson/Section ID':<20} | {'Title':<40} | {'Status':<10} | {'Score':<5}")
-        print("-" * 80)
-        
+        if not json_mode:
+            print(f"Level: {lvl}")
+            print("-" * 80)
+            print(f"{'Lesson/Section ID':<20} | {'Title':<40} | {'Status':<10} | {'Score':<5}")
+            print("-" * 80)
+            
         level_lessons = [les_id for les_id, les_lvl in lesson_levels.items() if les_lvl == lvl]
         if not level_lessons:
             if not lesson_levels:
                 level_lessons = sorted(list(arch_lessons.keys()))
             else:
-                print(f"No lessons defined for level '{lvl}' in architecture.md")
-                print("-" * 80)
-                print()
+                if not json_mode:
+                    print(f"No lessons defined for level '{lvl}' in architecture.md")
+                    print("-" * 80)
+                    print()
+                json_output["levels"][lvl] = {
+                    "summary": {
+                        "total": 0,
+                        "approved": 0,
+                        "draft": 0,
+                        "needs_revision": 0,
+                        "pending": 0,
+                        "completion_percentage": 0.0
+                    },
+                    "sections": []
+                }
                 continue
                 
         sections_dir = os.path.join(target_path, f"output/sections/{lvl}")
@@ -855,11 +1036,13 @@ def cmd_status(target_path, level_arg=None):
         draft_sec = 0
         revision_sec = 0
         pending_sec = 0
+        level_sections_json = []
         
         for les_id in sorted(level_lessons):
             les_title = arch_lessons.get(les_id, "Unknown Lesson")
-            print(f"{les_id}: {les_title}")
-            
+            if not json_mode:
+                print(f"{les_id}: {les_title}")
+                
             les_sections = [sec_id for (l_id, sec_id) in arch_sections.keys() if l_id == les_id]
             for sec_id in sorted(les_sections):
                 total_sec += 1
@@ -899,19 +1082,203 @@ def cmd_status(target_path, level_arg=None):
                 else:
                     pending_sec += 1
                     
-                print(f"  {sec_id:<18} | {sec_title[:40]:<40} | {status:<10} | {score:<5}")
+                if not json_mode:
+                    print(f"  {sec_id:<18} | {sec_title[:40]:<40} | {status:<10} | {score:<5}")
+                
+                level_sections_json.append({
+                    "lesson_id": les_id,
+                    "section_id": sec_id,
+                    "title": sec_title,
+                    "status": status,
+                    "score": score,
+                    "file": matched_file or ""
+                })
         
-        print("-" * 80)
-        print(f"Summary for level '{lvl}':")
-        print(f"- Total Sections: {total_sec}")
-        print(f"- Approved: {approved_sec}")
-        print(f"- Draft: {draft_sec}")
-        print(f"- Needs Revision: {revision_sec}")
-        print(f"- Pending: {pending_sec}")
+        pct = 0.0
         if total_sec > 0:
             pct = (approved_sec / total_sec) * 100
-            print(f"- Completion: {pct:.1f}%")
-        print()
+            
+        if not json_mode:
+            print("-" * 80)
+            print(f"Summary for level '{lvl}':")
+            print(f"- Total Sections: {total_sec}")
+            print(f"- Approved: {approved_sec}")
+            print(f"- Draft: {draft_sec}")
+            print(f"- Needs Revision: {revision_sec}")
+            print(f"- Pending: {pending_sec}")
+            if total_sec > 0:
+                print(f"- Completion: {pct:.1f}%")
+            print()
+            
+        json_output["levels"][lvl] = {
+            "summary": {
+                "total": total_sec,
+                "approved": approved_sec,
+                "draft": draft_sec,
+                "needs_revision": revision_sec,
+                "pending": pending_sec,
+                "completion_percentage": round(pct, 1)
+            },
+            "sections": level_sections_json
+        }
+        
+    if json_mode:
+        print(json.dumps(json_output, indent=2))
+
+def cmd_evaluate(target_path, level, filename):
+    target_path = os.path.abspath(target_path)
+    sections_dir = os.path.join(target_path, "output", "sections", level)
+    file_path = os.path.join(sections_dir, filename)
+    
+    report = {
+        "file": filename,
+        "level": level,
+        "passed": False,
+        "errors": [],
+        "metadata": {}
+    }
+    
+    if not os.path.exists(file_path):
+        report["errors"].append(f"File not found: {file_path}")
+        print(json.dumps(report, indent=2))
+        return False
+        
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            content = file.read()
+    except Exception as e:
+        report["errors"].append(f"Failed to read file: {e}")
+        print(json.dumps(report, indent=2))
+        return False
+        
+    file_errors = []
+    
+    # 1. Frontmatter
+    meta = {}
+    body = content
+    if not content.startswith("---"):
+        file_errors.append("Missing frontmatter metadata block at the start of the file.")
+    else:
+        try:
+            meta, body = parse_frontmatter(content)
+            report["metadata"] = meta
+            required_keys = [
+                "id", "title", "sidebar_label", "sidebar_position", 
+                "level", "lesson_id", "lesson_title", "section_id", 
+                "section_title", "language_version", "review_score", "status"
+            ]
+            for rk in required_keys:
+                if rk not in meta or str(meta[rk]).strip() == "":
+                    file_errors.append(f"Missing or empty metadata key: '{rk}'.")
+            if "sidebar_position" in meta:
+                try:
+                    int(meta["sidebar_position"])
+                except ValueError:
+                    file_errors.append(f"Metadata 'sidebar_position' must be an integer, got '{meta['sidebar_position']}'.")
+            if "review_score" in meta:
+                try:
+                    float(meta["review_score"])
+                except ValueError:
+                    file_errors.append(f"Metadata 'review_score' must be a float, got '{meta['review_score']}'.")
+            if "level" in meta and meta["level"] not in ["begin", "advance", "master"]:
+                file_errors.append(f"Metadata 'level' must be 'begin', 'advance', or 'master', got '{meta['level']}'.")
+            if "status" in meta and meta["status"] not in ["draft", "reviewed", "approved"]:
+                file_errors.append(f"Metadata 'status' must be 'draft', 'reviewed', or 'approved', got '{meta['status']}'.")
+            if "lesson_id" in meta and not re.match(r'^L\d{2}$', meta["lesson_id"]):
+                file_errors.append(f"Metadata 'lesson_id' must match format Lxx, got '{meta['lesson_id']}'.")
+            if "section_id" in meta and not re.match(r'^S\d{2}$', meta["section_id"]):
+                file_errors.append(f"Metadata 'section_id' must match format Sxx, got '{meta['section_id']}'.")
+        except Exception as e:
+            file_errors.append(f"Failed to parse frontmatter: {str(e)}")
+            
+    # 2. MDX Safety
+    safety_errors = check_mdx_safety(content)
+    file_errors.extend(safety_errors)
+    
+    # 3. Headings Structure
+    course_language = "en"
+    state_path_json = os.path.join(target_path, "state.json")
+    state_path_md = os.path.join(target_path, "state.md")
+    if os.path.exists(state_path_json) or os.path.exists(state_path_md):
+        course_language = read_state(target_path, "course_language") or "en"
+        
+    file_lang = course_language
+    if "## Giới thiệu" in content or "## Khái niệm cốt lõi" in content or "## Ví dụ minh họa" in content:
+        file_lang = "vi"
+        
+    if file_lang == "vi":
+        file_expected_headings = [
+            "Giới thiệu",
+            "Khái niệm cốt lõi",
+            "Ví dụ minh họa",
+            "Lỗi thường gặp",
+            "Thực hành tốt nhất",
+            "Bài tập nhỏ",
+            "Tóm tắt",
+            "Tài liệu tham khảo"
+        ]
+    else:
+        file_expected_headings = [
+            "Introduction",
+            "Main Concepts",
+            "Code Examples",
+            "Common Mistakes",
+            "Best Practices",
+            "Mini Exercise",
+            "Summary",
+            "References"
+        ]
+        
+    lines = body.split("\n")
+    headings = []
+    in_code_block = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            continue
+        if not in_code_block and stripped.startswith("#"):
+            headings.append(stripped)
+            
+    l1_headings = [h for h in headings if h.startswith("# ") and not h.startswith("##")]
+    if len(l1_headings) == 0:
+        file_errors.append("Missing Level-1 heading (# Section Title).")
+    elif len(l1_headings) > 1:
+        file_errors.append(f"Multiple Level-1 headings found: {l1_headings}.")
+    else:
+        if "section_title" in meta:
+            l1_title = re.sub(r'[^a-zA-Z0-9\s]', '', l1_headings[0][2:].strip().lower())
+            l1_title = re.sub(r'^l\d{2}\s*s\d{2}\s*[\s:]*', '', l1_title)
+            meta_title = re.sub(r'[^a-zA-Z0-9\s]', '', str(meta["section_title"]).strip().lower().strip('"\''))
+            if meta_title not in l1_title and l1_title not in meta_title:
+                file_errors.append(f"Level-1 heading '{l1_headings[0]}' does not match 'section_title' '{meta['section_title']}'.")
+                
+    l2_headings = [h[3:].strip() for h in headings if h.startswith("## ") and not h.startswith("###")]
+    for h2 in l2_headings:
+        if h2 not in file_expected_headings and h2 not in ["Prerequisites", "Tiên quyết"]:
+            file_errors.append(f"Forbidden custom level-2 heading found: '## {h2}'. Custom subheadings must use level-3 (###) or level-4 (####).")
+            
+    missing_headings = [eh for eh in file_expected_headings if eh not in l2_headings]
+    if missing_headings:
+        file_errors.append(f"Missing standard level-2 headings: {missing_headings}.")
+    else:
+        curr_idx = -1
+        out_of_order = False
+        for h2 in l2_headings:
+            if h2 in file_expected_headings:
+                idx = file_expected_headings.index(h2)
+                if idx < curr_idx:
+                    out_of_order = True
+                curr_idx = idx
+        if out_of_order:
+            file_errors.append("Standard level-2 headings are not in the correct order.")
+            
+    report["errors"] = file_errors
+    report["passed"] = (len(file_errors) == 0)
+    
+    print(json.dumps(report, indent=2))
+    return report["passed"]
+
 
 def cmd_reorder(target_path, level_arg, mode):
     arch_path = resolve_config_file(target_path, "architecture.md")

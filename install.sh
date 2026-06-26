@@ -36,8 +36,15 @@ mkdir -p ~/.local/bin
 cp "$SRC_DIR/bin/hermes-course-generator" ~/.local/bin/hermes-course-generator
 chmod +x ~/.local/bin/hermes-course-generator
 
+# Install python dependencies if pip3 is available
+if command -v pip3 >/dev/null 2>&1; then
+    echo "Installing Python dependencies (optional)..."
+    pip3 install --user python-frontmatter PyYAML jsonschema --quiet 2>/dev/null || \
+        echo "Note: Could not install Python dependencies automatically. Install manually: pip3 install python-frontmatter PyYAML jsonschema"
+fi
+
 # Register skills
-for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer" "hermes-course-validator"; do
+for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer" "hermes-course-validator" "hermes-course-evaluator"; do
     mkdir -p ~/.gemini/config/skills/"$skill"
     cp "$SRC_DIR/skills/$skill/SKILL.md" ~/.gemini/config/skills/"$skill"/SKILL.md
     mkdir -p ~/.agents/skills/"$skill"

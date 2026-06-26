@@ -38,3 +38,15 @@ To maintain high professional standards, clarity, and consistency across all rep
 
 - Write in a professional, clear, and concise tone.
 - Document inputs, outputs, and parameters precisely.
+
+## Quick Commands
+
+- Install local CLI and skills: `bash install.sh`
+- Run unit tests: `python3 -m pytest tests/ -v` (using active virtual environment)
+- Validate skills frontmatter: `python3 tests/check_skills.py`
+- Verify workspace sections format: `hermes-course-generator verify --level all`
+- Run status checks: `hermes-course-generator status --level all`
+
+## Testing
+
+Unit tests are stored in `tests/`. Always run unit tests (`.venv/bin/pytest tests/ -v`) and skill validation checks (`.venv/bin/python tests/check_skills.py`) before committing changes to `bin/hermes-course-generator` or updating `skills/`. All tests must pass for changes to be considered robust and complete.

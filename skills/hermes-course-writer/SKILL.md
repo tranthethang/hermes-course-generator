@@ -3,6 +3,7 @@ name: hermes-course-writer
 description: >-
   Research and write high-quality, comprehensive course sections one at a time, complying with MDX
   safety standards, length constraints, and coding styles.
+allowed-tools: [read_file, write_file, run_command, search_web]
 ---
 
 # Skill: Hermes Course Writer
@@ -41,15 +42,16 @@ course directory, these configuration files might be located directly in the cur
 or inside the `./output/` subdirectory. Search both locations (preferring `./` if present, then
 falling back to `./output/`):
 
-1. `state.md` (read from `./state.md` or `./output/state.md`) to check the current state and
+1. `state.json` or `state.md` (read from `./state.json` / `./state.md` or `./output/state.json` / `./output/state.md`) to check the current state and
    determine the `course_language` (e.g., "en" or "vi"). **CRITICAL:** Under no circumstances should
-   you modify or update the `course_language` in `state.md` to align with past memories, other
-   courses, or the language you are conversing in. The language specified in `state.md` is the
+   you modify or update the `course_language` in the state file to align with past memories, other
+   courses, or the language you are conversing in. The language specified in the state file is the
    absolute source of truth. **CRITICAL:** If `locked_section` is NOT empty (e.g.,
    `locked_section: "L01_S01"`), you MUST abort generation and inform the user that the workspace is
-   locked until the Reviewer approves the pending section. **EXCEPTION:** If you are running in
-   automated sequential/batch generation mode, you must bypass this check and continue generating
-   the remaining sections in the level/batch.
+   locked until the Evaluator/Reviewer approves the pending section. **EXCEPTION:** If you are running in
+   automated sequential/batch generation mode, you must first check the `locked_section` before starting the batch.
+   If it is non-empty, request the Evaluator/Reviewer to clear it first. Once cleared, generate all sections and
+   set `locked_section` only after the very last section is saved.
 2. `overview.md` (read from `./overview.md` or `./output/overview.md`) to align on objectives.
 3. `architecture.md` (read from `./architecture.md` or `./output/architecture.md`) to find the exact
    lesson and section title.

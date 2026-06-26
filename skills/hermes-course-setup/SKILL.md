@@ -3,6 +3,7 @@ name: hermes-course-setup
 description: >-
   Initialize the programming course workspace, conduct the interactive setup interview, create
   target directory structures, and generate initial configuration documents.
+allowed-tools: [read_file, write_file, run_command]
 ---
 
 # Skill: Hermes Course Setup

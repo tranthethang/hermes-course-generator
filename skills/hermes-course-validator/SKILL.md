@@ -3,6 +3,7 @@ name: hermes-course-validator
 description: >-
   Verify all course section files for format, metadata, and headings structure, and reorder
   Docusaurus sidebar positions.
+allowed-tools: [read_file, run_command]
 ---
 
 # Skill: Hermes Course Validator
