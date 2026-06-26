@@ -140,3 +140,43 @@ current working directory, e.g., English for `en`, Vietnamese for `vi`), adherin
   hermes-course-generator state update --key "active_lesson_id" --value "{lesson_id}"
   ```
 - Append the merge details to `output/changelog.md` following the changelog format.
+
+---
+
+## Automated Sequential/Batch Review & Merge Flow
+
+When triggered with a request to review and merge all lessons for a level sequentially (e.g. in
+Phase 4), follow this structured loop flow:
+
+### 1. Identify Target Lessons
+
+- Read
+  [architecture.md](file:///Users/thangtt/Documents/Github/hermes-course-generator/templates/architecture.md)
+  (or `output/architecture.md`) and check `state.md` to identify the list of all lessons for the
+  active level.
+- Identify which lessons are pending review and merging (e.g. those whose lessons files do not exist
+  or do not have status `reviewed`).
+
+### 2. Loop and Execute
+
+For each pending lesson in order:
+
+- **Report/Log Progress:** To ensure execution is not silent and the user can track progress in
+  real-time:
+  - If you have terminal/tool access, run an echo command (e.g.
+    `echo "=== [Hermes Loop] Starting review and merge of [lesson_id] ==="` and
+    `echo "=== [Hermes Loop] Completed... ==="`).
+  - Otherwise, print a progress status message in your current message output, and/or write progress
+    updates to a temporary progress file (e.g. `output/progress.log`).
+- **Execute Single Lesson Review & Merge Workflow:** Perform Steps 1 to 4 of the merging workflow.
+- **Automatically Proceed:** Immediately transition to the next lesson in the sequence.
+  - If running in an autonomous/agentic loop mode (like Antigravity or Claude Code), do not pause or
+    ask the user for confirmation; proceed directly to the next lesson in the same execution run.
+  - If running in a co-working or conversational interface where you must stop after each response,
+    output your progress report and ask the user to type "continue" or press Enter to trigger the
+    next lesson.
+
+### 3. Final Report
+
+- Once all lessons for the level have been processed, present a summary table of the merged lessons,
+  their paths, and statuses to the user.

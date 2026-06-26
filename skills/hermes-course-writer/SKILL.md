@@ -131,3 +131,49 @@ hermes-course-generator state update --key "locked_section" --value "{lesson_id}
 user for confirmation/instructions after saving a section. You must automatically proceed to the
 next section in the sequence. Only report completion and prompt the user to trigger the Reviewer
 Agent after ALL sections in the level/batch have been generated.
+
+---
+
+## Automated Sequential/Batch Generation Flow
+
+When triggered with a request to write all sections for a level sequentially (e.g. in Phase 2),
+follow this structured loop flow:
+
+### 1. Identify Target Sections
+
+- Read
+  [architecture.md](file:///Users/thangtt/Documents/Github/hermes-course-generator/templates/architecture.md)
+  (or `output/architecture.md`) and check `state.md` to determine the list of all sections for the
+  active level.
+- Identify which sections are pending (i.e. those whose files do not exist or have a `status` other
+  than `approved`).
+
+### 2. Loop and Execute
+
+For each pending section in order:
+
+- **Report/Log Progress:** To ensure execution is not silent and the user can track progress in
+  real-time:
+  - If you have terminal/tool access, run an echo command (e.g.
+    `echo "=== [Hermes Loop] Starting [lesson_id]_[section_id] ==="` and
+    `echo "=== [Hermes Loop] Completed... ==="`).
+  - Otherwise, print a progress status message in your current message output, and/or write progress
+    updates to a temporary progress file (e.g. `output/progress.log`).
+- **Execute Single Section Workflow:** Perform Steps 1 to 6 of this skill for the section.
+  - **Exception:** Do not set a non-empty `locked_section` state in `state.md` during Step 6 until
+    the very last section of the level has been successfully saved. Keep `locked_section: ""` during
+    intermediate sections to avoid locking yourself.
+- **Update Changelog:** Append the section creation/modification details to `output/changelog.md`
+  following the changelog format.
+- **Automatically Proceed:** Immediately transition to the next section in the sequence.
+  - If running in an autonomous/agentic loop mode (like Antigravity or Claude Code), do not pause or
+    ask the user for confirmation; proceed directly to the next section in the same execution run.
+  - If running in a co-working or conversational interface where you must stop after each response,
+    output your progress report and ask the user to type "continue" or press Enter to trigger the
+    next section.
+
+### 3. Final Report
+
+- Once all sections for the level have been processed, present a summary table of the generated
+  sections, their paths, and scores to the user, and prompt them to trigger the Validator/Reviewer
+  phase.

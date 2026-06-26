@@ -101,7 +101,12 @@ hermes-course-generator init --path /path/to/new-course
 
 ## Triggering the AI Agent Workflow
 
-The multi-agent workflow operates in four distinct phases:
+The multi-agent workflow operates in four distinct phases.
+
+_Note for non-autonomous/conversational agents (e.g., standard Cursor chat, ChatGPT, Copilot): If
+the agent's interface cannot loop autonomously across multiple file generation steps in a single
+turn, it will write or process one file at a time, report its progress, and wait. You can simply
+reply with "continue" or press Enter to prompt it to proceed to the next file._
 
 ### Phase 1: Setup
 
