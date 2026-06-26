@@ -47,7 +47,9 @@ falling back to `./output/`):
    courses, or the language you are conversing in. The language specified in `state.md` is the
    absolute source of truth. **CRITICAL:** If `locked_section` is NOT empty (e.g.,
    `locked_section: "L01_S01"`), you MUST abort generation and inform the user that the workspace is
-   locked until the Reviewer approves the pending section.
+   locked until the Reviewer approves the pending section. **EXCEPTION:** If you are running in
+   automated sequential/batch generation mode, you must bypass this check and continue generating
+   the remaining sections in the level/batch.
 2. `overview.md` (read from `./overview.md` or `./output/overview.md`) to align on objectives.
 3. `architecture.md` (read from `./architecture.md` or `./output/architecture.md`) to find the exact
    lesson and section title.
@@ -125,4 +127,7 @@ hermes-course-generator state update --key "active_section_id" --value "{lesson_
 hermes-course-generator state update --key "locked_section" --value "{lesson_id}_{section_id}"
 ```
 
-Report completion of the draft to the user and ask them to trigger the Reviewer Agent.
+**CRITICAL:** When running in automated sequential/batch generation mode, do NOT pause or ask the
+user for confirmation/instructions after saving a section. You must automatically proceed to the
+next section in the sequence. Only report completion and prompt the user to trigger the Reviewer
+Agent after ALL sections in the level/batch have been generated.
