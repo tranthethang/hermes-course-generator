@@ -139,14 +139,23 @@ Agent after ALL sections in the level/batch have been generated.
 When triggered with a request to write all sections for a level sequentially (e.g. in Phase 2),
 follow this structured loop flow:
 
-### 1. Identify Target Sections
+### 1. Scan Workspace and Identify Pending Sections
 
-- Read
-  [architecture.md](file:///Users/thangtt/Documents/Github/hermes-course-generator/templates/architecture.md)
-  (or `output/architecture.md`) and check `state.md` to determine the list of all sections for the
-  active level.
-- Identify which sections are pending (i.e. those whose files do not exist or have a `status` other
-  than `approved`).
+- **Scan Current Status:** Run the CLI command:
+  ```bash
+  hermes-course-generator status --level <level>
+  ```
+  to scan the workspace and identify the status of all sections. This is the absolute first step and must be executed before writing any new sections.
+- **Log Session Resume:** Write an entry in `output/changelog.md` to document that the session has resumed. List the current count of approved and pending sections. Do not use emojis. For example:
+  ```markdown
+  ## [YYYY-MM-DD HH:MM:SS +07:00] - Session Resumed
+  
+  ### Current Status
+  - Resuming generation for level: begin
+  - Status: X approved sections, Y pending sections remaining.
+  ```
+- **Filter Pending Sections:** Identify the sections that are pending (i.e., those whose files do not exist, or have a status other than `approved`).
+- **Skip Approved Sections:** Absolutely skip generating any section file that is already marked as `approved` and has a score >= 8.0, unless explicitly requested to overwrite them.
 
 ### 2. Loop and Execute
 

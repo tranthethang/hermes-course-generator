@@ -121,24 +121,28 @@ Trigger the setup agent by prompting:
 Trigger the writer agent to automatically and sequentially write all sections in a level by
 prompting:
 
-> "Please automatically and sequentially write all sections for the level [Level]
-> (begin/advance/master) using the `hermes-course-writer` skill. Read the `architecture.md` file to
-> identify the list of all sections for this level, and generate them one by one, ensuring each
-> section is written, self-reviewed, and saved successfully before moving on to the next.
+> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace and
+> check if any section files have already been created or approved. Log the session resume in
+> `output/changelog.md` with the count of approved and pending sections. Then, automatically and
+> sequentially write all pending sections (skipping those already approved) for the level [Level]
+> (begin/advance/master) using the `hermes-course-writer` skill. Generate them one by one, ensuring
+> each section is written, self-reviewed, and saved successfully before moving on to the next.
 >
 > **Important Execution Instructions:** Do NOT stop, pause, or ask for user confirmation/interaction
 > after completing each section. You must run the generation loop autonomously and sequentially.
-> Only report progress and ask for review when ALL sections for the specified level have been
-> generated, or if a critical, unrecoverable error occurs."
+> Only report progress and ask for review when ALL pending sections for the specified level have
+> been generated, or if a critical, unrecoverable error occurs."
 
 ### Phase 3: Section Validation & Reordering
 
 Trigger the validator agent to verify formatting, MDX safety, and sequentially reorder sidebar
 positions for all files in a level by prompting:
 
-> "Please automatically and sequentially verify the section files for the level [Level]
-> (begin/advance/master) and reorder their sidebar positions using the `hermes-course-validator`
-> skill. Ensure all files in this level are processed and validated.
+> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace and
+> identify the section files that have been created and need validation. Then, automatically and
+> sequentially verify the section files for the level [Level] (begin/advance/master) and reorder
+> their sidebar positions using the `hermes-course-validator` skill. Ensure all files in this level
+> are processed and validated.
 >
 > **Important Execution Instructions:** Do NOT stop, pause, or ask for user confirmation/interaction
 > after processing each file. You must validate all files in the level autonomously. Only report
@@ -150,9 +154,11 @@ positions for all files in a level by prompting:
 Trigger the reviewer agent to check and merge approved sections into lessons automatically and
 sequentially by prompting:
 
-> "Please automatically and sequentially review the sections and merge all lessons for the level
-> [Level] (begin/advance/master) using the `hermes-course-reviewer` skill. Process each lesson one
-> by one, checking all of its sections, and merging them into the final lesson files.
+> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace and
+> identify which sections are approved and lessons are pending. Then, automatically and
+> sequentially review the sections and merge all lessons for the level [Level]
+> (begin/advance/master) using the `hermes-course-reviewer` skill. Process each lesson one by one,
+> checking all of its sections, and merging them into the final lesson files.
 >
 > **Important Execution Instructions:** Do NOT stop, pause, or ask for user confirmation/interaction
 > after processing each lesson. You must review and merge all lessons in the level autonomously.

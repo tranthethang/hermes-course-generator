@@ -44,6 +44,11 @@ def main():
     reorder_parser.add_argument("--level", choices=["begin", "advance", "master", "all"], default="all", help="Level to reorder")
     reorder_parser.add_argument("--mode", choices=["flat", "nested"], default="flat", help="Reorder mode: flat (sequential 1..N) or nested (1..6 per lesson)")
     
+    # status
+    status_parser = subparsers.add_parser("status", help="Scan workspace status and progress")
+    status_parser.add_argument("--path", default=os.getcwd(), help="Workspace path")
+    status_parser.add_argument("--level", choices=["begin", "advance", "master", "all"], default=None, help="Level to check status")
+
     args = parser.parse_args()
     
     if args.command == "init":
@@ -58,6 +63,8 @@ def main():
         sys.exit(0 if success else 1)
     elif args.command == "reorder":
         cmd_reorder(args.path, args.level, args.mode)
+    elif args.command == "status":
+        cmd_status(args.path, args.level)
 
 # -- utility functions --
 def read_state(target_path, key):
@@ -418,24 +425,32 @@ def resolve_config_file(target_path, filename):
 def parse_architecture(arch_path):
     lessons = {}
     sections = {}
+    lesson_levels = {}
     if not os.path.exists(arch_path):
-        return lessons, sections
+        return lessons, sections, lesson_levels
     with open(arch_path, "r", encoding="utf-8") as f:
         content = f.read()
     current_lesson_id = None
+    current_level = None
     for line in content.split("\n"):
         line = line.strip()
+        level_match = re.match(r'^##\s*(Level\s*:\s*)?(begin|advance|master)\b', line, re.IGNORECASE)
+        if level_match:
+            current_level = level_match.group(2).lower()
+            continue
         lesson_match = re.match(r'^###\s*(L\d{2}):\s*(.*)$', line)
         if lesson_match:
             current_lesson_id = lesson_match.group(1).upper()
             lessons[current_lesson_id] = lesson_match.group(2).strip()
+            if current_level:
+                lesson_levels[current_lesson_id] = current_level
             continue
         if current_lesson_id:
             sec_match = re.match(r'^-\s*(S\d{2}):\s*(.*)$', line)
             if sec_match:
                 sec_id = sec_match.group(1).upper()
                 sections[(current_lesson_id, sec_id)] = sec_match.group(2).strip()
-    return lessons, sections
+    return lessons, sections, lesson_levels
 
 def check_mdx_safety(content):
     lines = content.splitlines()
@@ -775,9 +790,132 @@ def cmd_verify(target_path, level_arg, build=False):
         print("\nVerification FAILED! Some files do not meet the requirements.")
         return False
 
+def cmd_status(target_path, level_arg=None):
+    state_path = resolve_config_file(target_path, "state.md")
+    if not os.path.exists(state_path):
+        print(f"Error: state.md not found at {state_path}")
+        sys.exit(1)
+        
+    tech = read_state(os.path.dirname(state_path), "technology") or ""
+    tech_ver = read_state(os.path.dirname(state_path), "technology_version") or ""
+    course_name = read_state(os.path.dirname(state_path), "course_name") or ""
+    lang = read_state(os.path.dirname(state_path), "course_language") or "en"
+    active_lvl = read_state(os.path.dirname(state_path), "active_level") or ""
+    active_les = read_state(os.path.dirname(state_path), "active_lesson_id") or ""
+    active_sec = read_state(os.path.dirname(state_path), "active_section_id") or ""
+    locked_sec = read_state(os.path.dirname(state_path), "locked_section") or ""
+    
+    print("Workspace Status:")
+    print(f"- Technology: {tech} ({tech_ver})")
+    print(f"- Course Name: {course_name}")
+    print(f"- Language: {lang}")
+    print(f"- Active Level: {active_lvl}")
+    print(f"- Active Lesson: {active_les}")
+    print(f"- Active Section: {active_sec}")
+    print(f"- Locked Section: {locked_sec if locked_sec else 'None'}")
+    print()
+    
+    arch_path = resolve_config_file(target_path, "architecture.md")
+    if not os.path.exists(arch_path):
+        print(f"Error: architecture.md not found at {arch_path}")
+        sys.exit(1)
+        
+    arch_lessons, arch_sections, lesson_levels = parse_architecture(arch_path)
+    
+    if level_arg and level_arg != "all":
+        levels_to_check = [level_arg]
+    elif active_lvl:
+        levels_to_check = [active_lvl]
+    else:
+        levels_to_check = ["begin", "advance", "master"]
+        
+    for lvl in levels_to_check:
+        print(f"Level: {lvl}")
+        print("-" * 80)
+        print(f"{'Lesson/Section ID':<20} | {'Title':<40} | {'Status':<10} | {'Score':<5}")
+        print("-" * 80)
+        
+        level_lessons = [les_id for les_id, les_lvl in lesson_levels.items() if les_lvl == lvl]
+        if not level_lessons:
+            if not lesson_levels:
+                level_lessons = sorted(list(arch_lessons.keys()))
+            else:
+                print(f"No lessons defined for level '{lvl}' in architecture.md")
+                print("-" * 80)
+                print()
+                continue
+                
+        sections_dir = os.path.join(target_path, f"output/sections/{lvl}")
+        existing_files = []
+        if os.path.exists(sections_dir):
+            existing_files = [f for f in os.listdir(sections_dir) if f.endswith(".mdx")]
+            
+        total_sec = 0
+        approved_sec = 0
+        draft_sec = 0
+        revision_sec = 0
+        pending_sec = 0
+        
+        for les_id in sorted(level_lessons):
+            les_title = arch_lessons.get(les_id, "Unknown Lesson")
+            print(f"{les_id}: {les_title}")
+            
+            les_sections = [sec_id for (l_id, sec_id) in arch_sections.keys() if l_id == les_id]
+            for sec_id in sorted(les_sections):
+                total_sec += 1
+                sec_title = arch_sections.get((les_id, sec_id), "Unknown Section")
+                
+                matched_file = None
+                for f in existing_files:
+                    if f.startswith(f"{les_id}_{sec_id}_"):
+                        matched_file = f
+                        break
+                        
+                status = "Pending"
+                score = "-"
+                
+                if matched_file:
+                    file_path = os.path.join(sections_dir, matched_file)
+                    try:
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            content = f.read()
+                        meta, _ = parse_frontmatter(content)
+                        status_val = meta.get("status", "draft")
+                        score_val = meta.get("review_score", "0.0")
+                        
+                        if status_val == "approved":
+                            status = "Approved"
+                            approved_sec += 1
+                        elif status_val == "needs-revision":
+                            status = "Revision"
+                            revision_sec += 1
+                        else:
+                            status = "Draft"
+                            draft_sec += 1
+                        score = str(score_val)
+                    except Exception:
+                        status = "Error"
+                        draft_sec += 1
+                else:
+                    pending_sec += 1
+                    
+                print(f"  {sec_id:<18} | {sec_title[:40]:<40} | {status:<10} | {score:<5}")
+        
+        print("-" * 80)
+        print(f"Summary for level '{lvl}':")
+        print(f"- Total Sections: {total_sec}")
+        print(f"- Approved: {approved_sec}")
+        print(f"- Draft: {draft_sec}")
+        print(f"- Needs Revision: {revision_sec}")
+        print(f"- Pending: {pending_sec}")
+        if total_sec > 0:
+            pct = (approved_sec / total_sec) * 100
+            print(f"- Completion: {pct:.1f}%")
+        print()
+
 def cmd_reorder(target_path, level_arg, mode):
     arch_path = resolve_config_file(target_path, "architecture.md")
-    arch_lessons, arch_sections = parse_architecture(arch_path)
+    arch_lessons, arch_sections, _ = parse_architecture(arch_path)
     levels = ["begin", "advance", "master"] if level_arg == "all" else [level_arg]
     for lvl in levels:
         sections_dir = resolve_sections_dir(target_path, lvl)

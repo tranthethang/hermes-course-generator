@@ -15,6 +15,16 @@ corrections including Docusaurus sidebar position reordering.
 
 ## Tasks and Execution
 
+### 0. Scan Workspace Status First (Pre-flight Check)
+
+Before starting any validation or verification, run the status check to see the overall workspace state:
+
+```bash
+hermes-course-generator status --level <level>
+```
+
+This ensures you know which sections have been generated, their draft/approved statuses, and can confirm what files need validation.
+
 ### Task 1: Verify Course Sections and Build Compilation
 
 To run verification on all course sections in a workspace level, there are two options:

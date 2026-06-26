@@ -92,7 +92,13 @@ STEPS:
        - Does output/sections/{level}/ exist?
        - Does output/reviews/sections/{level}/ exist?
        - If not -> CREATE directories
-  10. REPORT: "Session initialized. Ready to generate {n} sections for Lesson {lesson_id} ({level})"
+  10. SCAN workspace status:
+       - Run command: `hermes-course-generator status --level {level}`
+       - Parse the status of existing section and lesson files.
+       - Log the session resume/start details to `output/changelog.md`:
+         "## [YYYY-MM-DD HH:MM:SS +07:00] - Session Resumed (Level: {level}, X approved, Y pending sections)"
+       - Determine and filter the list of section_ids to only include pending/unapproved sections.
+  11. REPORT: "Session initialized. Ready to generate {n} sections for Lesson {lesson_id} ({level})"
 ```
 
 ---
@@ -108,8 +114,9 @@ PRE-CONDITION:
 
 STEPS:
   1. UNDERSTAND_CONTEXT:
-     - Read architecture.md (from `./architecture.md` in the current working directory) again to know where this section is positioned
-     - List prerequisites (what the previous section taught)
+     - Check if this section has already been generated and approved (status: approved, score >= 8.0) during the status scan. If so, SKIP generation of this section and proceed directly to the next.
+     - Read architecture.md (from `./architecture.md` in the current working directory) again to know where this section is positioned.
+     - List prerequisites (what the previous section taught).
 
   2. RESEARCH:
      - Look up official documentation of [Language Name] for the topic
@@ -199,8 +206,8 @@ Retry limits:
 TASK: check_sections_ready(level, lesson_id)
 
 STEPS:
-  1. List all files in output/sections/{level}/ with prefix {lesson_id}_
-  2. Check YAML frontmatter of each file:
+  1. SCAN workspace status by running: `hermes-course-generator status --level {level}`
+  2. Check YAML frontmatter of each file matching the lesson prefix:
      - status == "approved"?
      - review_score >= 8.0?
   3. Compare with the section_ids list from architecture.md
