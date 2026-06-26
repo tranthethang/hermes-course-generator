@@ -49,4 +49,7 @@ To maintain high professional standards, clarity, and consistency across all rep
 
 ## Testing
 
-Unit tests are stored in `tests/`. Always run unit tests (`.venv/bin/pytest tests/ -v`) and skill validation checks (`.venv/bin/python tests/check_skills.py`) before committing changes to `bin/hermes-course-generator` or updating `skills/`. All tests must pass for changes to be considered robust and complete.
+Unit tests are stored in `tests/`. Always run unit tests (`.venv/bin/pytest tests/ -v`) and skill
+validation checks (`.venv/bin/python tests/check_skills.py`) before committing changes to
+`bin/hermes-course-generator` or updating `skills/`. All tests must pass for changes to be
+considered robust and complete.

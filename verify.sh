@@ -2,7 +2,9 @@
 echo "Verifying installation..."
 FAILED=0
 if [ -x "$(command -v hermes-course-generator)" ]; then
+    CLI_VERSION=$(hermes-course-generator --version 2>&1)
     echo "[OK] CLI tool 'hermes-course-generator' is installed and executable."
+    echo "   Version: $CLI_VERSION"
 else
     echo "[FAIL] CLI tool 'hermes-course-generator' is NOT in PATH or not executable."
     FAILED=1
@@ -16,11 +18,12 @@ else
     FAILED=1
 fi
 for agent in ".gemini/config" ".agents" ".claude" ".hermes"; do
-    for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer" "hermes-course-validator"; do
+    for skill in "hermes-course-setup" "hermes-course-writer" "hermes-course-reviewer" "hermes-course-validator" "hermes-course-evaluator"; do
         if [ -f "$HOME/$agent/skills/$skill/SKILL.md" ]; then
             echo "[OK] Skill '$skill' registered for: $agent"
         else
-            echo "[WARN] Skill '$skill' NOT registered for: $agent"
+            echo "[FAIL] Skill '$skill' NOT registered for: $agent"
+            FAILED=1
         fi
     done
 done

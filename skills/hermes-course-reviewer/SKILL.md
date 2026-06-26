@@ -155,17 +155,25 @@ Phase 4), follow this structured loop flow:
   ```bash
   hermes-course-generator status --level <level>
   ```
-  to scan the workspace and identify the status of all lessons and sections. This must be the first step executed.
-- **Log Session Resume:** Write an entry in `output/changelog.md` to document that the reviewer/merge session has resumed. List the current progress and count of reviewed/merged lessons. Do not use emojis. For example:
+  to scan the workspace and identify the status of all lessons and sections. This must be the first
+  step executed.
+- **Log Session Resume:** Write an entry in `output/changelog.md` to document that the
+  reviewer/merge session has resumed. List the current progress and count of reviewed/merged
+  lessons. Do not use emojis. For example:
+
   ```markdown
   ## [YYYY-MM-DD HH:MM:SS +07:00] - Review and Merge Session Resumed
-  
+
   ### Current Status
+
   - Resuming review/merge for level: begin
   - Status: X approved lessons, Y pending lessons remaining.
   ```
-- **Identify Pending Lessons:** Identify which lessons are pending review and merging (e.g., those whose lesson files do not exist, or do not have status `reviewed`).
-- **Skip Completed Lessons:** Skip merging/reviewing lessons that are already completed and reviewed.
+
+- **Identify Pending Lessons:** Identify which lessons are pending review and merging (e.g., those
+  whose lesson files do not exist, or do not have status `reviewed`).
+- **Skip Completed Lessons:** Skip merging/reviewing lessons that are already completed and
+  reviewed.
 
 ### 2. Loop and Execute
 

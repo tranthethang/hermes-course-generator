@@ -20,6 +20,8 @@ try:
 except ImportError:
     _HAS_JSONSCHEMA = False
 
+VERSION = "1.1.0"
+
 TEMPLATE_DIR = os.path.expanduser("~/.config/hermes-course-generator/templates")
 
 STATE_SCHEMA = {
@@ -48,6 +50,7 @@ STATE_SCHEMA = {
 
 def main():
     parser = argparse.ArgumentParser(description="Hermes Course Generator CLI")
+    parser.add_argument("--version", action="version", version=f"hermes-course-generator {VERSION}")
     subparsers = parser.add_subparsers(dest="command", required=True)
     
     # init

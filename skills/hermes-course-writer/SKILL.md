@@ -42,16 +42,17 @@ course directory, these configuration files might be located directly in the cur
 or inside the `./output/` subdirectory. Search both locations (preferring `./` if present, then
 falling back to `./output/`):
 
-1. `state.json` or `state.md` (read from `./state.json` / `./state.md` or `./output/state.json` / `./output/state.md`) to check the current state and
-   determine the `course_language` (e.g., "en" or "vi"). **CRITICAL:** Under no circumstances should
-   you modify or update the `course_language` in the state file to align with past memories, other
-   courses, or the language you are conversing in. The language specified in the state file is the
-   absolute source of truth. **CRITICAL:** If `locked_section` is NOT empty (e.g.,
-   `locked_section: "L01_S01"`), you MUST abort generation and inform the user that the workspace is
-   locked until the Evaluator/Reviewer approves the pending section. **EXCEPTION:** If you are running in
-   automated sequential/batch generation mode, you must first check the `locked_section` before starting the batch.
-   If it is non-empty, request the Evaluator/Reviewer to clear it first. Once cleared, generate all sections and
-   set `locked_section` only after the very last section is saved.
+1. `state.json` or `state.md` (read from `./state.json` / `./state.md` or `./output/state.json` /
+   `./output/state.md`) to check the current state and determine the `course_language` (e.g., "en"
+   or "vi"). **CRITICAL:** Under no circumstances should you modify or update the `course_language`
+   in the state file to align with past memories, other courses, or the language you are conversing
+   in. The language specified in the state file is the absolute source of truth. **CRITICAL:** If
+   `locked_section` is NOT empty (e.g., `locked_section: "L01_S01"`), you MUST abort generation and
+   inform the user that the workspace is locked until the Evaluator/Reviewer approves the pending
+   section. **EXCEPTION:** If you are running in automated sequential/batch generation mode, you
+   must first check the `locked_section` before starting the batch. If it is non-empty, request the
+   Evaluator/Reviewer to clear it first. Once cleared, generate all sections and set
+   `locked_section` only after the very last section is saved.
 2. `overview.md` (read from `./overview.md` or `./output/overview.md`) to align on objectives.
 3. `architecture.md` (read from `./architecture.md` or `./output/architecture.md`) to find the exact
    lesson and section title.
@@ -147,17 +148,24 @@ follow this structured loop flow:
   ```bash
   hermes-course-generator status --level <level>
   ```
-  to scan the workspace and identify the status of all sections. This is the absolute first step and must be executed before writing any new sections.
-- **Log Session Resume:** Write an entry in `output/changelog.md` to document that the session has resumed. List the current count of approved and pending sections. Do not use emojis. For example:
+  to scan the workspace and identify the status of all sections. This is the absolute first step and
+  must be executed before writing any new sections.
+- **Log Session Resume:** Write an entry in `output/changelog.md` to document that the session has
+  resumed. List the current count of approved and pending sections. Do not use emojis. For example:
+
   ```markdown
   ## [YYYY-MM-DD HH:MM:SS +07:00] - Session Resumed
-  
+
   ### Current Status
+
   - Resuming generation for level: begin
   - Status: X approved sections, Y pending sections remaining.
   ```
-- **Filter Pending Sections:** Identify the sections that are pending (i.e., those whose files do not exist, or have a status other than `approved`).
-- **Skip Approved Sections:** Absolutely skip generating any section file that is already marked as `approved` and has a score >= 8.0, unless explicitly requested to overwrite them.
+
+- **Filter Pending Sections:** Identify the sections that are pending (i.e., those whose files do
+  not exist, or have a status other than `approved`).
+- **Skip Approved Sections:** Absolutely skip generating any section file that is already marked as
+  `approved` and has a score >= 8.0, unless explicitly requested to overwrite them.
 
 ### 2. Loop and Execute
 

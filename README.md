@@ -73,7 +73,7 @@ hermes-course-generator init --path /path/to/new-course
 | `hermes-course-generator status --level <level> [--json]`            | Displays section completion status. Use `--json` for machine-readable output.      |
 | `hermes-course-generator verify [--path <path>] [--level <level>]`   | Verifies section formatting, metadata keys, and MDX safety (unescaped `<` / `>`).  |
 | `hermes-course-generator reorder [--path <path>] [--level <level>]`  | Scans and sequentially reorders Docusaurus sidebar positions in section files.     |
-| `hermes-course-generator evaluate --level <level> --file <file>`     | Evaluates a single section file structure and MDX safety, returning a JSON report.  |
+| `hermes-course-generator evaluate --level <level> --file <file>`     | Evaluates a single section file structure and MDX safety, returning a JSON report. |
 | `hermes-course-generator clear-lock`                                 | Clears the locked section in the workspace state.                                  |
 | `./format.sh`                                                        | Automatically formats all Markdown and MDX files in the workspace using Prettier.  |
 | `./verify_sections.sh <workspace_path> [level]`                      | Wrapper script to verify section files format and MDX safety in a workspace.       |
@@ -91,7 +91,8 @@ hermes-course-generator init --path /path/to/new-course
   - `hermes-course-validator` — Verification of section formatting, metadata, MDX safety, and
     sidebar reordering.
   - `hermes-course-reviewer` — Quality gate review, compiler validation, and lesson merging.
-  - `hermes-course-evaluator` — Independent quality grading, scoring rubric evaluation, and status validation.
+  - `hermes-course-evaluator` — Independent quality grading, scoring rubric evaluation, and status
+    validation.
 - [templates/](templates) — Core instructional templates and style guides.
   - [hermes_workflow.md](templates/hermes_workflow.md) — The generation workflow.
   - [file_naming_convention.md](templates/file_naming_convention.md) — Slugification and output
@@ -125,8 +126,8 @@ Trigger the setup agent by prompting:
 Trigger the writer agent to automatically and sequentially write all sections in a level by
 prompting:
 
-> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace and
-> check if any section files have already been created or approved. Log the session resume in
+> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace
+> and check if any section files have already been created or approved. Log the session resume in
 > `output/changelog.md` with the count of approved and pending sections. Then, automatically and
 > sequentially write all pending sections (skipping those already approved) for the level [Level]
 > (begin/advance/master) using the `hermes-course-writer` skill. Generate them one by one, ensuring
@@ -142,8 +143,8 @@ prompting:
 Trigger the validator agent to verify formatting, MDX safety, and sequentially reorder sidebar
 positions for all files in a level by prompting:
 
-> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace and
-> identify the section files that have been created and need validation. Then, automatically and
+> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace
+> and identify the section files that have been created and need validation. Then, automatically and
 > sequentially verify the section files for the level [Level] (begin/advance/master) and reorder
 > their sidebar positions using the `hermes-course-validator` skill. Ensure all files in this level
 > are processed and validated.
@@ -161,23 +162,22 @@ cannot modify content — it only scores and records structured results.
 
 > "Please use the `hermes-course-evaluator` skill to evaluate all section files for the level
 > [Level] (begin/advance/master). For each section file, run
-> `hermes-course-generator evaluate --level [Level] --file [filename]` to perform structural and
-> MDX safety checks, then apply the 5-dimension scoring rubric to grade the section. Record the
-> result as a JSON review file in `output/reviews/sections/[Level]/`. Do not modify any section
-> content.
+> `hermes-course-generator evaluate --level [Level] --file [filename]` to perform structural and MDX
+> safety checks, then apply the 5-dimension scoring rubric to grade the section. Record the result
+> as a JSON review file in `output/reviews/sections/[Level]/`. Do not modify any section content.
 >
 > **Important Execution Instructions:** Do NOT stop, pause, or ask for user confirmation/interaction
 > after processing each section. Evaluate all sections in the level autonomously. Only report
-> progress when ALL section files for the specified level have been evaluated, or if a
-> critical, unrecoverable error occurs."
+> progress when ALL section files for the specified level have been evaluated, or if a critical,
+> unrecoverable error occurs."
 
 ### Phase 4: Reviewing & Merging Lessons
 
 Trigger the reviewer agent to check and merge approved sections into lessons automatically and
 sequentially by prompting:
 
-> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace and
-> identify which sections are approved and lessons are pending. Then, automatically and
+> "Please start by running `hermes-course-generator status --level [Level]` to scan the workspace
+> and identify which sections are approved and lessons are pending. Then, automatically and
 > sequentially review the sections and merge all lessons for the level [Level]
 > (begin/advance/master) using the `hermes-course-reviewer` skill. Process each lesson one by one,
 > checking all of its sections, and merging them into the final lesson files.
@@ -214,8 +214,8 @@ bash install.sh
 
 ### Running Tests
 
-Unit tests cover core CLI functions including `slugify`, `parse_frontmatter`, MDX safety checks,
-and state JSON CRUD operations. Run them before submitting any changes to `bin/hermes-course-generator`
+Unit tests cover core CLI functions including `slugify`, `parse_frontmatter`, MDX safety checks, and
+state JSON CRUD operations. Run them before submitting any changes to `bin/hermes-course-generator`
 or to any `skills/` file:
 
 ```bash
@@ -235,7 +235,8 @@ GitHub Actions runs three automated checks on every push and pull request to `ma
 
 - `test-cli` — installs Python dependencies, runs `pytest tests/ -v`, and verifies CLI syntax.
 - `validate-skills` — checks that all `SKILL.md` files exist and have valid frontmatter.
-- `lint-markdown` — runs `markdownlint-cli2` across `templates/`, `skills/`, and root Markdown files.
+- `lint-markdown` — runs `markdownlint-cli2` across `templates/`, `skills/`, and root Markdown
+  files.
 
 Configuration: [.github/workflows/validate.yml](.github/workflows/validate.yml)
 
