@@ -108,25 +108,33 @@ The multi-agent workflow operates in four distinct phases:
 Trigger the setup agent by prompting:
 
 > "I want to set up a new course for [Rust/Python/Go]. Please use the `hermes-course-setup` skill
-> and interview me to collect the required settings."
+> and interview me to collect the required settings. Once set up, prepare the workspace for
+> automated and sequential lesson generation by level [begin/advance/master]."
 
 ### Phase 2: Writing Sections
 
-Trigger the writer agent for a specific section by prompting:
+Trigger the writer agent to automatically and sequentially write all sections in a level by
+prompting:
 
-> "Please write the section [Lesson ID] [Section ID] [Section Title] using the
-> `hermes-course-writer` skill."
+> "Please automatically and sequentially write all sections for the level [Level]
+> (begin/advance/master) using the `hermes-course-writer` skill. Read the `architecture.md` file to
+> identify the list of all sections for this level, and generate them one by one, ensuring each
+> section is written, self-reviewed, and saved successfully before moving on to the next."
 
 ### Phase 3: Section Validation & Reordering
 
 Trigger the validator agent to verify formatting, MDX safety, and sequentially reorder sidebar
-positions:
+positions for all files in a level by prompting:
 
-> "Please verify the section files for [Level] and reorder their sidebar positions using the
-> `hermes-course-validator` skill."
+> "Please automatically and sequentially verify the section files for the level [Level]
+> (begin/advance/master) and reorder their sidebar positions using the `hermes-course-validator`
+> skill. Ensure all files in this level are processed and validated."
 
 ### Phase 4: Reviewing & Merging Lessons
 
-Trigger the reviewer agent to check and merge approved sections into a lesson by prompting:
+Trigger the reviewer agent to check and merge approved sections into lessons automatically and
+sequentially by prompting:
 
-> "Please review the sections and merge [Lesson ID] using the `hermes-course-reviewer` skill."
+> "Please automatically and sequentially review the sections and merge all lessons for the level
+> [Level] (begin/advance/master) using the `hermes-course-reviewer` skill. Process each lesson one
+> by one, checking all of its sections, and merging them into the final lesson files."

@@ -74,7 +74,8 @@ For a Rust course, prioritize sources in this order:
 - **Official site:** [Node.js Documentation](https://nodejs.org/en/docs/)
 - **API Reference:** [Node.js API Reference](https://nodejs.org/docs/latest/api/)
 - **Guides:** [Node.js Guides](https://nodejs.org/en/learn/)
-- **Security:** [Node.js Security Best Practices](https://nodejs.org/en/learn/getting-started/security-best-practices)
+- **Security:**
+  [Node.js Security Best Practices](https://nodejs.org/en/learn/getting-started/security-best-practices)
 - **Package Manager:** [npm Documentation](https://docs.npmjs.com/)
 - **Runtime V8 Engine:** [V8 Docs](https://v8.dev/docs)
 
@@ -84,25 +85,29 @@ For a Rust course, prioritize sources in this order:
   - **Official site:** [React Documentation](https://react.dev/)
   - **API Reference:** [React API Reference](https://react.dev/reference/react)
   - **Hooks:** [React Built-in Hooks](https://react.dev/reference/react/hooks)
-  - **React Server Components:** [React Server Components Specification](https://react.dev/reference/rsc/server-components)
+  - **React Server Components:**
+    [React Server Components Specification](https://react.dev/reference/rsc/server-components)
 - **Next.js:**
   - **Official site:** [Next.js Documentation](https://nextjs.org/docs)
   - **App Router:** [Next.js App Router Guide](https://nextjs.org/docs/app)
   - **Pages Router:** [Next.js Pages Router Guide](https://nextjs.org/docs/pages)
   - **API Reference:** [Next.js API Reference](https://nextjs.org/docs/app/api-reference)
-  - **Deployment:** [Next.js Deployment Guide](https://nextjs.org/docs/app/building-your-application/deploying)
+  - **Deployment:**
+    [Next.js Deployment Guide](https://nextjs.org/docs/app/building-your-application/deploying)
 
 ## Vue and Nuxt.js
 
 - **Vue.js:**
   - **Official site:** [Vue.js 3 Docs](https://vuejs.org/guide/introduction.html)
   - **API Reference:** [Vue.js API Reference](https://vuejs.org/api/)
-  - **Composition API:** [Vue Composition API FAQ](https://vuejs.org/guide/extras/composition-api-faq.html)
+  - **Composition API:**
+    [Vue Composition API FAQ](https://vuejs.org/guide/extras/composition-api-faq.html)
   - **Vue Router:** [Vue Router Documentation](https://router.vuejs.org/)
   - **Pinia State Management:** [Pinia Documentation](https://pinia.vuejs.org/)
 - **Nuxt.js:**
   - **Official site:** [Nuxt Documentation](https://nuxt.com/)
-  - **Routing & Structure:** [Nuxt Directory Structure and Routing](https://nuxt.com/docs/getting-started/routing)
+  - **Routing & Structure:**
+    [Nuxt Directory Structure and Routing](https://nuxt.com/docs/getting-started/routing)
   - **API Reference:** [Nuxt API Docs](https://nuxt.com/docs/api)
   - **Modules:** [Nuxt Modules Directory](https://nuxt.com/modules)
 
